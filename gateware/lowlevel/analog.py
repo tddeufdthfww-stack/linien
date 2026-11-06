@@ -57,7 +57,8 @@ class PitayaAnalog(Module):
                 "ODDR",
                 i_D1=0,
                 i_D2=1,
-                i_C=ClockSignal("sys_double"),
+                #i_C=ClockSignal("sys_double"),
+                i_C=ClockSignal("dac_2p"),#add
                 o_Q=dac.clk,
                 i_CE=1,
                 i_R=0,

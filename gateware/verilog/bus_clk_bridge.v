@@ -67,14 +67,26 @@ module bus_clk_bridge
 //---------------------------------------------------------------------------------
 //  Synchronize signals between clock domains
 
+
 reg            sys_rd    ;
 reg            sys_wr    ;
 reg            sys_do    ;
+
+(* ASYNC_REG = "TRUE", SHREG_EXTRACT = "NO" *)
 reg  [ 2-1: 0] sys_sync  ;
+
 reg            sys_done  ;
 reg            dst_do    ;
+
+(* ASYNC_REG = "TRUE", SHREG_EXTRACT = "NO" *)
 reg  [ 2-1: 0] dst_sync  ;
+
 reg            dst_done  ;
+// Return data is captured with the destination ACK and held until
+// the next completed transaction (bundled-data CDC handshake).
+reg  [ 32-1: 0] dst_rdata_hold ;
+reg             dst_err_hold   ;
+
 
 always @(posedge sys_clk_i) begin
    if (sys_rstn_i == 1'b0) begin
@@ -105,13 +117,18 @@ always @(posedge clk_i) begin
       dst_do    <= 1'b0 ;
       dst_sync  <= 2'h0 ;
       dst_done  <= 1'b0 ;
+      dst_rdata_hold <= 32'h0 ;
+      dst_err_hold   <= 1'b0  ;
    end
    else begin
       dst_sync <= {dst_sync[0], sys_do};
       dst_do   <= dst_sync[1];
 
-      if (ack_i && (dst_do != dst_done))
-         dst_done <= dst_do;
+      if (ack_i && (dst_do != dst_done)) begin
+         dst_rdata_hold <= rdata_i;
+         dst_err_hold   <= err_i;
+         dst_done       <= dst_do;
+      end
    end
 end
 
@@ -119,8 +136,8 @@ assign ren_o = sys_rd && (dst_sync[1]^dst_do);
 assign wen_o = sys_wr && (dst_sync[1]^dst_do);
 
 
-assign sys_rdata_o = rdata_i                ;
-assign sys_err_o   = err_i                  ;
+assign sys_rdata_o = dst_rdata_hold        ;
+assign sys_err_o   = dst_err_hold          ;
 assign sys_ack_o   = sys_done ^ sys_sync[1] ;
 
 

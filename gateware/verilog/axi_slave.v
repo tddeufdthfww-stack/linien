@@ -150,7 +150,7 @@ always @(posedge axi_clk_i) begin
    else begin
       if (axi_arvalid_i && !rd_do && !axi_awvalid_i && !wr_do) // accept just one read request - write has priority
          rd_do  <= 1'b1 ;
-      else if (axi_rready_i && rd_do && ack)
+      else if (axi_rvalid_o && axi_rready_i)
          rd_do  <= 1'b0 ;
 
       if (axi_arvalid_i && axi_arready_o) begin // latch ID and address
@@ -170,7 +170,7 @@ always @(posedge axi_clk_i) begin
    else begin
       if (axi_awvalid_i && !wr_do && !rd_do) // accept just one write request - if idle
          wr_do  <= 1'b1 ;
-      else if (axi_bready_i && wr_do && ack)
+      else if (axi_bvalid_o && axi_bready_i)
          wr_do  <= 1'b0 ;
 
       if (axi_awvalid_i && axi_awready_o) begin // latch ID and address
@@ -200,23 +200,52 @@ assign axi_arready_o = !rd_do && !wr_do && !axi_awvalid_i     ;
 assign axi_rid_o     = rd_arid                                ;
 //assign axi_rdata_o   = sys_rdata_i                            ;
 
+
 always @(posedge axi_clk_i) begin
    if (axi_rstn_i == 1'b0) begin
-      axi_bvalid_o  <= 1'b0 ;
-      axi_bresp_o   <= 2'h0 ;
-      axi_rlast_o   <= 1'b0 ;
-      axi_rvalid_o  <= 1'b0 ;
-      axi_rresp_o   <= 2'h0 ;
+      axi_bvalid_o <= 1'b0;
+      axi_bresp_o  <= 2'b00;
+
+      axi_rvalid_o <= 1'b0;
+      axi_rdata_o  <= {AXI_DW{1'b0}};
+      axi_rresp_o  <= 2'b00;
+      axi_rlast_o  <= 1'b0;
    end
    else begin
-      axi_bvalid_o  <= wr_do && ack  ;
-      axi_bresp_o   <= {(wr_error || ack_cnt[5]),1'b0} ;  // 2'b10 SLVERR    2'b00 OK
-      axi_rlast_o   <= rd_do && ack  ;
-      axi_rvalid_o  <= rd_do && ack  ;
-      axi_rresp_o   <= {(rd_error || ack_cnt[5]),1'b0} ;  // 2'b10 SLVERR    2'b00 OK
-      axi_rdata_o   <= sys_rdata_i   ;
+
+      // AXI write response:
+      // Hold BVALID and BRESP until BREADY handshake.
+      if (axi_bvalid_o) begin
+         if (axi_bready_i)
+            axi_bvalid_o <= 1'b0;
+      end
+      else if (wr_do && ack) begin
+         axi_bvalid_o <= 1'b1;
+         axi_bresp_o  <= {
+            (wr_error || ack_cnt[5]), 1'b0
+         };
+      end
+
+      // AXI read response:
+      // Capture payload once and hold it until RREADY.
+      if (axi_rvalid_o) begin
+         if (axi_rready_i) begin
+            axi_rvalid_o <= 1'b0;
+            axi_rlast_o  <= 1'b0;
+         end
+      end
+      else if (rd_do && ack) begin
+         axi_rvalid_o <= 1'b1;
+         axi_rlast_o  <= 1'b1;
+         axi_rresp_o  <= {
+            (rd_error || ack_cnt[5]), 1'b0
+         };
+         axi_rdata_o  <= sys_rdata_i;
+      end
+
    end
 end
+
 
 // acknowledge protection
 always @(posedge axi_clk_i) begin

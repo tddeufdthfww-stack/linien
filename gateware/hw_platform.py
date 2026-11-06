@@ -162,28 +162,22 @@ _io += [
     ),
 ]
 
-
 class Platform(XilinxPlatform):
     default_clk_name = "clk125"
     default_clk_period = 8.0
 
     def __init__(self):
-        XilinxPlatform.__init__(self, "xc7z010-clg400-1", _io, toolchain="vivado")
-        self.toolchain.pre_synthesis_commands.append(
-            "read_xdc -ref processing_system7_v5_4_processing_system7 ../verilog/system_processing_system7_0_0.xdc"  # noqa: E501
-        )
+        XilinxPlatform.__init__(self, "xc7z020clg400-1", _io, toolchain="vivado")
+        # Gen 2 PS constraints are supplied by linien_ps_only.bd.
+        # Do not read the legacy Z7010 processing_system7 XDC.
         self.toolchain.with_phys_opt = True
 
     def do_finalize(self, fragment):
         try:
             clk125 = self.lookup_request("clk125")
             self.add_period_constraint(clk125.p, 8)
-            self.add_platform_command(
-                "set_clock_groups -asynchronous "
-                "-group [get_clocks -include_generated_clocks {clk}] "
-                "-group [get_clocks -include_generated_clocks clk_fpga_0]",
-                clk=clk125.p,
-            )
+            # The former PS clock name clk_fpga_0 belongs to the legacy PS IP.
+            # Review the Gen 2 FCLK0 clock name and CDC constraints after synthesis.
             for i in range(2):
                 try:
                     _ = self.lookup_request("adc", i)

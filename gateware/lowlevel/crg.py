@@ -20,8 +20,8 @@ from migen import ClockDomain, Instance, Module, Signal
 
 class CRG(Module):
     def __init__(self, clk_adc, clk_ps, rst):
-        self.clock_domains.cd_sys_quad = ClockDomain(reset_less=True)
         self.clock_domains.cd_sys_double = ClockDomain(reset_less=True)
+        self.clock_domains.cd_dac_2p = ClockDomain(reset_less=True)#add
         self.clock_domains.cd_sys = ClockDomain()
         self.clock_domains.cd_sys_slow = ClockDomain(reset_less=True)
         self.clock_domains.cd_sys_ps = ClockDomain()
@@ -30,7 +30,6 @@ class CRG(Module):
         clk_adci = Signal()
         clk_adcb = Signal()
         clk = Signal(6)
-        clkb = Signal(6)
         clk_fb = Signal()
         clk_fbb = Signal()
         locked = Signal()
@@ -70,8 +69,8 @@ class CRG(Module):
                 p_CLKOUT3_DUTY_CYCLE=0.5,
                 o_CLKOUT3=clk[3],
                 p_CLKOUT4_DIVIDE=4,
-                p_CLKOUT4_PHASE=0.0,
                 p_CLKOUT4_DUTY_CYCLE=0.5,
+                p_CLKOUT4_PHASE=-45.0,
                 o_CLKOUT4=clk[4],
                 p_CLKOUT5_DIVIDE=4,
                 p_CLKOUT5_PHASE=0.0,
@@ -81,12 +80,23 @@ class CRG(Module):
             )
         ]
         self.specials += Instance("BUFG", i_I=clk_fb, o_O=clk_fbb)
-        for i, o, d in zip(
-            clk,
-            clkb,
-            [self.cd_sys_quad, self.cd_sys_double, self.cd_sys, self.cd_sys_slow],
+        # 500 MHz CLKOUT0 has no consumers in this design; avoid its BUFG.
+        # Keep the active 250 MHz, 125 MHz and slow PLL clocks unchanged.
+        for clk_index, domain in (
+            (1, self.cd_sys_double),
+            (2, self.cd_sys),
+            (3, self.cd_sys_slow),
         ):
-            self.specials += Instance("BUFG", i_I=i, o_O=d.clk)
+            self.specials += Instance("BUFG", i_I=clk[clk_index], o_O=domain.clk)
         self.specials += Instance(
-            "FD", p_INIT=1, i_D=~locked, i_C=self.cd_sys.clk, o_Q=self.cd_sys.rst
+            "BUFG",#add
+            i_I=clk[4],#add
+            o_O=self.cd_dac_2p.clk,#add
         )
+        self.specials += Instance(
+            "FD",
+            p_INIT=1,
+            i_D=~locked,
+            i_C=self.cd_sys.clk,
+            o_Q=self.cd_sys.rst
+         )
