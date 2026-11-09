@@ -115,6 +115,7 @@ class SlowChain(Module, AutoCSR):
     def __init__(self, width=14, signal_width=25):
         self.input = Signal((width, True))
         self.output = Signal((width, True))
+        self.update_en = Signal(reset=1)
 
         out = Signal((signal_width, True))
 
@@ -127,6 +128,8 @@ class SlowChain(Module, AutoCSR):
         self.submodules.limit = LimitCSR(width=width, guard=5)
 
         self.comb += [
+            self.pid.update_en.eq(self.update_en),
+            self.limit.update_en.eq(self.update_en),
             self.pid.input.eq(self.input),
             self.output.eq(self.pid.pid_out),
             out.eq(self.limit.y << signal_width - width),

@@ -52,6 +52,8 @@ class Limit(Module):
 class LimitCSR(Filter):
     def __init__(self, guard=0, **kwargs):
         Filter.__init__(self, **kwargs)
+        # Gate only limit datapath registers, not the CSRStorage modules.
+        self.update_en = Signal(reset=1)
 
         width = len(self.y)
         if guard:
@@ -68,9 +70,10 @@ class LimitCSR(Filter):
             min = Cat(min, Replicate(min[-1], guard))
             max = Cat(max, Replicate(max[-1], guard))
         self.comb += [self.limit.x.eq(self.x)]
-        self.sync += [
+        self.sync += If(
+            self.update_en,
             self.limit.min.eq(min),
             self.limit.max.eq(max),
             self.y.eq(self.limit.y),
             self.error.eq(self.limit.railed),
-        ]
+        )

@@ -26,6 +26,8 @@ class PID(Module, AutoCSR):
 
         self.input = Signal((width, True))
         self.running = Signal()
+        # Only the data-path registers are clock-enabled; CSR writes are not.
+        self.update_en = Signal(reset=1)
 
         self.max_pos = (1 << (width - 1)) - 1
         self.max_neg = (-1 * self.max_pos) - 1
@@ -88,7 +90,8 @@ class PID(Module, AutoCSR):
         max_pos_extra = self.max_pos << extra_width
         max_neg_extra = (-1 * max_pos_extra) - 1
 
-        self.sync += [
+        self.sync += If(
+            self.update_en,
             If(self.reset.storage, self.int_reg.eq(0))
             .Elif(
                 self.int_sum > max_pos_extra,  # positive saturation
@@ -98,8 +101,8 @@ class PID(Module, AutoCSR):
                 self.int_sum < max_neg_extra,  # negative saturation
                 self.int_reg.eq(max_neg_extra),
             )
-            .Else(self.int_reg.eq(self.int_sum))
-        ]
+            .Else(self.int_reg.eq(self.int_sum)),
+        )
 
     def calculate_d(self):
         self.d_shift = 6
@@ -116,11 +119,12 @@ class PID(Module, AutoCSR):
         kd_reg_r = Signal((out_width, True))
 
         self.output_d = Signal((out_width, True))
-        self.sync += [
+        self.sync += If(
+            self.update_en,
             kd_reg.eq(kd_mult >> (self.coeff_width - self.d_shift)),
             kd_reg_r.eq(kd_reg),
             self.output_d.eq(kd_reg - kd_reg_r),
-        ]
+        )
 
     def calculate_sum(self):
         self.pid_sum = Signal(
@@ -142,4 +146,7 @@ class PID(Module, AutoCSR):
 
         # sync is required here, otherwise we get artifacts when one of the
         # signals changes sign
-        self.sync += [self.pid_sum.eq(self.output_p + self.int_out + self.output_d)]
+        self.sync += If(
+            self.update_en,
+            self.pid_sum.eq(self.output_p + self.int_out + self.output_d),
+        )

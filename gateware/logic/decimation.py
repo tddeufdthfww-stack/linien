@@ -28,3 +28,35 @@ class Decimate(Module):
         self.output = Signal(1)
 
         self.sync += [self.output.eq(Array(self.decimation_counter)[self.decimation])]
+
+
+class DecimateEnable(Module):
+    """125 MHz clock-enable replacement for the 250 MHz generated-clock divider.
+
+    Stable settings 0..15 have the same average update rate as Decimate.
+    For setting 0, the established divider model has a +4 ns sampling
+    phase change: the original edge occurs between sys rising edges.
+    Out-of-range values select the last entry, preserving Migen Array's
+    original divider behavior instead of disabling updates.
+    """
+
+    def __init__(self, max_decimation):
+        assert max_decimation >= 2
+        self.decimation = Signal(max=max_decimation + 1)
+        self.decimation_counter = Signal(max_decimation - 1)
+        self.started = Signal()
+        self.enable = Signal()
+
+        pulses = [1]
+        for index in range(1, max_decimation):
+            pulses.append(
+                self.decimation_counter[:index] == (1 << (index - 1))
+            )
+
+        self.comb += self.enable.eq(
+            self.started & Array(pulses)[self.decimation]
+        )
+        self.sync += [
+            self.decimation_counter.eq(self.decimation_counter + 1),
+            self.started.eq(1),
+        ]

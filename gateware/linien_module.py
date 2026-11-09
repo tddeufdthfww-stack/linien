@@ -19,7 +19,6 @@ from linien_common.common import OutputChannel
 from migen import (
     Array,
     Cat,
-    ClockDomain,
     ClockDomainsRenamer,
     If,
     Module,
@@ -32,7 +31,7 @@ from misoc.interconnect.csr import AutoCSR, CSRStatus, CSRStorage
 
 from .logic.autolock import FPGAAutolock
 from .logic.chains import FastChain, SlowChain, cross_connect
-from .logic.decimation import Decimate
+from .logic.decimation import DecimateEnable
 from .logic.delta_sigma import DeltaSigma
 from .logic.iir import Iir
 from .logic.limit import LimitCSR
@@ -207,13 +206,10 @@ class LinienModule(Module, AutoCSR):
             offset_signal=self.logic.chain_b_offset_signed,
         )
 
-        _ = ClockDomainsRenamer("sys_slow")
-        sys_double = ClockDomainsRenamer("sys_double")
         max_decimation = 16
-        self.submodules.decimate = sys_double(Decimate(max_decimation))
-        self.clock_domains.cd_decimated_clock = ClockDomain()
-        decimated_clock = ClockDomainsRenamer("decimated_clock")
-        self.submodules.slow_chain = decimated_clock(SlowChain())
+        # Runs in the 125 MHz sys domain. No data-dependent generated clock.
+        self.submodules.decimate = DecimateEnable(max_decimation)
+        self.submodules.slow_chain = SlowChain()
 
         self.submodules.scopegen = ScopeGen(signal_width)
 
@@ -306,7 +302,7 @@ class LinienModule(Module, AutoCSR):
             self.slow_chain.pid.running.eq(self.logic.autolock.lock_running.status),
             self.slow_chain.input.eq(self.logic.control_signal >> s),
             self.decimate.decimation.eq(self.logic.slow_decimation.storage),
-            self.cd_decimated_clock.clk.eq(self.decimate.output),
+            self.slow_chain.update_en.eq(self.decimate.enable),
             self.logic.slow_value.status.eq(self.slow_chain.output),
         ]
 
