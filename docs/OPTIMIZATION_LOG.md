@@ -78,3 +78,14 @@
 - CDC-1=436（R2b444），其余14/4/1/2/374不变；物理CDC未证明。默认DRC229条仍未签核。
 - 原始报告、输入SHA、失败初次契约用例及恢复源码见experiments/r4_pipeline_20261109/r4a_logs_reports.zip和r4a_metrics.json。没有生成/部署bitstream或上板/激光闭环。
 - 下一对照R4b：仅对error_s1输出加KEEP，保留独立S1误差寄存器，避免吸入DSP AREG；不改变运算、流水级数或16ns延迟。依据AMD UG901 DSP Block Implementation（https://docs.amd.com/r/2025.1-English/ug901-vivado-synthesis/DSP-Block-Implementation），KEEP可限制乘法操作数寄存器吸入DSP。效果需本机Vivado2020.1实际证明，不预判时序通过。
+
+
+## 13. 2026-11-09 / R4b KEEP共享误差级对照
+
+- R4a提交4e98ddb431ad19d6233399e6e4cb1740bee5e75d；R4b代码提交6846b99543e9abe1fed75b0fc55a07e605c80b5b。R4b判定：REJECTED / not merged into R4a；当前保留候选R4a，仍STA_FAIL，未合并R2b、未部署。
+- 相比R4a仅新增error_s1输出KEEP，数学/协议/两级结构不变，新增反馈延迟仍16ns。8项pytest、两种位宽延迟参考/边界/reset/CE/真实CSR、全部原CE/AXI/CDC/四相位PASS；CSR映射及XDC字节与R2b相同。
+- 综合WNS/TNS=-6.288/-4154.476ns；route=-5.820/-9325.396ns、Setup失败端点6960，WHS/WPWS=0.022/1.500ns。综合/route COMPLETE与STA FAIL分开记录。
+- DSP内部和普通数据/控制引脚细分、实际AREG/BREG/PREG、CDC完整差集、输入SHA与所有PASS/FAIL见docs/R4_RESULT_20261109.md和experiments/r4_pipeline_20261109/metrics.json。两组源码与ZIP完整性已检查，测试输入未变化。
+- CDC-1=435，对R2b规范化新增357/移除366；物理CDC未证明。no_clock/内部未约束/I/O仍1/2/44/46。默认DRC与其它剩余路径按原始报告保留，未签核。
+- 原工程168文件SHA未变，R2b/R3工作树干净。pid.py、chains.py、decimation/limit、AXI/CDC/时钟/板级代码在Git中保持R2b原样；新候选只在新分支/文件实现。
+- 下一轮根据实际最差路径安排：快速误差级和积分饱和物理收敛、慢PID事务/下游采样协议、robust动态延迟/abs/阈值链与CSR译码分别评估；不能把当前结果当作最终可上板版本，也没有证据说明125MHz目标“无论如何不可能”。
