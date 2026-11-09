@@ -20,6 +20,7 @@ from migen import Array, If, Module, Signal, bits_for
 from misoc.interconnect.csr import AutoCSR, CSRStatus, CSRStorage
 
 from .autolock_utils import SumDiffCalculator
+from .magnitude_compare import SignedMagnitudeGE
 
 ROBUST_AUTOLOCK_FPGA_DELAY = 3
 
@@ -126,7 +127,6 @@ class RobustAutolock(Module, AutoCSR):
         # detect right now
         self.current_instruction_idx = Signal(bits_for(AUTOLOCK_MAX_N_INSTRUCTIONS - 1))
         current_peak_height = Signal((peak_height_bit, True))
-        abs_current_peak_height = Signal.like(current_peak_height)
         current_wait_for = Signal(x_data_length_bit)
         self.comb += [
             current_peak_height.eq(
@@ -148,7 +148,6 @@ class RobustAutolock(Module, AutoCSR):
 
         # this is the signal that's used for detecting peaks
         sum_diff = Signal((len(self.sum_diff_calculator.output), True))
-        abs_sum_diff = Signal.like(sum_diff)
         self.comb += [
             self.sum_diff_calculator.writing_data_now.eq(self.writing_data_now),
             self.sum_diff_calculator.restart.eq(self.at_start),
@@ -166,16 +165,14 @@ class RobustAutolock(Module, AutoCSR):
         # have we detected all peaks (and can turn on the lock)?
         all_instructions_triggered = Signal()
 
+        self.submodules.magnitude = SignedMagnitudeGE(
+            len(sum_diff), len(current_peak_height))
+
         self.comb += [
             sign_equal.eq((sum_diff > 0) == (current_peak_height > 0)),
-            If(sum_diff >= 0, abs_sum_diff.eq(sum_diff)).Else(
-                abs_sum_diff.eq(-1 * sum_diff)
-            ),
-            If(
-                current_peak_height >= 0,
-                abs_current_peak_height.eq(current_peak_height),
-            ).Else(abs_current_peak_height.eq(-1 * current_peak_height)),
-            over_threshold.eq(abs_sum_diff >= abs_current_peak_height),
+            self.magnitude.value.eq(sum_diff),
+            self.magnitude.threshold.eq(current_peak_height),
+            over_threshold.eq(self.magnitude.match),
             waited_long_enough.eq(waited_for > current_wait_for),
             all_instructions_triggered.eq(
                 self.current_instruction_idx >= self.N_instructions.storage

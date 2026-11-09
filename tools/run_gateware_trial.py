@@ -60,7 +60,7 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     env = os.environ.copy()
     env['PYTHONDONTWRITEBYTECODE'] = '1'
-    env['PYTHONPATH'] = str(ROOT) + os.pathsep + str(ROOT / 'linien-common')
+    env['PYTHONPATH'] = os.pathsep.join(str(ROOT / p) for p in ('.', 'linien-common', 'linien-server'))
     env['MPLBACKEND'] = 'Agg'
     files = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
     files += subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=ROOT).decode().split('\0')
@@ -80,7 +80,7 @@ def main():
     try:
         execute([sys.executable, '-c', 'import sys, importlib.metadata as m, linien_common; '
                  'print(sys.version); print(linien_common.__file__); '
-                 'print("\\n".join(n+"=="+m.version(n) for n in ["migen","misoc","linien-common","pytest","pytest-plt"]))'],
+                 'print("\\n".join(n+"=="+m.version(n) for n in ["migen","misoc","linien-common","pytest","pytest-plt","linien-server"]))'],
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
@@ -90,6 +90,14 @@ def main():
                             '--basetemp', str(out / 'pytest-temp')], ROOT, out, 'pytest', env)
             if not re.search(r'\b\d+ passed\b', text):
                 raise RuntimeError('pytest did not execute passing tests')
+            if (ROOT / 'gateware/tests/timing/tb_autolock_compare.py').exists():
+                execute([sys.executable, '-m', 'gateware.tests.timing.tb_autolock_compare'],
+                        ROOT, out, 'autolock_compare', env, 'AUTOLOCK_COMPARE_SUITE_PASS')
+                text = execute([sys.executable, '-m', 'pytest', 'tests/test_robust_autolock.py',
+                                '-m', 'not slow', '-q', '--basetemp', str(out / 'pytest-robust-temp')],
+                               ROOT, out, 'pytest_robust', env)
+                if not re.search(r'\b5 passed\b', text):
+                    raise RuntimeError('robust non-slow regression did not execute 5 passing tests')
             custom = ROOT / 'gateware/tests/timing/tb_ce_saturation.py'
             if custom.exists():
                 execute([sys.executable, '-m', 'gateware.tests.timing.tb_ce_saturation'],
