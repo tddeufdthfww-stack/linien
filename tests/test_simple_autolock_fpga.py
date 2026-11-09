@@ -18,7 +18,7 @@
 from pathlib import Path
 
 from linien_common.common import AutolockMode
-from migen import run_simulation
+from migen import Module, run_simulation
 
 from gateware.linien_module import LinienLogic
 from gateware.logic.pid import PID
@@ -120,16 +120,57 @@ def test_root():
                     pid_running = yield pid.running
                     assert pid_running == 0
 
-    dut = LinienLogic()
+    dut = LinienLogic(pid_factory=PID)
     run_simulation(
         dut, tb(dut, lock_target_position=0), vcd_name=VCD_DIR / "root_target0.vcd"
     )
-    dut = LinienLogic()
+    dut = LinienLogic(pid_factory=PID)
     run_simulation(
         dut, tb(dut, lock_target_position=-40), vcd_name=VCD_DIR / "root_target-40.vcd"
     )
-    dut = LinienLogic()
+    dut = LinienLogic(pid_factory=PID)
     run_simulation(dut, tb(dut, 51), vcd_name=VCD_DIR / "root_target_51.vcd")
+
+
+def test_pipeline_root_exact_latency():
+    """Control/sweep timing is unchanged; PID output is exactly two clocks late."""
+    for target in (0, -40, 51):
+        dut = Module()
+        dut.submodules.reference = reference = LinienLogic(pid_factory=PID)
+        dut.submodules.candidate = candidate = LinienLogic()
+
+        def bench():
+            for root in (reference, candidate):
+                yield root.autolock.autolock_mode.storage.eq(AutolockMode.SIMPLE)
+                yield root.autolock.fast.target_position.storage.eq(target)
+                yield root.sweep.step.storage.eq(1 << root.sweep.step_shift)
+                yield root.sweep.run.storage.eq(1)
+                yield root.pid.input.eq(4096)
+                yield root.pid.kp.storage.eq(4096)
+                yield root.pid.ki.storage.eq(0)
+                yield root.pid.reset.storage.eq(1)
+            history = [0, 0]
+            locked = unlocked_after_lock = False
+            for cycle in range(750):
+                if cycle == 100:
+                    for root in (reference, candidate):
+                        yield root.sweep.sweep.turn.eq(1)
+                        yield root.autolock.request_lock.storage.eq(1)
+                if cycle == 500:
+                    for root in (reference, candidate):
+                        yield root.autolock.request_lock.storage.eq(0)
+                yield
+                running = (yield reference.pid.running)
+                assert running == (yield candidate.pid.running), ('running',target,cycle)
+                assert (yield reference.sweep.y) == (yield candidate.sweep.y), ('sweep',target,cycle)
+                expected = history.pop(0)
+                history.append((yield reference.pid.pid_out))
+                assert (yield candidate.pid.pid_out) == expected, ('latency',target,cycle,expected)
+                locked |= bool(running)
+                unlocked_after_lock |= locked and cycle > 500 and not running
+            assert locked and unlocked_after_lock, ('lock/unlock not exercised',target)
+            print('PIPELINE_AUTOLOCK_EXACT_2SYS_PASS target=%d cycles=750' % target)
+        run_simulation(dut, bench())
 
 
 if __name__ == "__main__":

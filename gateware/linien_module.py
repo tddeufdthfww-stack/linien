@@ -36,7 +36,7 @@ from .logic.delta_sigma import DeltaSigma
 from .logic.iir import Iir
 from .logic.limit import LimitCSR
 from .logic.modulate import Modulate
-from .logic.pid import PID
+from .logic.pid_pipeline import PipelinedPID
 from .logic.sweep import SweepCSR
 from .lowlevel.analog import PitayaAnalog
 from .lowlevel.crg import CRG
@@ -48,9 +48,10 @@ from .lowlevel.xadc import XADC
 
 
 class LinienLogic(Module, AutoCSR):
-    def __init__(self, width=14, signal_width=25, chain_factor_width=8, coeff_width=25):
+    def __init__(self, width=14, signal_width=25, chain_factor_width=8, coeff_width=25,
+                 pid_factory=PipelinedPID):
         self.init_csr(width, chain_factor_width)
-        self.init_submodules(width, signal_width)
+        self.init_submodules(width, signal_width, pid_factory)
         self.connect_pid()
         self.connect_everything(width, signal_width, coeff_width)
 
@@ -81,13 +82,13 @@ class LinienLogic(Module, AutoCSR):
         self.chain_b_offset_signed = Signal((width, True))
         self.out_offset_signed = Signal((width, True))
 
-    def init_submodules(self, width, signal_width):
+    def init_submodules(self, width, signal_width, pid_factory):
         self.submodules.mod = Modulate(width=width)
         self.submodules.sweep = SweepCSR(width=width, step_width=30, step_shift=24)
         self.submodules.limit_error_signal = LimitCSR(width=signal_width, guard=4)
         self.submodules.limit_fast1 = LimitCSR(width=width, guard=5)
         self.submodules.limit_fast2 = LimitCSR(width=width, guard=5)
-        self.submodules.pid = PID(width=signal_width)
+        self.submodules.pid = pid_factory(width=signal_width)
         self.submodules.autolock = FPGAAutolock(width=width, max_delay=8191)
 
     def connect_pid(self):
