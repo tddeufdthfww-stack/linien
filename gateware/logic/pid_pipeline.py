@@ -13,6 +13,9 @@ from .pid import PID
 class PipelinedPID(PID):
     def __init__(self, width=14, coeff_width=14):
         self.error_s1 = Signal((width + 1, True))
+        # Preserve the shared frontend FFs instead of absorbing them into DSP
+        # AREGs; this is a placement experiment, with identical cycle behavior.
+        self.error_s1.attr.add(("KEEP", "TRUE"))
         self.kp_s1 = Signal((coeff_width, True))
         self.ki_s1 = Signal((coeff_width, True))
         self.kd_s1 = Signal((coeff_width, True))
