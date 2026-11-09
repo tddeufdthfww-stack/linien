@@ -1,5 +1,7 @@
 # Linien v2.1.0 → Red Pitaya STEMlab 125-14 PRO Z7020 Gen 2
 
+> **2026-11-09 R3更新**：本分支保留一个功能等价但时序恶化的失败候选，标记REJECTED，不合并R2b。R3 route WNS=-8.510ns；冻结R2b=-5.605ns，二者均STA失败。最新明细见第12节及 `docs/R3_RESULT_20261109.md`。
+
 > **2026-11-09 优化分支更新**：当前 `opt/ce-saturation-20261106` 已包含经过本轮功能/综合/route验证的 CE 兼容候选和零新增流水级的饱和位解码。优化前版本已保存到 `backup/20261106-pre-optimization`（`a39000a`）；原目录仍未覆盖。下文 0～10 节是 2026-11-06 历史快照，“未合并”针对当时基线，不能据此判断当前优化分支没有 CE。最新结果、修改与残余风险见第11节和 `docs/OPTIMIZATION_LOG.md`。**最终 STA 仍失败，未生成/部署新 bitstream。**
 
 **Codex 持续开发交接文档 / 工程状态快照**  
@@ -332,3 +334,21 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - 后续带寄存器方案必须明确8/16ns等新增输入/输出延迟、保留P/I/D固有递推、携带采样/配置/reset/valid，并防止稀疏CE误变成整慢速tick延迟；本轮未实施。
 - R2b no_clock=1、未约束内部端点=2（DNA）；no_input_delay=44、no_output_delay=46。CDC仍有Critical/Warning，默认DRC仍有241项Warning/Advisory。WHS/WPWS为正只对应当前已分析路径，**未完成CDC、I/O、DRC与完整STA签核**。
 - R2b CDC-1=444，R1=439；差集为15条新增/10条移除，均为既有bridge payload到CSR接收寄存器副本的变化。没有新增时钟域的源码修改，但不能据此豁免，必须继续验证这些副本的物理CDC窗口。
+
+
+## 12. 2026-11-09 / R3 快速PID前端零新增延迟试验
+
+- **REJECTED / 不合并R2b**。基线R2b `4efa38fda4b4c315b744443a537e9d398843cbad` 保持不变；R3代码提交 `d57c0e2ada0dd57f72d29f1c380a444c323128dd`，独立分支 `opt/r3-fast-front-20261109`，目录 `D:\RP_Dev\linien_trials\20261109-r3-fast-front`。原工程168文件SHA核查无变化，R2b工作树干净。
+- 先只读打开R2b routed DCP，复现快速/D=-5.605、慢速/D=-5.242、/S=-5.414ns；慢积分/R接const0无计时路径，整个慢PID/R=+3.533ns；慢积分CE=+0.258ns，但整个慢PID CSR/CE=-0.422ns、快速CSR/CE=-1.660ns。完整起终点、级数、DSP/CARRY/LUT及logic/route见 `docs/R3_RESULT_20261109.md`。
+- 数学论证先记录于 `docs/R3_PLAN.md`，只试6位分块借位lookahead/carry-select误差减法。快速实例开启，生产慢实例默认关闭；保留signed输入/unsigned setpoint的w+1位模截断、乘法/右移/饱和、reset/CE/CSR及P/I/D原有寄存器。新增反馈/采样流水级 **0**，新增延迟 **0ns**。
+- **功能PASS**：7项pytest、14/25位1600周期逐状态差分与U/L边界、reset/CE、两种位宽真实CSRBank读写、完整divider/Limit回归、65536对缩小位宽借位穷举、14/25位5196/5361组误差oracle（各测running=0/1）、AXI/CDC/integration和四相位XSim。CSR map语义一致；XDC SHA256与R2b相同。
+- **综合COMPLETE / 综合STA FAIL**：R3 WNS/TNS=-9.226/-4855.070ns；R2b=-6.094/-4563.029ns。
+- **route COMPLETE / 最终Setup FAIL**：R3 WNS/TNS=-8.510/-13011.209ns、违规端点7407；R2b=-5.605/-10473.525ns、6813。WNS恶化2.905ns、TNS恶化2537.684ns、端点增加594，拒绝采用。
+- routed Hold/Pulse在当前约束下PASS：WHS=+0.029、WPWS=+1.500ns；0 hold/pulse失败端点。23734条可路由网全部完成、routing errors=0。这不替代最终时序/CDC/I/O签核。
+- R3快速最差从pid_only_mode/C到int_reg[10]/D，16.410ns=logic8.031+route8.379，19级（CARRY4=9、DSP=1、LUT2=2、LUT4=1、LUT5=2、LUT6=4）。相对R2b各自最差路径，carry减少但布线增加3.149ns；不能以级数减少推断改善。
+- 未改慢PID算法，但综合映射由FDSE/S变为FDRE/R；R3慢/R=-7.177、/D=-5.737、整个慢PID/CE=-0.779ns。积分子集CE=+1.043ns不能代替整组检查；快/慢反馈路径+1.168/+0.523ns。
+- no_clock=1、内部未约束端点=2、I/O缺口44/46仍在。CDC-1=444→447，其他14/4/1/2/374不变；详表差集新增10/移除7，均为既有bridge地址/写数据到CSR接收副本。**物理CDC安全未证明**，默认DRC241→238也不是签核。
+- 失败源码SHA256：`bac09aa84963259fbf6b5bcdab050ea57bb4aed8f5f42ff0719ad2518004d909`；全输入SHA、top.v/XDC/DCP哈希、所有命令/退出码/PASS标记、实际报告及失败诊断脚本日志归档于 `experiments/r3_fast_front_20261109`。本地DCP未提交Git；测试产物目录 `20261109_104835_r3_error_select`。
+- 首两次只读工具附加cell审计因Vivado属性API不支持而FAIL，第三次修正后PASS；最终通用工具分别在R2b/R3 DCP上PASS，DCP输入SHA未变化。工具FAIL不混记为设计功能失败或通过。
+- 下一步保持R2b为冻结起点，停止本carry-select路线；单次失败不证明零延迟空间完全耗尽。若分段预算确认需要流水线，先评估A误差快照1级/8ns、B误差+乘积2级/16ns，保持积分反馈递推并对齐P/I/D、增益、running/reset/valid与稀疏CE；激光环路相位/稳定性预算见完整报告。**本轮两方案均NOT IMPLEMENTED**。
+- 没有新增false/multicycle/clock-group/放宽周期，没有生成/部署bitstream，没有板上或激光闭环测试。R2b和R3都不是可上板正式版本。

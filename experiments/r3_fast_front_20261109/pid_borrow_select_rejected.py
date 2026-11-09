@@ -1,0 +1,203 @@
+# This file is part of Linien and based on redpid.
+#
+# Copyright (C) 2016-2024 Linien Authors (https://github.com/linien-org/linien#license)
+#
+# Linien is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Linien is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Linien.  If not, see <http://www.gnu.org/licenses/>.
+
+from migen import Cat, Constant, If, Module, Mux, Signal
+from misoc.interconnect.csr import AutoCSR, CSRStorage
+
+
+class PID(Module, AutoCSR):
+    def __init__(self, width=14, coeff_width=14, error_chunks=False):
+        self.width = width
+        self.coeff_width = coeff_width
+        self.error_chunks = error_chunks
+
+        self.input = Signal((width, True))
+        self.running = Signal()
+        # Only the data-path registers are clock-enabled; CSR writes are not.
+        self.update_en = Signal(reset=1)
+
+        self.max_pos = (1 << (width - 1)) - 1
+        self.max_neg = (-1 * self.max_pos) - 1
+
+        self.calculate_error_signal()
+        self.calculate_p()
+        self.calculate_i()
+        self.calculate_d()
+        self.calculate_sum()
+
+    def calculate_error_signal(self):
+        self.setpoint = CSRStorage(self.width)
+        setpoint_signed = Signal((self.width, True))
+        self.comb += [setpoint_signed.eq(self.setpoint.storage)]
+
+        self.error = Signal((self.width + 1, True))
+
+        difference = self.input - self.setpoint.storage
+        if self.error_chunks:
+            # Same modular signed-input/unsigned-setpoint subtraction as above.
+            # Parallel six-bit borrow lookahead and carry-select; no registers.
+            a = Signal(self.width + 1)
+            b = Signal(self.width + 1)
+            self.comb += [a.eq(self.input), b.eq(self.setpoint.storage)]
+            generate, propagate, pieces = [], [], []
+            for lo in range(0, self.width + 1, 6):
+                hi = min(lo + 6, self.width + 1)
+                ai, bi = a[lo:hi], b[lo:hi]
+                borrow = Constant(0, 1)
+                for j in range(len(generate)):
+                    term = generate[j]
+                    for pk in propagate[j+1:]:
+                        term = term & pk
+                    borrow = borrow | term
+                d0, d1 = Signal(hi-lo), Signal(hi-lo)
+                result, g, p = Signal(hi-lo), Signal(), Signal()
+                self.comb += [d0.eq(ai-bi), d1.eq(ai-bi-1),
+                              result.eq(Mux(borrow, d1, d0)),
+                              g.eq(ai < bi), p.eq(ai == bi)]
+                generate.append(g)
+                propagate.append(p)
+                pieces.append(result)
+            difference = Cat(*pieces)
+
+        self.comb += [
+            If(self.running, self.error.eq(difference)).Else(
+                self.error.eq(0)
+            )
+        ]
+
+    def calculate_p(self):
+        self.kp = CSRStorage(self.coeff_width)
+        kp_signed = Signal((self.coeff_width, True))
+        self.comb += [kp_signed.eq(self.kp.storage)]
+
+        kp_mult = Signal((self.width + self.coeff_width, True))
+        self.comb += [kp_mult.eq(self.error * kp_signed)]
+
+        self.output_p = Signal((self.width, True))
+        self.comb += [self.output_p.eq(kp_mult >> (self.coeff_width - 2))]
+
+        self.kp_mult = kp_mult
+
+    def calculate_i(self):
+        self.ki = CSRStorage(self.coeff_width)
+        self.reset = CSRStorage()
+
+        ki_signed = Signal((self.coeff_width, True))
+        self.comb += [ki_signed.eq(self.ki.storage)]
+
+        self.ki_mult = Signal((1 + self.width + self.coeff_width, True))
+
+        self.comb += [self.ki_mult.eq((self.error * ki_signed) >> 4)]
+
+        int_reg_width = self.width + self.coeff_width + 4
+        extra_width = int_reg_width - self.width
+        self.int_reg = Signal((int_reg_width, True))
+        self.int_sum = Signal((int_reg_width + 1, True))
+
+        self.int_out = Signal((self.width, True))
+
+        self.comb += [
+            self.int_sum.eq(self.ki_mult + self.int_reg),
+            self.int_out.eq(self.int_reg >> extra_width),
+        ]
+
+        max_pos_extra = self.max_pos << extra_width
+        max_neg_extra = (-1 * max_pos_extra) - 1
+
+        # Preserve the exact fractional saturation boundaries U and -U-1.
+        # Decode the exact sign/boundary bit patterns without a wide magnitude
+        # comparator. Keep the carry/sign bit of the N+1-bit sum. No register
+        # or numerical truncation is added.
+        overflow_pos = Signal()
+        overflow_neg = Signal()
+        sum_low = self.int_sum[:extra_width]
+        sum_middle = self.int_sum[extra_width:-2]
+        self.comb += [
+            overflow_pos.eq(
+                ~self.int_sum[-1]
+                & (self.int_sum[-2]
+                   | ((sum_middle == (1 << (self.width - 1)) - 1)
+                      & (sum_low != 0)))
+            ),
+            overflow_neg.eq(
+                self.int_sum[-1]
+                & (~self.int_sum[-2]
+                   | ((sum_middle == 0)
+                      & (sum_low != (1 << extra_width) - 1)))
+            ),
+        ]
+
+        self.sync += If(
+            self.update_en,
+            If(self.reset.storage, self.int_reg.eq(0))
+            .Elif(
+                overflow_pos,
+                self.int_reg.eq(max_pos_extra),
+            )
+            .Elif(
+                overflow_neg,
+                self.int_reg.eq(max_neg_extra),
+            )
+            .Else(self.int_reg.eq(self.int_sum)),
+        )
+
+    def calculate_d(self):
+        self.d_shift = 6
+        mult_width = self.coeff_width + self.width + 2
+        out_width = mult_width - self.coeff_width + self.d_shift + 1
+
+        self.kd = CSRStorage(self.coeff_width)
+        kd_signed = Signal((self.coeff_width, True))
+        kd_mult = Signal((mult_width, True))
+
+        self.comb += [kd_signed.eq(self.kd.storage), kd_mult.eq(self.error * kd_signed)]
+
+        kd_reg = Signal((out_width, True))
+        kd_reg_r = Signal((out_width, True))
+
+        self.output_d = Signal((out_width, True))
+        self.sync += If(
+            self.update_en,
+            kd_reg.eq(kd_mult >> (self.coeff_width - self.d_shift)),
+            kd_reg_r.eq(kd_reg),
+            self.output_d.eq(kd_reg - kd_reg_r),
+        )
+
+    def calculate_sum(self):
+        self.pid_sum = Signal(
+            (len(self.output_p) + len(self.int_out) + len(self.output_d), True)
+        )
+        self.pid_out = Signal((self.width, True))
+
+        self.comb += [
+            If(
+                self.pid_sum > self.max_pos,  # positive overflow
+                self.pid_out.eq(self.max_pos),
+            )
+            .Elif(
+                self.pid_sum < self.max_neg,  # negative overflow
+                self.pid_out.eq(self.max_neg),
+            )
+            .Else(self.pid_out.eq(self.pid_sum[: self.width]))
+        ]
+
+        # sync is required here, otherwise we get artifacts when one of the
+        # signals changes sign
+        self.sync += If(
+            self.update_en,
+            self.pid_sum.eq(self.output_p + self.int_out + self.output_d),
+        )
