@@ -28,10 +28,10 @@ REPO_ROOT_DIR = Path(__file__).resolve().parents[1]
 
 # Vivado 2020.1 generated Z20 Gen 2 PS Block Design.
 # Update this path if the Vivado reference project is moved.
-GEN2_PS_BD = Path(
-    r"D:\RP_Dev\Vivado_Projects\linien_ps_g2_ref"
-    r"\linien_ps_g2_ref.srcs\sources_1\bd\linien_ps_only\linien_ps_only.bd"
-)
+GEN2_PS_BD = Path(os.environ.get(
+    "LINIEN_PS_BD",
+    REPO_ROOT_DIR / "hardware" / "ps_reference" / "linien_ps_only" / "linien_ps_only.bd",
+))
 GEN2_PS_WRAPPER = GEN2_PS_BD.parent / "hdl" / "linien_ps_only_wrapper.v"
 
 
@@ -74,9 +74,12 @@ if __name__ == "__main__":
     platform = Platform()
     root = RootModule(platform)
 
-    with open(
-        REPO_ROOT_DIR / "linien-server" / "linien_server" / "csrmap.py", "w"
-    ) as fil:
+    csrmap_path = Path(os.environ.get(
+        "LINIEN_CSRMAP_OUTPUT",
+        REPO_ROOT_DIR / "linien-server" / "linien_server" / "csrmap.py",
+    ))
+    csrmap_path.parent.mkdir(parents=True, exist_ok=True)
+    with csrmap_path.open("w") as fil:
         py_csrconstants(root.linien.csrbanks.constants, fil)
         csr = get_csrmap(root.linien.csrbanks.banks)
         py_csrmap(csr, fil)
@@ -100,7 +103,9 @@ if __name__ == "__main__":
         ]
     )
 
-    build_dir = REPO_ROOT_DIR / "gateware" / "build"
+    build_dir = Path(os.environ.get(
+        "LINIEN_FPGA_BUILD_DIR", REPO_ROOT_DIR / "gateware" / "build"
+    ))
     preview = os.environ.get("LINIEN_FPGA_PREVIEW") == "1"
     platform.build(root, build_name="top", build_dir=build_dir, run=not preview)
 

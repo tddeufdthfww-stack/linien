@@ -52,9 +52,11 @@ module tb_bus_clk_bridge;
     $display("[CLOCK] Phase offset = %0.3f ns",
              dst_t0 - sys_t0);
 
-    if ((sys_t1 - sys_t0) != 8.0 ||
-        (dst_t1 - dst_t0) != 8.0 ||
-        (dst_t0 - sys_t0) != (phase_ps / 1000.0))
+    // Compare integer picoseconds, not exact binary floating-point equality.
+    // Non-binary fractions such as 1 ps otherwise spuriously fail at 1 ps precision.
+    if ($rtoi((sys_t1 - sys_t0) * 1000.0 + 0.5) != 8000 ||
+        $rtoi((dst_t1 - dst_t0) * 1000.0 + 0.5) != 8000 ||
+        $rtoi((dst_t0 - sys_t0) * 1000.0 + 0.5) != phase_ps)
       $fatal(1, "Clock configuration mismatch");
   end
 
