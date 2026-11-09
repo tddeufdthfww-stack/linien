@@ -94,6 +94,3 @@ puts R5_PID_AUTOLOCK_READONLY_COMPLETE
     exit 3
 }
 exit 0
-
-
-

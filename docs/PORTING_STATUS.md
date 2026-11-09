@@ -1,5 +1,7 @@
 # Linien v2.1.0 → Red Pitaya STEMlab 125-14 PRO Z7020 Gen 2
 
+> **R5更新 2026-11-09**：本分支保留功能等价但全局时序恶化的R5失败候选（-6.027ns），不合并R4a；当前保留R4a（-4.822ns，已有16ns快速延迟），仍STA FAIL。最新见第14节和docs/R5_RESULT_20261109.md。
+
 > **R4更新 2026-11-09**：两级快速PID新增16ns，当前保留R4a候选；功能按明确延迟契约通过、综合和route完成、最终STA失败。R4a route WNS=-4.822ns；R4b=-5.820ns。R2b/原工程/R3不变。最新见第12/13节及docs/R4_RESULT_20261109.md。
 
 > **2026-11-09 优化分支更新**：当前 `opt/ce-saturation-20261106` 已包含经过本轮功能/综合/route验证的 CE 兼容候选和零新增流水级的饱和位解码。优化前版本已保存到 `backup/20261106-pre-optimization`（`a39000a`）；原目录仍未覆盖。下文 0～10 节是 2026-11-06 历史快照，“未合并”针对当时基线，不能据此判断当前优化分支没有 CE。最新结果、修改与残余风险见第11节和 `docs/OPTIMIZATION_LOG.md`。**最终 STA 仍失败，未生成/部署新 bitstream。**
@@ -360,3 +362,16 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - CDC-1=435，对R2b规范化新增357/移除366；物理CDC未证明。no_clock/内部未约束/I/O仍1/2/44/46。默认DRC与其它剩余路径按原始报告保留，未签核。
 - 原工程168文件SHA未变，R2b/R3工作树干净。pid.py、chains.py、decimation/limit、AXI/CDC/时钟/板级代码在Git中保持R2b原样；新候选只在新分支/文件实现。
 - 下一轮根据实际最差路径安排：快速误差级和积分饱和物理收敛、慢PID事务/下游采样协议、robust动态延迟/abs/阈值链与CSR译码分别评估；不能把当前结果当作最终可上板版本，也没有证据说明125MHz目标“无论如何不可能”。
+
+
+## 14. 2026-11-09 / R5 autolock零新增延迟比较链
+
+- **REJECTED / 不合并R4a**。代码提交b5441cac571d6807564621f63effe43789e3a89f，独立分支opt/r5-autolock-compare-20261109；基线R4a记录fc1b424保持原样。R5不新增延迟，累计快速PID仍为R4a的16ns；生产慢PID/原PID核/时钟/AXI/CDC未改。
+- 新SignedMagnitudeGE以并行x-h/x+h和符号/零/最小负数边界单bit选择替代宽abs后比较；修改前数学论证见docs/R5_PLAN.md。原最小负数abs溢出语义保留；无新寄存器、无锁定/采样/补偿周期改变。
+- 功能PASS：原8pytest+既有robust非slow5项（slow2项NOT RUN）；48952组三方比较；4200周期完整robust状态逐拍差分；原流水线/CE/CSR/AXI/CDC四相位PASS。CSR map与XDC SHA一致。
+- 首轮robust收集缺少linien-server元数据FAIL，无综合/route；R5独立测试venv补元数据后重跑，DUT SHA未变。R2b依赖环境不改，完整237项捕获输入在归档前匹配；源码运行中变化列表为空。
+- 综合WNS/TNS=-7.289/-4299.831ns；实际route=-6.027/-9590.878ns、违规6219，WHS/WPWS=0.010/1.500ns。相对R4a WNS恶化1.205ns、TNS恶化1688.713ns，端点虽少69仍拒绝，不合并。
+- 固定time_scale[0]→GPIO0路径改善0.487ns（-4.822→-4.335），logic6.799→6.424、route5.905→5.745、carry16→13；autolock组仍-4.824ns到指令CE。全局转为慢PID/D=-6.027；不能以局部收益代替全局签核。
+- CDC-1=436→441，其他14/4/1/2/374不变；对三个相同Scope CE样本扇入集合只读核查一致，原始/规范化/目标投影差集完整保留，物理CDC仍未证明。DRC229→225仍未签核。DNA1/2、I/O44/46缺口不变。
+- 全部源SHA、逻辑/布线/原语路径、失败环境日志、测试/工具命令与退出码、源码副本/ZIP SHA见experiments/r5_autolock_20261109和docs/R5_RESULT_20261109.md。原工程168文件不变，R2b/R3/R4a干净；无bitstream/上板/激光操作。
+- 当前继续保留R4a候选（STA仍FAIL）。后续若扩大修改，先定义慢速事务/下游限幅配置对齐与reset规则，逐一处理慢PID、autolock、快速DSP输入和CSR控制瓶颈；不能据本轮拒绝判定125MHz不可能。
