@@ -1,5 +1,7 @@
 # Linien v2.1.0 → Red Pitaya STEMlab 125-14 PRO Z7020 Gen 2
 
+> **2026-11-09 优化分支更新**：当前 `opt/ce-saturation-20261106` 已包含经过本轮功能/综合/route验证的 CE 兼容候选和零新增流水级的饱和位解码。优化前版本已保存到 `backup/20261106-pre-optimization`（`a39000a`）；原目录仍未覆盖。下文 0～10 节是 2026-11-06 历史快照，“未合并”针对当时基线，不能据此判断当前优化分支没有 CE。最新结果、修改与残余风险见第11节和 `docs/OPTIMIZATION_LOG.md`。**最终 STA 仍失败，未生成/部署新 bitstream。**
+
 **Codex 持续开发交接文档 / 工程状态快照**  
 快照日期：**2026-11-06 15:22（UTC+08:00）**  
 状态：**仍在移植与时序整改；尚未完成可上板的签核版本**。  
@@ -286,3 +288,47 @@ WNS:        -6.402 ns
 ## 10. 给 Codex 的首次任务（建议原样使用）
 
 > 请阅读根目录 `AGENTS.md` 和 `docs/PORTING_STATUS.md`，然后检查当前 Git 状态和源码、现有 Vivado/XSim 报告。不要修改基线。先确认慢速 Clock Enable 候选是否已合并、源码是否与 2026-11-06 报告一致，以及慢速 PID 到 `/R` 的最长 125 MHz 路径为何经过乘法、饱和控制。给出可验证、可回退的最小优化方案，列明可能增加的反馈延迟和实验测试清单。确认后再在单独分支修改；先跑 Migen/RTL 回归和综合 A/B，对效果明显的方案再做布局布线。完成后更新状态文档，并报告全部未通过项目，严禁把 route success 当成 timing pass。
+
+
+## 11. 2026-11-09 / 首轮隔离优化结果
+
+- 状态：CANDIDATE / PASS-FUNCTIONAL / SYNTH-COMPLETE / ROUTE-COMPLETE / **STA-FAIL**。这四类状态不能互相替代；仅记录本机 Windows/Vivado 2020.1 实际结果，不宣称 GitHub CI、上板或闭环验证通过。
+- 基线备份分支 `backup/20261106-pre-optimization`，提交 `a39000a802c27e0b6a904491ced4adaaceadfa35`；R0 隔离工具提交 `843a321`；R1 CE 提交 `c76d00b`；R2b最终提交以Git历史和优化记录为准。
+- 独立工作目录 `D:\RP_Dev\linien_trials\20261106-ce-saturation`。原 `D:\RP_Dev\linien-v2.1.0` 的168个有效源码/测试/文档文件SHA256核对未变化。
+- 工具链：CPython 3.10.21、Migen 0.9.2、MiSoC 0.13（源码commit 98227d90be73ead8b797eca74da7c58d0c18f378）、Linien Common 2.1.0、Vivado 2020.1 build 2902540。完整环境锁定见 `requirements-gateware.lock.txt`。
+
+| 实现 | 综合 WNS/TNS (ns) | Routed WNS/TNS (ns) | Setup失败端点 | WHS/WPWS (ns) | 决策 |
+|---|---:|---:|---:|---:|---|
+| 冻结原版 B0 | -5.966 / -4180.463 | -5.354 / -9445.378 | 6300 | 0.027 / 1.500 | 已备份，复现历史结果 |
+| R1 CE兼容候选 | -5.966 / -4345.464 | -5.972 / -11109.872 | 7357 | 0.018 / 1.500 | 保留为架构候选，未签核 |
+| R2a 通用高位比较 | -7.460 / -4609.988 | -6.448 / -10445.604 | 6955 | 0.021 / 1.500 | **REJECTED**，WNS恶化，不保留在生产PID源码 |
+| R2b 直接位解码 | -6.094 / -4563.029 | -5.605 / -10473.525 | 6813 | 0.051 / 1.500 | 保留为候选，未签核 |
+| R2b 同DCP重复实现 | 不重综合 | -5.605 / -10473.525 | 6813 | 0.051 / 1.500 | 同工具/directive完整重现 |
+
+R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端点减少544。原版慢速逻辑时钟有大量未约束端点，不能用原版全局WNS更好来证明原版慢速链已经满足要求。所有新候选仍为125 MHz、8 ns约束，没有新增false path/clock group/multicycle或删除I/O约束来制造通过。
+
+实际保留的修改：
+
+1. `fpga_image_helper.py` 和 `tools/run_gateware_trial.py`：PS BD、build、CSR map生成输出可隔离；每轮新目录，PS输入副本与Vivado project平级，防止改写原PS项目；stdout/stderr/退出码与标记、CSR协议和源码哈希检查；不生成bitstream。
+2. `decimation.py`、`pid.py`、`limit.py`、`chains.py`、`linien_module.py`：固定sys125 MHz、数据寄存器CE，CSR读写不冻结。与旧候选不同，非法16..31保留Migen原Array默认最后一项的第15档行为，而非停更。k=0的+4ns采样相位差以及全局复位重启分频相位仍需明确接受，不宣称与旧逻辑时钟逐边沿等价。
+3. `pid.py`：只对积分饱和条件作位模式解码；保留N+1位和、精确U和L=-U-1、符号/右移/截断、CE和复位优先级。新增PID数据寄存器/流水级为0。快慢PID分别以14/25位对照冻结参考；没有修改setpoint编码、Ki量纲、P/I/D固有延迟或CSR接口。
+4. 新的 `tb_ce_saturation.py`：14/25位逐状态差分、极限积分状态、CE/reset、k=0..15至少三个真实事件、16/31完整事件、全部非法索引的动态用例、LimitCSR差分、CE=0真实CSRBank读写。Migen测试按其实际时钟调度构建参考模型，不以人工PASS替代断言。
+5. `tb_bus_clk_bridge.sv`：浮点时间相等比较改为整数皮秒，消除1ps相位误报；通信RTL未改变。
+6. `tools/report_pid_details.tcl`：仅打开已有routed DCP，分别输出快慢PID /D、/R、/S、/CE、反馈路径和DSP寄存器信息。`experiments/optimization_20261109` 保存失败候选、汇总和小体积日志/报告档案；不提交DCP/工具缓存。
+
+测试证据：
+
+- 每个实际候选均有7项既有pytest通过；CE和两种SAT候选均有 `PID_BIT_EXACT_PASS width=14/25`、完整分频事件、`DIVIDER_DYNAMIC_AND_INVALID_PASS`、`LIMIT_CE_BIT_EXACT_PASS`、`CSR_BUS_WRITE_READ_WITH_CE_ZERO_PASS`、`CE_SATURATION_SUITE_PASS`。
+- 五个既有AXI/CDC/integration bench均通过；bridge的1/1250/3999/7999ps四相位用例通过；显式检查read/write背压、snapshot、8写8读及16单周期ACK、integration/reset PASS标记。
+- B0功能证据目录 `20261109_092834_baseline`，其后构建隔离目录问题修正后的构建目录为 `20261109_093033_baseline`；功能相关输入SHA一致。失败运行日志保留，不冒充综合成功。
+- R1：`20261109_094155_ce`；R2a：`20261109_095327_ce_sat`；R2b：`20261109_100550_ce_sat_bits`；重复实现：`20261109_101735_ce_sat_bits_repeat_route`。均在 `gateware/build/trials/` 下。
+- 没有执行板上测试、激光/PZT操作、完整项目所有软件测试、形式等价证明或最终I/O/CDC签核。
+
+关键路径和下一轮目标：
+
+- R2b最差快速路径：`linienmodule_logic_pid_setpoint_storage_full_reg[1]/C` → `linienmodule_logic_pid_int_reg_reg[3]/D`，13.547ns（logic8.317、route5.230），16个CARRY4+1个DSP，仍严重违反8ns要求。
+- R2b慢速 /D=-5.242ns、/S=-5.414ns；积分反馈路径慢速+2.101ns、快速+1.658ns。优先切分前端误差/乘法，不应盲目在已满足的积分反馈递推中加延迟。
+- R1还发现 `slow_decimation` CSR → 慢速PID /R、/CE 的违规，布线约7.2ns；R2b布局下慢速/CE最差+0.258ns，裕量仍紧，应继续独立分组跟踪，不以一次布局结果宣称控制路径彻底解决。
+- 后续带寄存器方案必须明确8/16ns等新增输入/输出延迟、保留P/I/D固有递推、携带采样/配置/reset/valid，并防止稀疏CE误变成整慢速tick延迟；本轮未实施。
+- R2b no_clock=1、未约束内部端点=2（DNA）；no_input_delay=44、no_output_delay=46。CDC仍有Critical/Warning，默认DRC仍有241项Warning/Advisory。WHS/WPWS为正只对应当前已分析路径，**未完成CDC、I/O、DRC与完整STA签核**。
+- R2b CDC-1=444，R1=439；差集为15条新增/10条移除，均为既有bridge payload到CSR接收寄存器副本的变化。没有新增时钟域的源码修改，但不能据此豁免，必须继续验证这些副本的物理CDC窗口。

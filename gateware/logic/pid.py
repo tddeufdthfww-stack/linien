@@ -90,15 +90,38 @@ class PID(Module, AutoCSR):
         max_pos_extra = self.max_pos << extra_width
         max_neg_extra = (-1 * max_pos_extra) - 1
 
+        # Preserve the exact fractional saturation boundaries U and -U-1.
+        # Decode the exact sign/boundary bit patterns without a wide magnitude
+        # comparator. Keep the carry/sign bit of the N+1-bit sum. No register
+        # or numerical truncation is added.
+        overflow_pos = Signal()
+        overflow_neg = Signal()
+        sum_low = self.int_sum[:extra_width]
+        sum_middle = self.int_sum[extra_width:-2]
+        self.comb += [
+            overflow_pos.eq(
+                ~self.int_sum[-1]
+                & (self.int_sum[-2]
+                   | ((sum_middle == (1 << (self.width - 1)) - 1)
+                      & (sum_low != 0)))
+            ),
+            overflow_neg.eq(
+                self.int_sum[-1]
+                & (~self.int_sum[-2]
+                   | ((sum_middle == 0)
+                      & (sum_low != (1 << extra_width) - 1)))
+            ),
+        ]
+
         self.sync += If(
             self.update_en,
             If(self.reset.storage, self.int_reg.eq(0))
             .Elif(
-                self.int_sum > max_pos_extra,  # positive saturation
+                overflow_pos,
                 self.int_reg.eq(max_pos_extra),
             )
             .Elif(
-                self.int_sum < max_neg_extra,  # negative saturation
+                overflow_neg,
                 self.int_reg.eq(max_neg_extra),
             )
             .Else(self.int_reg.eq(self.int_sum)),

@@ -30,7 +30,8 @@ def execute(args, cwd, output, name, env, marker=None):
     if re.search(r'(?m)^(ERROR:|FATAL_ERROR:|Traceback \(most recent call last\):|AssertionError:)', text):
         status['passed'] = False
     (output / (name + '.json')).write_text(json.dumps(status, indent=2), encoding='utf-8')
-    print(name, 'PASS' if status['passed'] else 'FAIL', flush=True)
+    success = 'COMPLETE' if name in ('versions', 'migen_generate', 'synthesis', 'implementation') else 'PASS'
+    print(name, success if status['passed'] else 'FAIL', flush=True)
     if not status['passed']:
         print(text[-6000:], flush=True)
         raise RuntimeError(name + ' failed; see complete logs')
