@@ -62,3 +62,4 @@
 - CDC-1从439到444：报告差集为新增15/移除10条，均为既有bus_clk_bridge地址/写数据到CSR接收寄存器副本的变化。其物理CDC安全仍未证明，不能豁免；其他CDC类别未改善。
 - `requirements-gateware.lock.txt` 固定本次环境，`experiments/baseline_20261106/README.md` 警示历史覆盖式脚本仅归档；`tools/report_pid_details.tcl` 提供可重复只读分组诊断；小体积日志/报告、输入哈希和失败源码保存到 `experiments/optimization_20261109`。
 - `docs/PORTING_STATUS.md` 增加2026-11-09当前分支说明和第11节四级验证结果、全部A/B数字、已知风险及后续目标；没有把负WNS写成时序通过。
+- R2b代码提交：`502be6c9edc1269e21c766d9cce053025aa321fa`。原目录168文件核查未变化；当前PID与已测试R2b输入哈希一致，失败候选归档也与R2a输入一致；证据ZIP均完成完整性检查。

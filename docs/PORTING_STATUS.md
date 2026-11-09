@@ -293,7 +293,7 @@ WNS:        -6.402 ns
 ## 11. 2026-11-09 / 首轮隔离优化结果
 
 - 状态：CANDIDATE / PASS-FUNCTIONAL / SYNTH-COMPLETE / ROUTE-COMPLETE / **STA-FAIL**。这四类状态不能互相替代；仅记录本机 Windows/Vivado 2020.1 实际结果，不宣称 GitHub CI、上板或闭环验证通过。
-- 基线备份分支 `backup/20261106-pre-optimization`，提交 `a39000a802c27e0b6a904491ced4adaaceadfa35`；R0 隔离工具提交 `843a321`；R1 CE 提交 `c76d00b`；R2b最终提交以Git历史和优化记录为准。
+- 基线备份分支 `backup/20261106-pre-optimization`，提交 `a39000a802c27e0b6a904491ced4adaaceadfa35`；R0 隔离工具提交 `843a321`；R1 CE 提交 `c76d00b`；R2b代码提交 `502be6c9edc1269e21c766d9cce053025aa321fa`。
 - 独立工作目录 `D:\RP_Dev\linien_trials\20261106-ce-saturation`。原 `D:\RP_Dev\linien-v2.1.0` 的168个有效源码/测试/文档文件SHA256核对未变化。
 - 工具链：CPython 3.10.21、Migen 0.9.2、MiSoC 0.13（源码commit 98227d90be73ead8b797eca74da7c58d0c18f378）、Linien Common 2.1.0、Vivado 2020.1 build 2902540。完整环境锁定见 `requirements-gateware.lock.txt`。
 
