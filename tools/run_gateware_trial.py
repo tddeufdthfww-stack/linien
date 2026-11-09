@@ -94,6 +94,9 @@ def main():
             if custom.exists():
                 execute([sys.executable, '-m', 'gateware.tests.timing.tb_ce_saturation'],
                         ROOT, out, 'ce_saturation', env, 'CE_SATURATION_SUITE_PASS')
+            if (ROOT / 'gateware/tests/timing/tb_r3_error.py').exists():
+                execute([sys.executable, '-m', 'gateware.tests.timing.tb_r3_error'],
+                        ROOT, out, 'r3_error', env, 'R3_ERROR_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

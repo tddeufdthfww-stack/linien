@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Linien.  If not, see <http://www.gnu.org/licenses/>.
 
-from migen import If, Module, Signal
+from migen import Cat, Constant, If, Module, Mux, Signal
 from misoc.interconnect.csr import AutoCSR, CSRStorage
 
 
 class PID(Module, AutoCSR):
-    def __init__(self, width=14, coeff_width=14):
+    def __init__(self, width=14, coeff_width=14, error_chunks=False):
         self.width = width
         self.coeff_width = coeff_width
+        self.error_chunks = error_chunks
 
         self.input = Signal((width, True))
         self.running = Signal()
@@ -45,8 +46,35 @@ class PID(Module, AutoCSR):
 
         self.error = Signal((self.width + 1, True))
 
+        difference = self.input - self.setpoint.storage
+        if self.error_chunks:
+            # Same modular signed-input/unsigned-setpoint subtraction as above.
+            # Parallel six-bit borrow lookahead and carry-select; no registers.
+            a = Signal(self.width + 1)
+            b = Signal(self.width + 1)
+            self.comb += [a.eq(self.input), b.eq(self.setpoint.storage)]
+            generate, propagate, pieces = [], [], []
+            for lo in range(0, self.width + 1, 6):
+                hi = min(lo + 6, self.width + 1)
+                ai, bi = a[lo:hi], b[lo:hi]
+                borrow = Constant(0, 1)
+                for j in range(len(generate)):
+                    term = generate[j]
+                    for pk in propagate[j+1:]:
+                        term = term & pk
+                    borrow = borrow | term
+                d0, d1 = Signal(hi-lo), Signal(hi-lo)
+                result, g, p = Signal(hi-lo), Signal(), Signal()
+                self.comb += [d0.eq(ai-bi), d1.eq(ai-bi-1),
+                              result.eq(Mux(borrow, d1, d0)),
+                              g.eq(ai < bi), p.eq(ai == bi)]
+                generate.append(g)
+                propagate.append(p)
+                pieces.append(result)
+            difference = Cat(*pieces)
+
         self.comb += [
-            If(self.running, self.error.eq(self.input - self.setpoint.storage)).Else(
+            If(self.running, self.error.eq(difference)).Else(
                 self.error.eq(0)
             )
         ]

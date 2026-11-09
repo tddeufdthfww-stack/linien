@@ -87,7 +87,7 @@ class LinienLogic(Module, AutoCSR):
         self.submodules.limit_error_signal = LimitCSR(width=signal_width, guard=4)
         self.submodules.limit_fast1 = LimitCSR(width=width, guard=5)
         self.submodules.limit_fast2 = LimitCSR(width=width, guard=5)
-        self.submodules.pid = PID(width=signal_width)
+        self.submodules.pid = PID(width=signal_width, error_chunks=True)
         self.submodules.autolock = FPGAAutolock(width=width, max_delay=8191)
 
     def connect_pid(self):

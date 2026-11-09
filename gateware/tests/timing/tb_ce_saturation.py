@@ -28,7 +28,7 @@ def check_pid(width):
             self.clock_domains.cd_sys = ClockDomain('sys')
             self.submodules.reference = CEInserter()(baseline_pid()(width=width))
             self.reference.ce.reset = Constant(1, 1)
-            self.submodules.candidate = PID(width=width)
+            self.submodules.candidate = PID(width=width, error_chunks=True)
     dut = Pair()
     rng = random.Random(20261106 + width)
     fields = ['error', 'ki_mult', 'int_sum', 'int_reg', 'int_out', 'output_p',
@@ -173,10 +173,10 @@ def check_limit():
     run_simulation(dut, bench(), clocks={'sys': 8})
 
 
-def check_csr():
+def check_csr(width):
     class DUT(Module):
         def __init__(self):
-            self.submodules.pid = PID()
+            self.submodules.pid = PID(width=width, error_chunks=True)
             self.submodules.bank = CSRBank(self.pid.get_csrs())
     dut = DUT()
     def bench():
@@ -205,7 +205,7 @@ def check_csr():
         yield
         yield
         assert (yield dut.pid.int_reg) == 0, 'PID reset failed on enabled update'
-        print('CSR_BUS_WRITE_READ_WITH_CE_ZERO_PASS', flush=True)
+        print('CSR_BUS_WRITE_READ_WITH_CE_ZERO_PASS width=' + str(width), flush=True)
     run_simulation(dut, bench(), clocks={'sys': 8})
 
 
@@ -214,7 +214,8 @@ def main():
     check_pid(25)
     check_divider()
     check_limit()
-    check_csr()
+    check_csr(14)
+    check_csr(25)
     print('CE_SATURATION_SUITE_PASS', flush=True)
 
 
