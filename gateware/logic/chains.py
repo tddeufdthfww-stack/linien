@@ -155,7 +155,8 @@ class SlowChain(Module, AutoCSR):
         ]
 
 
-def cross_connect(gpio, chains):
+def cross_connect(gpio, chains, gpio_status_pipeline=0):
+    assert gpio_status_pipeline in (0, 1)
     state_names = ["force"] + [f"di{i}" for i in range(len(gpio.i))]
     states = [1, gpio.i]
     signal_names = ["zero"]
@@ -195,11 +196,22 @@ def cross_connect(gpio, chains):
         )
     ]
 
+    # Only external GPIO/LED state outputs use this optional observation stage.
+    # Internal state/status/control consumers below retain the current state.
+    observed_state = state
+    if gpio_status_pipeline:
+        observed_state = Signal(len(state), name='gpio_status_state_s1')
+        gpio.sync += observed_state.eq(state)
+
     # connect gpio output to "doi%i_en"
     for i, s in enumerate(gpio.o):
         csr = CSRStorage(len(state), name=f"do{i}_en")
         setattr(gpio, csr.name, csr)
-        gpio.sync += s.eq((state & csr.storage) != 0)
+        observed_mask = csr.storage
+        if gpio_status_pipeline:
+            observed_mask = Signal(len(state), name=f'gpio_status_mask_s1_{i}')
+            gpio.sync += observed_mask.eq(csr.storage)
+        gpio.sync += s.eq((observed_state & observed_mask) != 0)
 
     # connect state ins to "%s_en" and signal ins to "%s_sel"
     for n, c in chains:

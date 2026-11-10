@@ -84,6 +84,9 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            if (ROOT / 'tools/check_gpio_status_pipeline.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_gpio_status_pipeline.py', '--out', out / 'gpio_status_checks'],
+                        ROOT, out, 'gpio_status', env, 'GPIO_STATUS_PIPELINE_SUITE_PASS')
             text = execute([sys.executable, '-m', 'pytest', 'tests/test_pid.py',
                             'tests/test_limit.py', 'tests/test_sweep.py',
                             'tests/test_simple_autolock_fpga.py', '-q',

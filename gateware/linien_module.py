@@ -242,6 +242,7 @@ class LinienModule(Module, AutoCSR):
                 ("logic", self.logic),
                 ("robust", self.logic.autolock.robust),
             ],
+            gpio_status_pipeline=1,
         )
 
         csr_map = {
