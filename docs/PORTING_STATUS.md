@@ -1,3 +1,5 @@
+> **2026-11-10 R16最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-4.068/-5780.718ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R16 RUNNING**：R14与R12混合器组合的独立候选，尚无本轮完整功能/综合/route结果。当前更优候选仍R14 -4.093/-6274.995ns、STA FAIL。新增延迟相对R14为0，R4a/R2b/原工程不改。见R16_PLAN.md。
 
 > **2026-11-10 R14 RUNNING**：独立组合试验，含R13慢支路16ns候选，再给robust判定增加1sys=8ns，ADC→DAC持续数据通路相对R13不再加级。R13非CSR慢PID算术端点无负裕量，但全局WNS/TNS=-5.137/-9054.302，仍REJECTED且未合并R4a。R14父模块/真实CSR/独立延迟原始输入配置参考的RTL差分50076拍通过，已知50021、RAM未知55均严格四态比较；综合/route/STA尚未验收。详见R14_PLAN.md。
@@ -366,3 +368,16 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - CDC-1=435，对R2b规范化新增357/移除366；物理CDC未证明。no_clock/内部未约束/I/O仍1/2/44/46。默认DRC与其它剩余路径按原始报告保留，未签核。
 - 原工程168文件SHA未变，R2b/R3工作树干净。pid.py、chains.py、decimation/limit、AXI/CDC/时钟/板级代码在Git中保持R2b原样；新候选只在新分支/文件实现。
 - 下一轮根据实际最差路径安排：快速误差级和积分饱和物理收敛、慢PID事务/下游采样协议、robust动态延迟/abs/阈值链与CSR译码分别评估；不能把当前结果当作最终可上板版本，也没有证据说明125MHz目标“无论如何不可能”。
+
+
+## R16 / 2026-11-10归档 / mixer时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `e7abddf066877c27ee1fde34c69d6af50fde0cb3`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r16-combined-mixer-pipelines`；R4a/R2b/原用户工程保持原样。
+- 功能：原生RTL父FPGAAutolock+真实CSR+独立延迟原始输入/配置的冻结R4a Robust参考50076拍PASS，已知50021、RAM未知55均严格四态比较，watch31468/advanced32181/lock27427；原robust非slow5项PASS；R13完整慢链413022拍/32分频/4171提交/饱和51与57再次PASS；指定Bare及快→慢串接数字延迟正负脉冲PASS；混合器实际DSP/CSR/FastChainFF差分重新PASS（33096与10000拍）；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=快速主支路相对R4a新增0拍；慢PID/analog0扫频贡献新增2sys=16ns；robust判定新增1sys=8ns；快→慢串接相对R2b累计新增32ns。
+- 综合（R15为REUSED_R14，其他为本轮COMPLETE），WNS/TNS=-3.911/-3598.924ns。实际route COMPLETE，WNS/TNS=-4.068/-5780.718ns，失败端点5437；WHS/WPWS=0.038/1.5ns，THS=0。
+- raw IIR内部最差=-2.834ns，入口=-4.059ns；全局最差 `DSP48E1_1/CLK` → `linienmodule_logic_limit_error_signal_limitcsr_y_reg[8]/D`，逻辑/布线=['6.876', '4.808']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 14008, 'ff': 13768, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=218。
+- CDC={'CDC-1': 453, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 2, 'CDC-15': 374}，严格名称差集新增21/移除4；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，无时序例外/时钟放宽。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r16_mixer_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
