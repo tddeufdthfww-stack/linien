@@ -1,3 +1,5 @@
+> **2026-11-10 R14 RUNNING**：独立组合试验，含R13慢支路16ns候选，再给robust判定增加1sys=8ns，ADC→DAC持续数据通路相对R13不再加级。R13非CSR慢PID算术端点无负裕量，但全局WNS/TNS=-5.137/-9054.302，仍REJECTED且未合并R4a。R14父模块/真实CSR/独立延迟原始输入配置参考的RTL差分50076拍通过，已知50021、RAM未知55均严格四态比较；综合/route/STA尚未验收。详见R14_PLAN.md。
+
 > **2026-11-10 R13 RUNNING**：独立慢PID事务流水线候选；保留R4a/R2b/原工程不变。R12 route WNS/TNS=-5.156/-9847.520ns，REJECTED。R13实际RTL差分413022拍、4171提交、32分频配置及正/负饱和51/57通过；额外慢支路16ns、快速主支路额外0，analog0扫频贡献也延后16ns。尚无R13综合/route/STA结果，不能上板。详见R13_PLAN.md与CONTROL_DESIGN_TARGETS.md。
 
 # Linien v2.1.0 → Red Pitaya STEMlab 125-14 PRO Z7020 Gen 2

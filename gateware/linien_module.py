@@ -30,6 +30,7 @@ from misoc.interconnect import csr_bus
 from misoc.interconnect.csr import AutoCSR, CSRStatus, CSRStorage
 
 from .logic.autolock import FPGAAutolock
+from .logic.autolock_pipeline import PipelinedRobustAutolock
 from .logic.chains import FastChain, SlowChain, cross_connect
 from .logic.decimation import DecimateEnable
 from .logic.delta_sigma import DeltaSigma
@@ -90,7 +91,7 @@ class LinienLogic(Module, AutoCSR):
         self.submodules.limit_fast1 = LimitCSR(width=width, guard=5)
         self.submodules.limit_fast2 = LimitCSR(width=width, guard=5)
         self.submodules.pid = pid_factory(width=signal_width)
-        self.submodules.autolock = FPGAAutolock(width=width, max_delay=8191)
+        self.submodules.autolock = FPGAAutolock(width=width, max_delay=8191, robust_factory=PipelinedRobustAutolock)
 
     def connect_pid(self):
         # pid is not started directly by `request_lock` signal. Instead, `request_lock`

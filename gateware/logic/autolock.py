@@ -34,8 +34,8 @@ class FPGAAutolock(Module, AutoCSR):
     established, `lock_running` will be HIGH.
     """
 
-    def __init__(self, width=14, N_points=16383, max_delay=16383):
-        self.submodules.robust = RobustAutolock(max_delay=max_delay)
+    def __init__(self, width=14, N_points=16383, max_delay=16383, robust_factory=None):
+        self.submodules.robust = (robust_factory or RobustAutolock)(max_delay=max_delay)
 
         self.submodules.fast = SimpleAutolock(width=width)
 
