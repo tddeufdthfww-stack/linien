@@ -1,3 +1,5 @@
+> **2026-11-10 R17最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-2.8/-4213.79ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R16最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-4.068/-5780.718ns，最终STA FAIL。详细归档见本文末尾。
 
 # 优化记录
@@ -115,3 +117,16 @@
 全局瓶颈DSP48E1_1/CLK→error limit.y[8]/D，logic6.876+route4.808ns；快速PID/S仍-.105ns，慢PID含CSR当前最差+.936ns且负端点0，但慢链其他路径及IIR/autolock仍违规。CDC-1=453、其他14/4/1/2/374，物理CDC NOT_PROVEN；DNA no_clock1/未约束2、I/O44/46与DRC218未签核。没有新增放宽时钟或掩盖违例的例外，没有bitstream或板上/激光操作。
 
 完整六轮对比、每类/D/S/R/CE实际路径、数学依据、文件变更、全部PASS/FAIL/REUSED、下一阶段8/16ns方案（尚未实施）及PowerShell重复入口见docs/OPTIMIZATION_ROUNDS_20261110.md。逐文件输入SHA与证据索引见experiments/r16_mixer_20261110/verification_index.json；原生日志/报告/源码/测试向量见各独立轮次experiments归档。所有构建期间和记录前源哈希差异为空；归档后的文档更新不属于硬件输入改变。
+
+
+## R17 / 2026-11-10归档 / mixer时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `78db834e27db93102ff20a3bcfc755de33c0933f`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r17-mixer-mreg-frame`；R4a/R2b/原用户工程保持原样。
+- 功能：新增原生UNISIM DSP/真实CSR联合帧14/25位44290/44292拍、全512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；IIR配置对齐14/25位17930/18016拍与冻结RTL及28/50位整数oracle PASS；R13慢链与R14 robust父模块套件再次PASS；R17指定Bare/快慢串接模型正负脉冲确认新增8ns（64.1/100.1ns），R18继承同组件/零周期MAC契约，未重跑数字模型；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增1sys=8ns，快速相对R2b累计24ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外24ns、相对R2b累计40ns；robust自身判定仍8ns；R18 MAC自身新增0拍。
+- 综合（R15为REUSED_R14，其他为本轮COMPLETE），WNS/TNS=-2.836/-3068.768ns。实际route COMPLETE，WNS/TNS=-2.8/-4213.79ns，失败端点4523；WHS/WPWS=0.026/1.5ns，THS=0。
+- raw IIR内部最差=-2.623ns，入口=-2.144ns；全局最差 `linienmodule_fast_a_iir0_z20/CLK` → `linienmodule_fast_a_iir0_z50/CEB2`，逻辑/布线=['7.833', '2.239']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 13941, 'ff': 14065, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=220。
+- CDC={'CDC-1': 444, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 2, 'CDC-15': 374}，严格名称差集新增376/移除368；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r17_mixer_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
