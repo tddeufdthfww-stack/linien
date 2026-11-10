@@ -1,3 +1,5 @@
+> **2026-11-10 R22最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-1.5/-211.865ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R20最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-1.838/-600.003ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-10 R18最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-2.326/-1448.239ns，最终STA FAIL。详细归档见本文末尾。
@@ -426,3 +428,16 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - CDC={'CDC-1': 436, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增381/移除381；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r20_iir_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R22 / 2026-11-10归档 / mixer时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `fccfb491bbccc0bcf3b6667ea525a0780c48370a`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r22-balanced-tap-preg`；R4a/R2b/原用户工程保持原样。
+- 功能：原生UNISIM/真实CSR两拍联合帧14/25位44290/44292拍、512/512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；14/25 IIR配置帧与冻结RTL/28与50位整数oracle PASS（从未延迟输入到b0/b5=8/13拍，滤波器latency CSR仍6）；完整旧功能回归PASS。R19指定Bare/快慢串接组件数字模型正负脉冲确认72.1/108.1ns，较R16追加16ns；R20/R21/R22/R23继承同组件契约，未重跑该组件模型，IIR周期由完整滤波器测试独立验证；并行tap限幅14/25位原生RTL/旧LimitCSR/独立整数oracle、全部tap与符号/非法上下限/回绕/真实CSR/CE/reset PASS；完整FastChain pair 30000拍、CSR字节映射、I/Q/原寄存器前信号/独立CE PASS（精确周期与统计见trial/parallel_tap_checks/results.json和fastchain/results.json）；包含公共求和优先及反相比较并行的数学变换，额外覆盖N位最小负数回绕及邻值；FastChain pair比较旧split_c48+串行tap与生产registered_c48+新tap组合，显式UNISIM/glbl；原生时钟MAC71760组及IIR order1/2/5/CSR/hold/clear/复位再次PASS；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20 IIR寄存器重定位、R21/R22/R23 tap算术均新增周期0。
+- 综合（R15为REUSED_R14，其他为本轮COMPLETE），WNS/TNS=-1.732/-386.595ns。实际route COMPLETE，WNS/TNS=-1.5/-211.865ns，失败端点586；WHS/WPWS=0.005/1.5ns，THS=0。
+- raw IIR内部最差=-0.434ns，入口=-0.396ns；全局最差 `linienmodule_fast_a_ya_reg[0]/C` → `linienmodule_fast_a_paralleltaplimitcsr0_y_reg[7]/D`，逻辑/布线=['3.391', '5.798']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 14157, 'ff': 14782, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=407。
+- CDC={'CDC-1': 441, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增11/移除6；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r22_mixer_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
