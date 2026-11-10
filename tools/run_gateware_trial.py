@@ -118,6 +118,9 @@ def main():
             if (ROOT / 'tools/check_c48_filter.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_c48_filter.py', '--out', out / 'c48_filter_checks'],
                         ROOT, out, 'c48_filter', env, 'C48_FILTER_SUITE_PASS')
+            if (ROOT / 'tools/check_registered_c48_mac.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_registered_c48_mac.py', '--out', out / 'registered_c48_mac_checks'],
+                        ROOT, out, 'registered_c48_mac', env, 'C48_REGISTERED_MAC_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

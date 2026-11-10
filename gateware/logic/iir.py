@@ -21,6 +21,7 @@ from misoc.interconnect.csr import CSRConstant, CSRStorage
 
 from .filter import Filter
 from .iir_c48_mac import split_c48_mac
+from .iir_registered_c48 import registered_c48_mac
 
 
 class Iir(Filter):
@@ -38,12 +39,12 @@ class Iir(Filter):
         Filter.__init__(self, width)
         assert config_delay in (0,1,2)
         assert mode in ("pipelined", "iterative")
-        assert mac_impl in ("native","split_c48")
+        assert mac_impl in ("native","split_c48","registered_c48")
         if intermediate_width is None:
             intermediate_width = width + coeff_width
             # + bits_for(2*(order + 1))
 
-        if mac_impl == "split_c48":
+        if mac_impl in ("split_c48","registered_c48"):
             assert mode == "pipelined" and width == coeff_width == 25 and intermediate_width == 50
 
         self.z0 = CSRStorage(intermediate_width - shift, reset=0)
@@ -101,14 +102,23 @@ class Iir(Filter):
         if mode == "pipelined":
             r = [(f"b{i}", self.x) for i in reversed(range(order + 1))]
             r += [(f"a{i}", y) for i in reversed(range(1, order + 1))]
-            for coeff, signal in r:
+            if mac_impl == "registered_c48":
                 zr = Signal.like(z)
                 self.sync += zr.eq(z)
-                z = Signal.like(zr)
-                if mac_impl == "split_c48":
-                    self.comb += z.eq(split_c48_mac(self,zr,signal,c[coeff]))
-                else:
-                    self.comb += z.eq(zr + signal * c[coeff])
+                for i, (coeff, signal) in enumerate(r):
+                    if i < len(r)-1:
+                        zr = registered_c48_mac(self,zr,signal,c[coeff])
+                    else:
+                        z = split_c48_mac(self,zr,signal,c[coeff])
+            else:
+                for coeff, signal in r:
+                    zr = Signal.like(z)
+                    self.sync += zr.eq(z)
+                    z = Signal.like(zr)
+                    if mac_impl == "split_c48":
+                        self.comb += z.eq(split_c48_mac(self,zr,signal,c[coeff]))
+                    else:
+                        self.comb += z.eq(zr + signal * c[coeff])
             self.comb += y_next.eq(z)
             self.latency.value = Constant(order + 1)
             self.interval.value = Constant(1)

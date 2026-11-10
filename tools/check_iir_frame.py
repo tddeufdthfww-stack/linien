@@ -27,7 +27,7 @@ def main():
         class Pair(Module):
             def __init__(self):
                 self.clock_domains.cd_sys=ClockDomain('sys')
-                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=delay,mac_impl="split_c48" if width==25 else "native")
+                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=delay,mac_impl="registered_c48" if width==25 else "native")
                 self.submodules.reference=r=old.Iir(order=5,width=width,coeff_width=cw,shift=shift)
                 self.submodules.bank=b=CSRBank(c.get_csrs());self.ports={}
                 for key,bits,sgn in [('x',width,True),('hold',1,False),('clear',1,False),('csr_adr',14,False),('csr_we',1,False),('csr_dat_w',8,False)]:self.ports[key]=Signal((bits,sgn),name_override=key)
@@ -81,7 +81,7 @@ def main():
             for key,value in [('writes',we),('holds',hold),('clears',clear),('resets',rst),('rail',model.error),('nonzero',int(model.y!=0))]:stats[key]+=value
         def write(key,value):
             for adr,pos,bits in d.addresses[key]:emit(adr=adr,we=1,data=(value>>pos)&((1<<bits)-1))
-        for _ in range(4):emit(rst=1)
+        for _ in range(24):emit(rst=1)
         for tap,expected_delay in [('b0',6+delay),('b5',11+delay)]:
             for key in COEFFS:write(key,(1<<shift) if key==tap else 0)
             for _ in range(40):emit()
@@ -123,7 +123,7 @@ initial begin #500000;$fatal(1,"timeout");end
 endmodule
 '''
         (sub/'tb.sv').write_bytes(tb.encode())
-        for label,cmd,marker in [('compile',[tool/'xvlog.bat','--sv',sub/'pair.v',sub/'tb.sv'],None),('elaborate',[tool/'xelab.bat','tb_iir_frame','-s','tb_iir_frame','--timescale','1ns/1ps'],None),('simulate',[tool/'xsim.bat','tb_iir_frame','-runall'],f'IIR_CONFIG_FRAME_PASS width={width}')]:
+        for label,cmd,marker in [('compile',[tool/'xvlog.bat','--sv',sub/'pair.v',sub/'tb.sv',tool.parent/'data/verilog/src/glbl.v'],None),('elaborate',[tool/'xelab.bat','tb_iir_frame','glbl','-L','unisims_ver','-s','tb_iir_frame','--timescale','1ns/1ps'],None),('simulate',[tool/'xsim.bat','tb_iir_frame','-runall'],f'IIR_CONFIG_FRAME_PASS width={width}')]:
             cmd=[str(x) for x in cmd];r=subprocess.run(cmd,cwd=sub,capture_output=True);(sub/(label+'.stdout.log')).write_bytes(r.stdout);(sub/(label+'.stderr.log')).write_bytes(r.stderr)
             txt=(r.stdout+b'\n'+r.stderr).decode(errors='replace');ok=r.returncode==0 and (not marker or marker in txt) and not re.search(r'(?m)^(ERROR:|Fatal:|FATAL_ERROR:)',txt)
             (sub/(label+'.json')).write_bytes(json.dumps({'command':cmd,'exit_code':r.returncode,'passed':bool(ok)},indent=2).encode());print(width,label,'PASS' if ok else 'FAIL',flush=True);assert ok,txt[-7000:]

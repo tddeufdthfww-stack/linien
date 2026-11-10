@@ -184,7 +184,7 @@ class LinienModule(Module, AutoCSR):
         self.submodules.logic = LinienLogic(
             coeff_width=coeff_width, chain_factor_width=chain_factor_bits,
             pid_factory=partial(MixerAlignedPID,frame_delay=2), error_limit_factory=partial(AlignedInputLimitCSR,frame_delay=2),
-            raw_iir_config_delay=2, raw_iir_mac_impl="split_c48"
+            raw_iir_config_delay=2, raw_iir_mac_impl="registered_c48"
         )
         self.submodules.analog = PitayaAnalog(
             platform.request("adc"), platform.request("dac")
@@ -212,7 +212,7 @@ class LinienModule(Module, AutoCSR):
             coeff_width,
             self.logic.mod,
             offset_signal=self.logic.chain_a_offset_signed,
-            iir_mac_impl="split_c48",
+            iir_mac_impl="registered_c48",
         )
         self.submodules.fast_b = FastChain(
             width,
@@ -220,7 +220,7 @@ class LinienModule(Module, AutoCSR):
             coeff_width,
             self.logic.mod,
             offset_signal=self.logic.chain_b_offset_signed,
-            iir_mac_impl="split_c48",
+            iir_mac_impl="registered_c48",
         )
 
         max_decimation = 16
