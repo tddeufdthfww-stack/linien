@@ -104,3 +104,14 @@
 - CDC={'CDC-1': 453, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 2, 'CDC-15': 374}，严格名称差集新增21/移除4；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，无时序例外/时钟放宽。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r16_mixer_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## 2026-11-10 本轮交付与当前保留关系
+
+当前较优源码候选R16，代码e7abddf，原生回归PASS、综合COMPLETE、实际route COMPLETE、最终STA FAIL。route WNS/TNS=-4.068/-5780.718ns、Setup失败5437、WHS=.038、THS0、WPWS1.5；相对R4a改善.754ns/2121.447ns，减少851端点。R11–R13失败保留；R14/R15/R16为未签核候选，全部未合并R4a/R2b和原用户工程。
+
+快主支路相对R4a新增0，保留相对R2b累计16ns；慢/analog0贡献相对R4a新增16ns，特定快→慢串接累计32ns；robust判定额外8ns，不能加到全部持续样本上。已重新测量指定P-only数字模型Bare DAC A56.1ns、快A→慢→DAC B92.1ns；此前漏顶层FF的32.1/48.1ns绝对值作废，完整更正在OPTIMIZATION_ROUNDS_20261110.md。模型不含转换器内部/模拟/板级，不是已验证闭环带宽。
+
+全局瓶颈DSP48E1_1/CLK→error limit.y[8]/D，logic6.876+route4.808ns；快速PID/S仍-.105ns，慢PID含CSR当前最差+.936ns且负端点0，但慢链其他路径及IIR/autolock仍违规。CDC-1=453、其他14/4/1/2/374，物理CDC NOT_PROVEN；DNA no_clock1/未约束2、I/O44/46与DRC218未签核。没有新增放宽时钟或掩盖违例的例外，没有bitstream或板上/激光操作。
+
+完整六轮对比、每类/D/S/R/CE实际路径、数学依据、文件变更、全部PASS/FAIL/REUSED、下一阶段8/16ns方案（尚未实施）及PowerShell重复入口见docs/OPTIMIZATION_ROUNDS_20261110.md。逐文件输入SHA与证据索引见experiments/r16_mixer_20261110/verification_index.json；原生日志/报告/源码/测试向量见各独立轮次experiments归档。所有构建期间和记录前源哈希差异为空；归档后的文档更新不属于硬件输入改变。
