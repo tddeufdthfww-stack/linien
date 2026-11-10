@@ -20,6 +20,7 @@ from misoc.interconnect.csr import CSR, AutoCSR, CSRStatus, CSRStorage
 
 from .iir import Iir
 from .limit import LimitCSR
+from .parallel_tap_limit import ParallelTapLimitCSR
 from .modulate import Demodulate
 from .pid import PID
 
@@ -27,7 +28,7 @@ from .pid import PID
 class FastChain(Module, AutoCSR):
     def __init__(
         self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
-        iir_mac_impl="native"
+        iir_mac_impl="native", parallel_output=False
     ):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
@@ -92,9 +93,9 @@ class FastChain(Module, AutoCSR):
                 mac_impl=iir_mac_impl,
             )
             setattr(self.submodules, f"iir_d_{sub_channel_idx+1}", iir_d)
-            y_limit = LimitCSR(width=signal_width, guard=3)
+            y_limit = (ParallelTapLimitCSR if parallel_output else LimitCSR)(width=signal_width, guard=3)
             if sub_channel_idx == 0:
-                self.comb += [self.pre_out_i.eq(y_limit.limit.y),
+                self.comb += [self.pre_out_i.eq(y_limit.pre_y if parallel_output else y_limit.limit.y),
                               self.out_i_update_en.eq(y_limit.update_en)]
             setattr(self.submodules, f"y_limit_{sub_channel_idx+1}", y_limit)
 
@@ -111,13 +112,15 @@ class FastChain(Module, AutoCSR):
             ys = Array([iir_c.x, iir_c.y, iir_d.y])
 
             output_signal_this_channel = (self.out_i, self.out_q)[sub_channel_idx]
-            self.comb += [
-                y_limit.x.eq(
+            if parallel_output:
+                self.comb += [y_limit.common_a.eq(ya << s),y_limit.common_b.eq(offset_signal << s),
+                              y_limit.tap_select.eq(self.y_tap.storage),y_limit.invert.eq(self.invert.storage)]
+                self.comb += [target.eq(source) for target,source in zip(y_limit.taps,ys)]
+            else:
+                self.comb += y_limit.x.eq(
                     Mux(self.invert.storage, -1, 1)
-                    * (ys[self.y_tap.storage] + (ya << s) + (offset_signal << s))
-                ),
-                output_signal_this_channel.eq(y_limit.y),
-            ]
+                    * (ys[self.y_tap.storage] + (ya << s) + (offset_signal << s)))
+            self.comb += output_signal_this_channel.eq(y_limit.y)
 
 
 class SlowChain(Module, AutoCSR):
