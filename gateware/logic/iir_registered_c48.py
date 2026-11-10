@@ -19,7 +19,8 @@ def registered_c48_mac(module,z,x,c):
                 i_CLK=ClockSignal(),i_A=Cat(c,Replicate(c[-1],5)),i_B=b,
                 i_C=Constant(0,48) if high else z[:48],
                 i_PCIN=cascade if high else Constant(0,48),
-                i_OPMODE=Constant(0x65 if high else 0x35,7),
+                # Z mux 101 selects arithmetic PCIN>>17 (110 uses own P>>17).
+                i_OPMODE=Constant(0x55 if high else 0x35,7),
                 i_ALUMODE=Constant(0,4),i_INMODE=Constant(0,5),i_CARRYINSEL=Constant(0,3),
                 o_P=high_q if high else low)
         if not high:kw['o_PCOUT']=cascade
