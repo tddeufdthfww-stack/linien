@@ -1,3 +1,5 @@
+> **2026-11-10 R24：生产功能FAIL，综合中止，route未运行，禁止采用。**
+
 > **2026-11-10 R20最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-1.838/-600.003ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-10 R18最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-2.326/-1448.239ns，最终STA FAIL。详细归档见本文末尾。
@@ -426,3 +428,10 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - CDC={'CDC-1': 436, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增381/移除381；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r20_iir_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R24 / 2026-11-10：生产功能缺陷继承，中止综合
+
+代码 `a495d8ee527d3725444e5e3b0f68ae79a42ea047`，独立分支。**REJECTED / ABORTED / NOT_MERGED**。自动锁定新谓词本身原生90800已知向量+8000未知位四态检查PASS；完整父FPGAAutolock/真实CSR/冻结参考50076拍PASS（55拍RAM未知严格对照），其余旧回归PASS。但继承R23预偏置unsigned CSR源被零扩展的生产缺陷；旧完整FastChain夹具错误使用signed源，PASS覆盖不足。新真实unsigned CSR/部分写夹具在第45拍复现FAIL，生产chains.py Git blob与R23/R25失败复现提交cba82d1完全一致，故全工程生产功能契约FAIL。
+
+Migen生成COMPLETE、CSR map PASS；综合已调用但人为中止，**SYNTHESIS_ABORTED，ROUTE_NOT_RUN，无可用WNS/TNS**，不得冒充综合或route成功。只停止核实身份后的本轮进程及其子进程，未修改运行中源码，未停止用户GUI。中止后手工逐文件SHA核对差异=[]；正常结束哈希检查NOT_REACHED。无约束放宽/bitstream/部署。保护基线及最佳已验证R22不变。新分支R25修正类型、保留同一失败测试并重新全套验证，不追认本版本。完整命令/PASS/中止/源码/SHA见experiments/r24_autolock_aborted_20261110。
