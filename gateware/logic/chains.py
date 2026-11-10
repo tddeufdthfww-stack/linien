@@ -26,7 +26,8 @@ from .pid import PID
 
 class FastChain(Module, AutoCSR):
     def __init__(
-        self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None
+        self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
+        iir_mac_impl="native"
     ):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
@@ -80,6 +81,7 @@ class FastChain(Module, AutoCSR):
                 coeff_width=coeff_width,
                 shift=coeff_width - 2,
                 order=1,
+                mac_impl=iir_mac_impl,
             )
             setattr(self.submodules, f"iir_c_{sub_channel_idx+1}", iir_c)
             iir_d = Iir(
@@ -87,6 +89,7 @@ class FastChain(Module, AutoCSR):
                 coeff_width=coeff_width,
                 shift=coeff_width - 2,
                 order=2,
+                mac_impl=iir_mac_impl,
             )
             setattr(self.submodules, f"iir_d_{sub_channel_idx+1}", iir_d)
             y_limit = LimitCSR(width=signal_width, guard=3)

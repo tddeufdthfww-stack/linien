@@ -20,6 +20,7 @@ from migen.genlib.misc import timeline
 from misoc.interconnect.csr import CSRConstant, CSRStorage
 
 from .filter import Filter
+from .iir_c48_mac import split_c48_mac
 
 
 class Iir(Filter):
@@ -32,13 +33,18 @@ class Iir(Filter):
         shift=16,
         intermediate_width=None,
         config_delay=0,
+        mac_impl="native",
     ):
         Filter.__init__(self, width)
         assert config_delay in (0,1)
         assert mode in ("pipelined", "iterative")
+        assert mac_impl in ("native","split_c48")
         if intermediate_width is None:
             intermediate_width = width + coeff_width
             # + bits_for(2*(order + 1))
+
+        if mac_impl == "split_c48":
+            assert mode == "pipelined" and width == coeff_width == 25 and intermediate_width == 50
 
         self.z0 = CSRStorage(intermediate_width - shift, reset=0)
         self.shift = CSRConstant(shift)
@@ -99,7 +105,10 @@ class Iir(Filter):
                 zr = Signal.like(z)
                 self.sync += zr.eq(z)
                 z = Signal.like(zr)
-                self.comb += z.eq(zr + signal * c[coeff])
+                if mac_impl == "split_c48":
+                    self.comb += z.eq(split_c48_mac(self,zr,signal,c[coeff]))
+                else:
+                    self.comb += z.eq(zr + signal * c[coeff])
             self.comb += y_next.eq(z)
             self.latency.value = Constant(order + 1)
             self.interval.value = Constant(1)

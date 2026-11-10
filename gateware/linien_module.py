@@ -54,11 +54,11 @@ from .lowlevel.xadc import XADC
 class LinienLogic(Module, AutoCSR):
     def __init__(self, width=14, signal_width=25, chain_factor_width=8, coeff_width=25,
                  pid_factory=PipelinedPID, error_limit_factory=LimitCSR,
-                 raw_iir_config_delay=0):
+                 raw_iir_config_delay=0, raw_iir_mac_impl="native"):
         self.init_csr(width, chain_factor_width)
         self.init_submodules(width, signal_width, pid_factory, error_limit_factory)
         self.connect_pid()
-        self.connect_everything(width, signal_width, coeff_width, raw_iir_config_delay)
+        self.connect_everything(width, signal_width, coeff_width, raw_iir_config_delay, raw_iir_mac_impl)
 
     def init_csr(self, width, chain_factor_width):
         self.dual_channel = CSRStorage(1)
@@ -114,7 +114,7 @@ class LinienLogic(Module, AutoCSR):
             self.autolock.robust.sweep_up.eq(self.sweep.sweep.up),
         ]
 
-    def connect_everything(self, width, signal_width, coeff_width, raw_iir_config_delay):
+    def connect_everything(self, width, signal_width, coeff_width, raw_iir_config_delay, raw_iir_mac_impl):
         combined_error_signal = Signal((signal_width, True))
         self.control_signal = Signal((signal_width, True))
 
@@ -126,6 +126,7 @@ class LinienLogic(Module, AutoCSR):
             shift=coeff_width - 2,
             order=5,
             config_delay=raw_iir_config_delay,
+            mac_impl=raw_iir_mac_impl,
         )
         combined_error_signal_filtered = Signal((signal_width, True))
         self.comb += [
@@ -182,7 +183,7 @@ class LinienModule(Module, AutoCSR):
         self.submodules.logic = LinienLogic(
             coeff_width=coeff_width, chain_factor_width=chain_factor_bits,
             pid_factory=MixerAlignedPID, error_limit_factory=AlignedInputLimitCSR,
-            raw_iir_config_delay=1
+            raw_iir_config_delay=1, raw_iir_mac_impl="split_c48"
         )
         self.submodules.analog = PitayaAnalog(
             platform.request("adc"), platform.request("dac")
@@ -210,6 +211,7 @@ class LinienModule(Module, AutoCSR):
             coeff_width,
             self.logic.mod,
             offset_signal=self.logic.chain_a_offset_signed,
+            iir_mac_impl="split_c48",
         )
         self.submodules.fast_b = FastChain(
             width,
@@ -217,6 +219,7 @@ class LinienModule(Module, AutoCSR):
             coeff_width,
             self.logic.mod,
             offset_signal=self.logic.chain_b_offset_signed,
+            iir_mac_impl="split_c48",
         )
 
         max_decimation = 16

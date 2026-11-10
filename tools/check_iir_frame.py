@@ -27,7 +27,7 @@ def main():
         class Pair(Module):
             def __init__(self):
                 self.clock_domains.cd_sys=ClockDomain('sys')
-                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=1)
+                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=1,mac_impl="split_c48" if width==25 else "native")
                 self.submodules.reference=r=old.Iir(order=5,width=width,coeff_width=cw,shift=shift)
                 self.submodules.bank=b=CSRBank(c.get_csrs());self.ports={}
                 for key,bits,sgn in [('x',width,True),('hold',1,False),('clear',1,False),('csr_adr',14,False),('csr_we',1,False),('csr_dat_w',8,False)]:self.ports[key]=Signal((bits,sgn),name_override=key)

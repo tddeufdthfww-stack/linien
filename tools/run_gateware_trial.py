@@ -112,6 +112,12 @@ def main():
             if (ROOT / 'tools/check_iir_frame.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_iir_frame.py', '--out', out / 'iir_frame_checks'],
                         ROOT, out, 'iir_frame', env, 'IIR_CONFIG_FRAME_SUITE_PASS')
+            if (ROOT / 'tools/check_c48_mac.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_c48_mac.py', '--out', out / 'c48_mac_checks'],
+                        ROOT, out, 'c48_mac', env, 'C48_MAC_SUITE_PASS')
+            if (ROOT / 'tools/check_c48_filter.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_c48_filter.py', '--out', out / 'c48_filter_checks'],
+                        ROOT, out, 'c48_filter', env, 'C48_FILTER_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent
