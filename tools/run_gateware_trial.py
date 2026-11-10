@@ -97,6 +97,9 @@ def main():
             if (ROOT / 'gateware/tests/timing/tb_pid_pipeline.py').exists():
                 execute([sys.executable, '-m', 'gateware.tests.timing.tb_pid_pipeline'],
                         ROOT, out, 'pid_pipeline', env, 'PID_PIPELINE_SUITE_PASS')
+            if (ROOT / 'tools/check_slow_pipeline.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_slow_pipeline.py', '--out', out / 'slow_pipeline_checks'],
+                        ROOT, out, 'slow_pipeline', env, 'SLOW_PIPELINE_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

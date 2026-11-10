@@ -37,6 +37,7 @@ from .logic.iir import Iir
 from .logic.limit import LimitCSR
 from .logic.modulate import Modulate
 from .logic.pid_pipeline import PipelinedPID
+from .logic.slow_pipeline import PipelinedSlowChain, SlowOutputTransport
 from .logic.sweep import SweepCSR
 from .lowlevel.analog import PitayaAnalog
 from .lowlevel.crg import CRG
@@ -210,7 +211,7 @@ class LinienModule(Module, AutoCSR):
         max_decimation = 16
         # Runs in the 125 MHz sys domain. No data-dependent generated clock.
         self.submodules.decimate = DecimateEnable(max_decimation)
-        self.submodules.slow_chain = SlowChain()
+        self.submodules.slow_chain = PipelinedSlowChain()
 
         self.submodules.scopegen = ScopeGen(signal_width)
 
@@ -307,6 +308,15 @@ class LinienModule(Module, AutoCSR):
             self.logic.slow_value.status.eq(self.slow_chain.output),
         ]
 
+        self.submodules.slow_transport = SlowOutputTransport(width)
+        self.comb += [
+            self.slow_transport.slow_channel.eq(self.logic.slow_control_channel.storage),
+            self.slow_transport.sweep_channel.eq(self.logic.sweep_channel.storage),
+            self.slow_transport.sweep.eq(self.logic.sweep.y),
+            self.slow_transport.offset.eq(self.logic.out_offset_signed),
+            self.slow_transport.slow_pid.eq(self.slow_chain.output),
+        ]
+
         # FAST OUTPUTS -----------------------------------------------------------------
         fast_outs = [Signal((width + 4, True)), Signal((width + 4, True))]
         for n_channel, fast_out in enumerate(fast_outs):
@@ -332,7 +342,7 @@ class LinienModule(Module, AutoCSR):
                     0,
                 )
                 + Mux(
-                    self.logic.slow_control_channel.storage == n_channel,
+                    self.slow_transport.aligned_slow_channel == n_channel,
                     self.slow_chain.output,
                     0,
                 )
@@ -342,26 +352,7 @@ class LinienModule(Module, AutoCSR):
         # ANALOG OUT 0 gets a special treatment because it may contain signal of  slow
         # pid or sweep
         analog_out = Signal((width + 3, True))
-        self.comb += [
-            analog_out.eq(
-                Mux(
-                    self.logic.sweep_channel.storage == OutputChannel.ANALOG_OUT0,
-                    self.logic.sweep.y,
-                    0,
-                )
-                + Mux(
-                    self.logic.sweep_channel.storage == OutputChannel.ANALOG_OUT0,
-                    self.logic.out_offset_signed,
-                    0,
-                )
-                + Mux(
-                    self.logic.slow_control_channel.storage
-                    == OutputChannel.ANALOG_OUT0,
-                    self.slow_chain.output,
-                    0,
-                )
-            ),
-        ]
+        self.comb += analog_out.eq(self.slow_transport.analog_out)
         # NOTE: not sure why limit is used
         self.comb += self.slow_chain.limit.x.eq(analog_out)
         # ds0 apparently has 16 bit, but only allowing positive  values --> "15 bit"?

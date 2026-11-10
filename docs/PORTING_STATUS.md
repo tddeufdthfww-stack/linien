@@ -1,3 +1,5 @@
+> **2026-11-10 R13 RUNNING**：独立慢PID事务流水线候选；保留R4a/R2b/原工程不变。R12 route WNS/TNS=-5.156/-9847.520ns，REJECTED。R13实际RTL差分413022拍、4171提交、32分频配置及正/负饱和51/57通过；额外慢支路16ns、快速主支路额外0，analog0扫频贡献也延后16ns。尚无R13综合/route/STA结果，不能上板。详见R13_PLAN.md与CONTROL_DESIGN_TARGETS.md。
+
 # Linien v2.1.0 → Red Pitaya STEMlab 125-14 PRO Z7020 Gen 2
 
 > **R4更新 2026-11-09**：两级快速PID新增16ns，当前保留R4a候选；功能按明确延迟契约通过、综合和route完成、最终STA失败。R4a route WNS=-4.822ns；R4b=-5.820ns。R2b/原工程/R3不变。最新见第12/13节及docs/R4_RESULT_20261109.md。
