@@ -1,3 +1,5 @@
+> **2026-11-10 R32最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.691/-67.215ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R29最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.617/-91.147ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-10 R28最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.788/-99.471ns，最终STA FAIL。详细归档见本文末尾。
@@ -207,3 +209,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 441, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增380/移除375；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r29_physical_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R32 / 2026-11-10归档 / physical时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `75a983cdcce4955245f2d9e53fb783109c282ca0`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r32-place-explore`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R28_EXACT_INPUTS_NOT_RERUN：74个硬件/测试原始SHA及同R28 synth.dcp，复用9c5c32a的完整原生功能/CSR/延迟证据，本轮没有重新执行功能或综合，不是postroute/SDF等价。新执行opt/placeExplore/post-placeAggressiveFanoutOpt/routeExplore-tns_cleanup，源码/8ns XDC/时钟/流水线不改，0新增串行周期。新保存placed前后DCP及routed DCP，输入synthDCP SHA不变；没有修改Migen evaluator。
+- REUSED_R28：原pytest/PID/慢链/IIR/Scope/AXI/CDC/CSR均来自已通过且硬件SHA完全相同的R28，本轮NOT RERUN；只有placement/physical/route为本轮新执行；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20之后IIR/tap/common/阈值/Scope组合优化均新增周期0。
+- 综合来源=REUSED_R28_EXACT_DCP_NOT_RERUN，WNS/TNS=-1.908/-307.63ns。实际route COMPLETE，WNS/TNS=-0.691/-67.215ns，失败端点456；WHS/WPWS=0.014/1.5ns，THS=0。
+- raw IIR内部最差=-0.177ns，入口=-0.352ns；全局最差 `linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[1]_rep__0/C` → `linienmodule_gpio_n_o_reg[6]_lopt_replica/D`，逻辑/布线=['2.975', '5.402']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 15133, 'ff': 15857, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=413。
+- CDC={'CDC-1': 441, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增380/移除375；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r32_physical_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
