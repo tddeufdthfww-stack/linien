@@ -15,7 +15,7 @@ FIELDS=['kp_mult','output_p','ki_mult','int_sum','int_reg','int_out','output_d',
 PIDCONFIG=['setpoint','kp','ki','kd','reset']
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);p.add_argument('--frame-delay',type=int,choices=(1,2),default=2);a=p.parse_args();delay=a.frame_delay
     out=a.out.resolve();out.mkdir(parents=True,exist_ok=False);tool=Path('D:/Xilinx/Vivado/2020.1/bin')
     frozen=ROOT/'gateware/tests/timing/reference/r16_pid_pipeline.py'
     spec=importlib.util.spec_from_file_location('gateware.logic.r16_pid_pipeline_frame',frozen);old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
@@ -26,16 +26,16 @@ def main():
             def __init__(self):
                 self.factor_a=MixerFactorCSR('factor_a');self.factor_b=MixerFactorCSR('factor_b')
                 self.offset=CSRStorage(14);self.dual=CSRStorage(1);self.mode=CSRStorage(1)
-                self.submodules.limit=AlignedInputLimitCSR(width=25,guard=4)
-                self.submodules.pid=MixerAlignedPID(width=width)
+                self.submodules.limit=AlignedInputLimitCSR(width=25,guard=4,frame_delay=delay)
+                self.submodules.pid=MixerAlignedPID(width=width,frame_delay=delay)
                 self.offset_signed=Signal((14,True));self.sync += self.offset_signed.eq(self.offset.storage)
         class Pair(Module):
             def __init__(self):
                 self.clock_domains.cd_sys=ClockDomain('sys')
                 self.submodules.controls=c=Controls()
                 self.submodules.bank=bank=CSRBank(c.get_csrs())
-                self.submodules.mixer=m=RegisteredErrorMixer(product_pipeline=True)
-                self.submodules.alignment=align=FeedbackInputAlignment()
+                self.submodules.mixer=m=RegisteredErrorMixer(product_pipeline=True,sum_pipeline=delay==2)
+                self.submodules.alignment=align=FeedbackInputAlignment(frame_delay=delay)
                 self.submodules.a_limit=la=LimitCSR(width=25,guard=3)
                 self.submodules.b_limit=lb=LimitCSR(width=25,guard=3)
                 self.submodules.ref_limit=rl=LimitCSR(width=25,guard=4)
@@ -44,7 +44,9 @@ def main():
                 for key,bits,sgn in [('ax',28,True),('bx',28,True),('adc',14,True),('ce_a',1,False),('ce_b',1,False),('limit_ce',1,False),('pid_ce',1,False),('running',1,False),('csr_adr',14,False),('csr_we',1,False),('csr_dat_w',8,False),('seed',1,False),('seed_value',n,True)]:self.ports[key]=Signal((bits,sgn),name_override=key)
                 ports=self.ports
                 def lag(value):
-                    q=Signal.like(value);self.sync += q.eq(value);return q
+                    for _ in range(delay):
+                        q=Signal.like(value);self.sync += q.eq(value);value=q
+                    return value
                 refa,refb,fa,fb,off,dual,mode,adc=[lag(x) for x in (la.y,lb.y,c.factor_a.storage,c.factor_b.storage,c.offset_signed,c.dual.storage,c.mode.storage,ports['adc'])]
                 refmix=Signal((37,True));refinput=Signal((25,True))
                 self.comb += [la.x.eq(ports['ax']),lb.x.eq(ports['bx']),la.update_en.eq(ports['ce_a']),lb.update_en.eq(ports['ce_b']),
@@ -153,7 +155,7 @@ initial begin
   if(cand_rail)rails=rails+1;if(!ref_lce)holds=holds+1;cycles=cycles+1;
  end
  if(known<40000 || positive<3 || negative<3 || rails<1000 || holds<1000 || seen_a!=={{512{{1'b1}}}} || seen_b!=={{512{{1'b1}}}})$fatal(1,"frame coverage W={width} known=%0d sat=%0d/%0d rails=%0d holds=%0d",known,positive,negative,rails,holds);
- $display("FEEDBACK_FRAME_1SYS_PASS width={width} cycles=%0d known=%0d positive_sat=%0d negative_sat=%0d rails=%0d limit_holds=%0d factors=512/512",cycles,known,positive,negative,rails,holds);$finish;
+ $display("FEEDBACK_FRAME_{delay}SYS_PASS width={width} cycles=%0d known=%0d positive_sat=%0d negative_sat=%0d rails=%0d limit_holds=%0d factors=512/512",cycles,known,positive,negative,rails,holds);$finish;
 end
 initial begin #1000000;$fatal(1,"timeout");end
 endmodule
@@ -161,13 +163,13 @@ endmodule
         (sub/'tb.sv').write_bytes(tb.encode())
         for label,cmd,marker in [('compile',[tool/'xvlog.bat','--sv',sub/'pair.v',sub/'tb.sv',tool.parent/'data/verilog/src/glbl.v'],None),
             ('elaborate',[tool/'xelab.bat','tb_feedback_frame','glbl','-L','unisims_ver','-s','tb_feedback_frame','--timescale','1ns/1ps'],None),
-            ('simulate',[tool/'xsim.bat','tb_feedback_frame','-runall'],f'FEEDBACK_FRAME_1SYS_PASS width={width}')]:
+            ('simulate',[tool/'xsim.bat','tb_feedback_frame','-runall'],f'FEEDBACK_FRAME_{delay}SYS_PASS width={width}')]:
             cmd=[str(v) for v in cmd];r=subprocess.run(cmd,cwd=sub,capture_output=True);(sub/(label+'.stdout.log')).write_bytes(r.stdout);(sub/(label+'.stderr.log')).write_bytes(r.stderr)
             txt=(r.stdout+b'\n'+r.stderr).decode(errors='replace');ok=r.returncode==0 and (not marker or marker in txt) and not re.search(r'(?m)^(ERROR:|Fatal:|FATAL_ERROR:)',txt)
             (sub/(label+'.json')).write_bytes(json.dumps({'command':cmd,'exit_code':r.returncode,'passed':bool(ok)},indent=2).encode());print(width,label,'PASS' if ok else 'FAIL',flush=True);assert ok,txt[-7000:]
             if marker:print(re.search(marker+r'[^\r\n]*',txt)[0],flush=True)
         stats['cycles']=len(rows);results.append({'width':width,'stats':stats,'CSR_addresses':d.addresses})
-    (out/'results.json').write_bytes(json.dumps({'passed':True,'results':results,'frozen_pid_sha256':hashlib.sha256(frozen.read_bytes()).hexdigest(),
+    (out/'results.json').write_bytes(json.dumps({'passed':True,'frame_delay':delay,'results':results,'frozen_pid_sha256':hashlib.sha256(frozen.read_bytes()).hexdigest(),
         'scope':'Native UNISIM MREG+real CSR; exact 37-bit integer oracle; original limiter with delayed raw config, clamp oracle, frozen R16 PID with independently delayed controls; full mode/CE/reset/hot-write frame comparison. No implementation/board proof.'},indent=2).encode())
     print('FEEDBACK_FRAME_SUITE_PASS',flush=True)
 if __name__=='__main__':main()

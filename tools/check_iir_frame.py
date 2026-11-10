@@ -18,7 +18,7 @@ def packed(values,widths):
     return result
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
+    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);p.add_argument('--frame-delay',type=int,choices=(1,2),default=2);a=p.parse_args();delay=a.frame_delay;out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     frozen=ROOT/'gateware/tests/timing/reference/r16_iir.py'
     spec=importlib.util.spec_from_file_location('gateware.logic.r16_iir_frame_reference',frozen);old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
     results=[];tool=Path('D:/Xilinx/Vivado/2020.1/bin')
@@ -27,12 +27,14 @@ def main():
         class Pair(Module):
             def __init__(self):
                 self.clock_domains.cd_sys=ClockDomain('sys')
-                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=1,mac_impl="split_c48" if width==25 else "native")
+                self.submodules.candidate=c=Iir(order=5,width=width,coeff_width=cw,shift=shift,config_delay=delay,mac_impl="split_c48" if width==25 else "native")
                 self.submodules.reference=r=old.Iir(order=5,width=width,coeff_width=cw,shift=shift)
                 self.submodules.bank=b=CSRBank(c.get_csrs());self.ports={}
                 for key,bits,sgn in [('x',width,True),('hold',1,False),('clear',1,False),('csr_adr',14,False),('csr_we',1,False),('csr_dat_w',8,False)]:self.ports[key]=Signal((bits,sgn),name_override=key)
                 def lag(value):
-                    q=Signal.like(value);self.sync += q.eq(value);return q
+                    for _ in range(delay):
+                        q=Signal.like(value);self.sync += q.eq(value);value=q
+                    return value
                 for key in ['x','hold','clear']:
                     self.comb += [getattr(c,key).eq(lag(self.ports[key])),getattr(r,key).eq(lag(self.ports[key]))]
                 self.stores=[('z0',c.z0)]+[(k,getattr(c,'r_'+k)) for k in COEFFS]
@@ -64,29 +66,29 @@ def main():
                 self.coeff={k:signed(self.storage[k],cw) for k in COEFFS}
                 if we and adr in d.byte_map:
                     key,pos,bits=d.byte_map[adr];mask=(1<<bits)-1;self.storage[key]=(self.storage[key]&~(mask<<pos))|((data&mask)<<pos)
-        model=Oracle();current={k:0 for k,_ in d.stores};previous=(0,0,0,0,0,0);rng=random.Random(2026111018+width)
+        model=Oracle();current={k:0 for k,_ in d.stores};previous=[(0,0,0,0,0,0)]*delay;rng=random.Random(2026111018+width)
         rows=[];stats={'writes':0,'holds':0,'clears':0,'resets':0,'rail':0,'nonzero':0};latencies={}
         def emit(x=0,hold=0,clear=0,rst=0,adr=0,we=0,data=0):
             nonlocal previous
-            if rst:model.reset();current.update({k:0 for k in current});previous=(0,0,0,0,0,0);read=0
+            if rst:model.reset();current.update({k:0 for k in current});previous=[(0,0,0,0,0,0)]*delay;read=0
             else:
-                model.step(*previous)
+                model.step(*previous.pop(0))
                 key,pos,bits=d.byte_map[adr];mask=(1<<bits)-1;read=(current[key]>>pos)&mask
                 if we:current[key]=(current[key]&~(mask<<pos))|((data&mask)<<pos)
-                previous=(x,hold,clear,adr,we,data)
+                previous.append((x,hold,clear,adr,we,data))
             rows.append([rst,x&((1<<width)-1),hold,clear,adr,we,data,read,model.y&((1<<width)-1),model.error,
                 packed([model.coeff[k] for k in COEFFS],[cw]*11),packed([current[k] for k,_ in d.stores],[v.size for _,v in d.stores])])
             for key,value in [('writes',we),('holds',hold),('clears',clear),('resets',rst),('rail',model.error),('nonzero',int(model.y!=0))]:stats[key]+=value
         def write(key,value):
             for adr,pos,bits in d.addresses[key]:emit(adr=adr,we=1,data=(value>>pos)&((1<<bits)-1))
         for _ in range(4):emit(rst=1)
-        for tap,delay in [('b0',7),('b5',12)]:
+        for tap,expected_delay in [('b0',6+delay),('b5',11+delay)]:
             for key in COEFFS:write(key,(1<<shift) if key==tap else 0)
             for _ in range(40):emit()
             start=len(rows);emit(x=123)
             for _ in range(40):emit()
             hit=next(i for i in range(start,len(rows)) if signed(rows[i][8],width)==123)
-            assert hit-start+1==delay,(width,tap,hit-start+1);latencies[tap]=delay
+            assert hit-start+1==expected_delay,(width,tap,hit-start+1);latencies[tap]=expected_delay
         for key in COEFFS:write(key,0)
         for val in [1,-1,(1<<(width-1))-1,-(1<<(width-1)),(1<<(width+1))-1,-(1<<(width+1)),0]:
             write('z0',val)
@@ -115,7 +117,7 @@ initial begin
   if(cand_error)rails=rails+1;if(cand_y!=0)nonzero=nonzero+1;cycles=cycles+1;
  end
  if(cycles<17000 || rails<100 || nonzero<1000)$fatal(1,"coverage");
- $display("IIR_CONFIG_FRAME_PASS width={width} cycles=%0d rails=%0d nonzero=%0d raw_b0_latency=7 raw_b5_latency=12",cycles,rails,nonzero);$finish;
+ $display("IIR_CONFIG_FRAME_PASS width={width} cycles=%0d rails=%0d nonzero=%0d raw_b0_latency={6+delay} raw_b5_latency={11+delay}",cycles,rails,nonzero);$finish;
 end
 initial begin #500000;$fatal(1,"timeout");end
 endmodule
@@ -127,6 +129,6 @@ endmodule
             (sub/(label+'.json')).write_bytes(json.dumps({'command':cmd,'exit_code':r.returncode,'passed':bool(ok)},indent=2).encode());print(width,label,'PASS' if ok else 'FAIL',flush=True);assert ok,txt[-7000:]
             if marker:print(re.search(marker+r'[^\r\n]*',txt)[0],flush=True)
         stats['cycles']=len(rows);results.append({'width':width,'stats':stats,'latency_from_undelayed_raw_input':latencies,'latency_CSR_relative_to_filter_x':6,'CSR_addresses':d.addresses})
-    (out/'results.json').write_bytes(json.dumps({'passed':True,'results':results,'frozen_iir_sha256':hashlib.sha256(frozen.read_bytes()).hexdigest(),'scope':'Native generated RTL, frozen R16 IIR with independent raw input/config delay and integer 28/50-bit oracle, true CSRBank and hot partial writes; no IIR recurrence register change.'},indent=2).encode())
+    (out/'results.json').write_bytes(json.dumps({'passed':True,'frame_delay':delay,'results':results,'frozen_iir_sha256':hashlib.sha256(frozen.read_bytes()).hexdigest(),'scope':'Native generated RTL, frozen R16 IIR with independent raw input/config delay and integer 28/50-bit oracle, true CSRBank and hot partial writes; no IIR recurrence register change.'},indent=2).encode())
     print('IIR_CONFIG_FRAME_SUITE_PASS',flush=True)
 if __name__=='__main__':main()

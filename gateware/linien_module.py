@@ -39,6 +39,7 @@ from .logic.limit import LimitCSR
 from .logic.registered_error_mixer import MixerFactorCSR, RegisteredErrorMixer
 from .logic.modulate import Modulate
 from .logic.pid_pipeline import PipelinedPID
+from functools import partial
 from .logic.feedback_pipeline import AlignedInputLimitCSR, FeedbackInputAlignment, MixerAlignedPID
 from .logic.slow_pipeline import PipelinedSlowChain, SlowOutputTransport
 from .logic.sweep import SweepCSR
@@ -182,8 +183,8 @@ class LinienModule(Module, AutoCSR):
 
         self.submodules.logic = LinienLogic(
             coeff_width=coeff_width, chain_factor_width=chain_factor_bits,
-            pid_factory=MixerAlignedPID, error_limit_factory=AlignedInputLimitCSR,
-            raw_iir_config_delay=1, raw_iir_mac_impl="split_c48"
+            pid_factory=partial(MixerAlignedPID,frame_delay=2), error_limit_factory=partial(AlignedInputLimitCSR,frame_delay=2),
+            raw_iir_config_delay=2, raw_iir_mac_impl="split_c48"
         )
         self.submodules.analog = PitayaAnalog(
             platform.request("adc"), platform.request("dac")
@@ -276,7 +277,7 @@ class LinienModule(Module, AutoCSR):
         ]
 
         # Register copies occur on the original FastChain/CSR update edges.
-        self.submodules.error_mixer = mixer = RegisteredErrorMixer(product_pipeline=True)
+        self.submodules.error_mixer = mixer = RegisteredErrorMixer(product_pipeline=True,sum_pipeline=True)
         mixed = mixer.y
         self.comb += [
             mixer.a.eq(self.fast_a.out_i), mixer.b.eq(self.fast_b.out_i),
@@ -300,7 +301,7 @@ class LinienModule(Module, AutoCSR):
 
         # FAST PID ---------------------------------------------------------------------
         pid_out = Signal((width, True))
-        self.submodules.feedback_alignment = alignment = FeedbackInputAlignment(width,signal_width)
+        self.submodules.feedback_alignment = alignment = FeedbackInputAlignment(width,signal_width,frame_delay=2)
         self.comb += [
             alignment.direct_adc.eq(self.analog.adc_a),
             alignment.mixed_error.eq(mixed_limited),

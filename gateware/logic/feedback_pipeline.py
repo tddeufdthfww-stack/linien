@@ -1,4 +1,4 @@
-"""One-cycle mixer-frame alignment; PID recurrence and CSR ABI are unchanged."""
+"""Configurable mixer-frame alignment; PID recurrence and CSR ABI are unchanged."""
 from migen import Cat, If, Module, Mux, Replicate, Signal
 from misoc.interconnect.csr import CSRStorage
 from .filter import Filter
@@ -8,12 +8,13 @@ from .pid_pipeline import PipelinedPID
 
 
 class MixerAlignedPID(PipelinedPID):
-    """PipelinedPID receiving data already delayed one cycle by the frontend.
+    """PipelinedPID receiving data already delayed frame_delay cycles by the frontend.
 
     Public CSR storage/running/CE are current; the corresponding sample controls
-    are shifted one sys clock. P/I/D then retain the R4 two-stage frontend.
+    are shifted frame_delay sys clocks. P/I/D then retain the R4 two-stage frontend.
     """
-    def __init__(self, width=14, coeff_width=14):
+    def __init__(self, width=14, coeff_width=14, frame_delay=1):
+        assert frame_delay in (1,2)
         self.error_s1 = Signal((width+1, True))
         self.kp_s1, self.ki_s1, self.kd_s1 = [Signal((coeff_width, True)) for _ in range(3)]
         self.reset_s1, self.reset_s2 = Signal(), Signal()
@@ -27,12 +28,14 @@ class MixerAlignedPID(PipelinedPID):
         self.execute_en = self.update_en
         self.update_en = Signal(reset=1)
         self.comb += self.execute_en.eq(self.valid_s2)
+        for target, source in ((self.setpoint_cohort,self.setpoint.storage),
+                (self.running_cohort,self.running),(self.kp_cohort,self.kp.storage),
+                (self.ki_cohort,self.ki.storage),(self.kd_cohort,self.kd.storage),
+                (self.reset_cohort,self.reset.storage),(self.valid_cohort,self.update_en)):
+            for _ in range(frame_delay-1):
+                q=Signal.like(target); self.sync += q.eq(source); source=q
+            self.sync += target.eq(source)
         self.sync += [
-            self.setpoint_cohort.eq(self.setpoint.storage),
-            self.running_cohort.eq(self.running),
-            self.kp_cohort.eq(self.kp.storage), self.ki_cohort.eq(self.ki.storage),
-            self.kd_cohort.eq(self.kd.storage), self.reset_cohort.eq(self.reset.storage),
-            self.valid_cohort.eq(self.update_en),
             self.valid_s1.eq(self.valid_cohort), self.valid_s2.eq(self.valid_s1),
             self.error_s1.eq(self.error),
             self.kp_s1.eq(self.kp_cohort), self.ki_s1.eq(self.ki_cohort),
@@ -49,12 +52,13 @@ class MixerAlignedPID(PipelinedPID):
 
 
 class AlignedInputLimitCSR(Filter):
-    """Original LimitCSR, with one-cycle CSR-bound transport before its old FFs.
+    """Original LimitCSR, with frame_delay-cycle CSR-bound transport before its old FFs.
 
     update_en is execution CE (already aligned by FeedbackInputAlignment).
     CSR writes are not gated. Original internal bound/y/error FFs remain.
     """
-    def __init__(self, guard=0, **kwargs):
+    def __init__(self, guard=0, frame_delay=1, **kwargs):
+        assert frame_delay in (1,2)
         super().__init__(**kwargs)
         self.update_en = Signal(reset=1)
         width = len(self.y)
@@ -65,7 +69,12 @@ class AlignedInputLimitCSR(Filter):
         self.submodules.limit = Limit(width+guard)
         lo = Signal(width, reset=1 << (width-1))
         hi = Signal(width, reset=(1 << (width-1))-1)
-        self.sync += [lo.eq(self.min.storage), hi.eq(self.max.storage)]
+        low_source, high_source = self.min.storage, self.max.storage
+        for _ in range(frame_delay-1):
+            lq=Signal.like(lo); hq=Signal.like(hi)
+            self.sync += [lq.eq(low_source), hq.eq(high_source)]
+            low_source, high_source = lq, hq
+        self.sync += [lo.eq(low_source), hi.eq(high_source)]
         low_value = Cat(lo, Replicate(lo[-1],guard)) if guard else lo
         high_value = Cat(hi, Replicate(hi[-1],guard)) if guard else hi
         self.comb += self.limit.x.eq(self.x)
@@ -76,7 +85,8 @@ class AlignedInputLimitCSR(Filter):
 
 class FeedbackInputAlignment(Module):
     """Align direct ADC/mode with pipelined mixed error, no extra output FF."""
-    def __init__(self, width=14, signal_width=25):
+    def __init__(self, width=14, signal_width=25, frame_delay=1):
+        assert frame_delay in (1,2)
         self.direct_adc = Signal((width,True))
         self.mixed_error = Signal((signal_width,True))
         self.pid_only = Signal()
@@ -85,7 +95,10 @@ class FeedbackInputAlignment(Module):
         self.output = Signal((signal_width,True))
         adc_cohort = Signal.like(self.direct_adc)
         mode_cohort = Signal()
-        self.sync += [adc_cohort.eq(self.direct_adc), mode_cohort.eq(self.pid_only),
-                      self.limit_execute_en.eq(self.limit_accept_en)]
+        for target, source in ((adc_cohort,self.direct_adc),(mode_cohort,self.pid_only),
+                               (self.limit_execute_en,self.limit_accept_en)):
+            for _ in range(frame_delay-1):
+                q=Signal.like(target); self.sync += q.eq(source); source=q
+            self.sync += target.eq(source)
         self.comb += self.output.eq(Mux(mode_cohort,
             adc_cohort << (signal_width-width), self.mixed_error))

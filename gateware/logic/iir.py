@@ -36,7 +36,7 @@ class Iir(Filter):
         mac_impl="native",
     ):
         Filter.__init__(self, width)
-        assert config_delay in (0,1)
+        assert config_delay in (0,1,2)
         assert mode in ("pipelined", "iterative")
         assert mac_impl in ("native","split_c48")
         if intermediate_width is None:
@@ -63,7 +63,7 @@ class Iir(Filter):
                 ci = Signal((coeff_width, True), name=name)
                 rci = CSRStorage(len(ci), name=name)
                 source = rci.storage
-                if config_delay:
+                for _ in range(config_delay):
                     cohort = Signal.like(source)
                     self.sync += cohort.eq(source)
                     source = cohort
@@ -75,7 +75,7 @@ class Iir(Filter):
 
         z = Signal((intermediate_width, True), name="z0r")
         z0_source = self.z0.storage
-        if config_delay:
+        for _ in range(config_delay):
             z0_cohort = Signal.like(z0_source)
             self.sync += z0_cohort.eq(z0_source)
             z0_source = z0_cohort

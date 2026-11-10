@@ -26,7 +26,8 @@ class RegisteredErrorMixer(Module):
     and CE. BREG copies an encoded CSR low byte on the same CSR write edge.
     DSP resets to zero, matching data=0 and F=128 (encoded low=0).
     """
-    def __init__(self, product_pipeline=False):
+    def __init__(self, product_pipeline=False, sum_pipeline=False):
+        assert not sum_pipeline or product_pipeline
         self.a, self.b = Signal((25, True)), Signal((25, True))
         self.pre_a, self.pre_b = Signal((25, True)), Signal((25, True))
         self.ce_a, self.ce_b = Signal(reset=1), Signal(reset=1)
@@ -87,6 +88,11 @@ class RegisteredErrorMixer(Module):
                           carry.eq(((u & v) | (u & w) | (v & w)) << 1)]
             operands = operands[3:] + [total, carry]
         merged = Signal((37, True))
+        summed = Signal.like(self.y)
+        if sum_pipeline:
+            self.sync += self.y.eq(summed)
+        else:
+            self.comb += self.y.eq(summed)
         self.comb += [merged.eq(operands[0] + operands[1]),
-                      If(selected_dual, self.y.eq(merged)).Else(
-                          self.y.eq((selected_a << 8) + off))]
+                      If(selected_dual, summed.eq(merged)).Else(
+                          summed.eq((selected_a << 8) + off))]
