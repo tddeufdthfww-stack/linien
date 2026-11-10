@@ -124,6 +124,9 @@ def main():
             if (ROOT / 'tools/check_parallel_tap.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_parallel_tap.py', '--out', out / 'parallel_tap_checks'],
                         ROOT, out, 'parallel_tap', env, 'PARALLEL_TAP_SUITE_PASS')
+            if (ROOT / 'tools/check_abs_threshold.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_abs_threshold.py', '--out', out / 'abs_threshold_checks'],
+                        ROOT, out, 'abs_threshold', env, 'ABS_PREDICATE_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

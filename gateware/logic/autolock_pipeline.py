@@ -2,6 +2,7 @@
 from linien_common.common import AUTOLOCK_MAX_N_INSTRUCTIONS
 from migen import Array,If,Signal,bits_for
 from .autolock import RobustAutolock,ROBUST_AUTOLOCK_FPGA_DELAY
+from .abs_threshold import signed_abs_over_threshold
 
 class PipelinedRobustAutolock(RobustAutolock):
     def __init__(self, width=14, N_points=16383, max_delay=16383):
@@ -15,6 +16,7 @@ class PipelinedRobustAutolock(RobustAutolock):
         n_instructions_s1 = Signal(self.N_instructions.size)
         final_wait_s1 = Signal(self.final_wait_time.size)
         peak_abs_s1,peak_positive_s1,wait_s1 = [],[],[]
+        peak_neg_abs_s1 = []
         current_peak_positive = Signal()
         self.sync += [at_start_s1.eq(self.at_start),request_s1.eq(self.request_lock),
             writing_s1.eq(self.writing_data_now),sweep_up_s1.eq(self.sweep_up),
@@ -25,10 +27,15 @@ class PipelinedRobustAutolock(RobustAutolock):
             signed_height = Signal((peak_height_bit,True))
             magnitude = Signal.like(signed_height)
             positive = Signal()
-            self.comb += signed_height.eq(peak.storage)
-            # Keep the original finite-width abs(min_negative) wrap behavior.
-            self.sync += [If(signed_height>=0,magnitude.eq(signed_height)).Else(
-                magnitude.eq(-1*signed_height)),positive.eq(signed_height>0)]
+            abs_next = Signal.like(signed_height)
+            abs_extended = Signal((peak_height_bit+1,True))
+            negative = Signal.like(abs_extended)
+            self.comb += [signed_height.eq(peak.storage),
+                If(signed_height>=0,abs_next.eq(signed_height)).Else(abs_next.eq(-1*signed_height)),
+                abs_extended.eq(abs_next)]
+            # Both polarities share the old CSR-cohort edge, including min wrap.
+            self.sync += [magnitude.eq(abs_next),negative.eq(-abs_extended),positive.eq(signed_height>0)]
+            peak_neg_abs_s1.append(negative)
             peak_abs_s1.append(magnitude);peak_positive_s1.append(positive)
         for wait in self.wait_for:
             value = Signal(x_data_length_bit)
@@ -44,6 +51,7 @@ class PipelinedRobustAutolock(RobustAutolock):
         self.current_instruction_idx = Signal(bits_for(AUTOLOCK_MAX_N_INSTRUCTIONS - 1))
         current_peak_height = Signal((peak_height_bit, True))
         abs_current_peak_height = Signal.like(current_peak_height)
+        negative_current_peak_height = Signal((peak_height_bit+1,True))
         current_wait_for = Signal(x_data_length_bit)
         self.comb += [
             current_peak_height.eq(
@@ -90,7 +98,7 @@ class PipelinedRobustAutolock(RobustAutolock):
             ),
             abs_current_peak_height.eq(Array(peak_abs_s1)[self.current_instruction_idx]),
             current_peak_positive.eq(Array(peak_positive_s1)[self.current_instruction_idx]),
-            over_threshold.eq(abs_sum_diff >= abs_current_peak_height),
+            negative_current_peak_height.eq(Array(peak_neg_abs_s1)[self.current_instruction_idx]),
             waited_long_enough.eq(waited_for > current_wait_for),
             all_instructions_triggered.eq(
                 self.current_instruction_idx >= n_instructions_s1
@@ -100,6 +108,8 @@ class PipelinedRobustAutolock(RobustAutolock):
                 & (final_waited_for >= final_wait_s1)
             ),
         ]
+
+        signed_abs_over_threshold(self,sum_diff,abs_current_peak_height,negative_current_peak_height,over_threshold)
 
         self.sync += [
             If(
