@@ -103,6 +103,9 @@ def main():
             if (ROOT / 'tools/check_autolock_pipeline.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_autolock_pipeline.py', '--out', out / 'autolock_pipeline_checks'],
                         ROOT, out, 'autolock_pipeline', env, 'AUTOLOCK_DECISION_PIPELINE_SUITE_PASS')
+            if (ROOT / 'tools/check_registered_mixer.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_registered_mixer.py', '--out', out / 'registered_mixer_checks'],
+                        ROOT, out, 'registered_mixer', env, 'REGISTERED_MIXER_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

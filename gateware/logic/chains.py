@@ -31,6 +31,9 @@ class FastChain(Module, AutoCSR):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
         self.out_i = Signal((signal_width, True))
+        # Same-edge DSP input copy, not an additional data stage.
+        self.pre_out_i = Signal((signal_width, True))
+        self.out_i_update_en = Signal(reset=1)
         # output of quadrature demodulated signal
         self.out_q = Signal((signal_width, True))
 
@@ -87,6 +90,9 @@ class FastChain(Module, AutoCSR):
             )
             setattr(self.submodules, f"iir_d_{sub_channel_idx+1}", iir_d)
             y_limit = LimitCSR(width=signal_width, guard=3)
+            if sub_channel_idx == 0:
+                self.comb += [self.pre_out_i.eq(y_limit.limit.y),
+                              self.out_i_update_en.eq(y_limit.update_en)]
             setattr(self.submodules, f"y_limit_{sub_channel_idx+1}", y_limit)
 
             self.comb += [

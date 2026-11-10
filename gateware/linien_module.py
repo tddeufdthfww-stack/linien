@@ -36,6 +36,7 @@ from .logic.decimation import DecimateEnable
 from .logic.delta_sigma import DeltaSigma
 from .logic.iir import Iir
 from .logic.limit import LimitCSR
+from .logic.registered_error_mixer import MixerFactorCSR, RegisteredErrorMixer
 from .logic.modulate import Modulate
 from .logic.pid_pipeline import PipelinedPID
 from .logic.slow_pipeline import PipelinedSlowChain, SlowOutputTransport
@@ -67,8 +68,12 @@ class LinienLogic(Module, AutoCSR):
 
         # we use chain_factor_width + 1 for the single channel mode
         factor_reset = 1 << (chain_factor_width - 1)
-        self.chain_a_factor = CSRStorage(chain_factor_width + 1, reset=factor_reset)
-        self.chain_b_factor = CSRStorage(chain_factor_width + 1, reset=factor_reset)
+        if chain_factor_width == 8:
+            self.chain_a_factor = MixerFactorCSR(name="chain_a_factor")
+            self.chain_b_factor = MixerFactorCSR(name="chain_b_factor")
+        else:
+            self.chain_a_factor = CSRStorage(chain_factor_width + 1, reset=factor_reset)
+            self.chain_b_factor = CSRStorage(chain_factor_width + 1, reset=factor_reset)
         self.chain_a_offset = CSRStorage(width)
         self.chain_b_offset = CSRStorage(width)
         self.combined_offset = CSRStorage(width)
@@ -262,24 +267,21 @@ class LinienModule(Module, AutoCSR):
             self.fast_b.adc.eq(self.analog.adc_b),
         ]
 
-        # now, we combine the output of the two paths, with a variable factor each.
-        mixed = Signal(
-            (2 + ((signal_width + 1) + self.logic.chain_a_factor.size), True)
-        )
+        # Register copies occur on the original FastChain/CSR update edges.
+        self.submodules.error_mixer = mixer = RegisteredErrorMixer()
+        mixed = mixer.y
         self.comb += [
-            If(
-                self.logic.dual_channel.storage,
-                mixed.eq(
-                    (self.logic.chain_a_factor.storage * self.fast_a.out_i)
-                    + (self.logic.chain_b_factor.storage * self.fast_b.out_i)
-                    + (self.logic.combined_offset_signed << (chain_factor_bits + s))
-                ),
-            ).Else(
-                mixed.eq(
-                    (self.fast_a.out_i << chain_factor_bits)
-                    + (self.logic.combined_offset_signed << (chain_factor_bits + s))
-                )
-            )
+            mixer.a.eq(self.fast_a.out_i), mixer.b.eq(self.fast_b.out_i),
+            mixer.pre_a.eq(self.fast_a.pre_out_i), mixer.pre_b.eq(self.fast_b.pre_out_i),
+            mixer.ce_a.eq(self.fast_a.out_i_update_en), mixer.ce_b.eq(self.fast_b.out_i_update_en),
+            mixer.high_a.eq(self.logic.chain_a_factor.storage[8]),
+            mixer.high_b.eq(self.logic.chain_b_factor.storage[8]),
+            mixer.low_a.eq(self.logic.chain_a_factor.encoded_low_data),
+            mixer.low_b.eq(self.logic.chain_b_factor.encoded_low_data),
+            mixer.write_a.eq(self.logic.chain_a_factor.encoded_low_write),
+            mixer.write_b.eq(self.logic.chain_b_factor.encoded_low_write),
+            mixer.offset.eq(self.logic.combined_offset_signed),
+            mixer.dual.eq(self.logic.dual_channel.storage),
         ]
 
         mixed_limited = Signal((signal_width, True))
