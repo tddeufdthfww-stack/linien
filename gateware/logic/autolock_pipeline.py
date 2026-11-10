@@ -1,8 +1,9 @@
 """One-clock robust decision transport; original sample throughput retained."""
 from linien_common.common import AUTOLOCK_MAX_N_INSTRUCTIONS
-from migen import Array,If,Signal,bits_for
+from migen import Cat,If,Signal,bits_for
 from .autolock import RobustAutolock,ROBUST_AUTOLOCK_FPGA_DELAY
 from .abs_threshold import signed_abs_over_threshold
+from .onehot_select import onehot_select_word
 
 class PipelinedRobustAutolock(RobustAutolock):
     def __init__(self, width=14, N_points=16383, max_delay=16383):
@@ -49,20 +50,21 @@ class PipelinedRobustAutolock(RobustAutolock):
         # the following signals are property of the peak that the autolock is trying to
         # detect right now
         self.current_instruction_idx = Signal(bits_for(AUTOLOCK_MAX_N_INSTRUCTIONS - 1))
+        assert AUTOLOCK_MAX_N_INSTRUCTIONS == 1 << len(self.current_instruction_idx)
+        # Parallel encoding of the CURRENT index, not a delayed binary decode.
+        self._instruction_onehot = Signal(AUTOLOCK_MAX_N_INSTRUCTIONS, reset=1,
+                                          name='instruction_onehot')
         current_peak_height = Signal((peak_height_bit, True))
         abs_current_peak_height = Signal.like(current_peak_height)
         negative_current_peak_height = Signal((peak_height_bit+1,True))
         current_wait_for = Signal(x_data_length_bit)
         self.comb += [
             current_peak_height.eq(
-                Array([peak_height.storage for peak_height in self.peak_heights])[
-                    self.current_instruction_idx
-                ]
+                onehot_select_word(self, [peak.storage for peak in self.peak_heights],
+                                   self._instruction_onehot)
             ),
             current_wait_for.eq(
-                Array(wait_s1)[
-                    self.current_instruction_idx
-                ]
+                onehot_select_word(self, wait_s1, self._instruction_onehot)
             ),
         ]
 
@@ -96,9 +98,9 @@ class PipelinedRobustAutolock(RobustAutolock):
             If(sum_diff >= 0, abs_sum_diff.eq(sum_diff)).Else(
                 abs_sum_diff.eq(-1 * sum_diff)
             ),
-            abs_current_peak_height.eq(Array(peak_abs_s1)[self.current_instruction_idx]),
-            current_peak_positive.eq(Array(peak_positive_s1)[self.current_instruction_idx]),
-            negative_current_peak_height.eq(Array(peak_neg_abs_s1)[self.current_instruction_idx]),
+            abs_current_peak_height.eq(onehot_select_word(self, peak_abs_s1, self._instruction_onehot)),
+            current_peak_positive.eq(onehot_select_word(self, peak_positive_s1, self._instruction_onehot)),
+            negative_current_peak_height.eq(onehot_select_word(self, peak_neg_abs_s1, self._instruction_onehot)),
             waited_long_enough.eq(waited_for > current_wait_for),
             all_instructions_triggered.eq(
                 self.current_instruction_idx >= n_instructions_s1
@@ -119,6 +121,7 @@ class PipelinedRobustAutolock(RobustAutolock):
                 # Therefore, we give it a head start for `final_waited_for`
                 final_waited_for.eq(ROBUST_AUTOLOCK_FPGA_DELAY),
                 self.current_instruction_idx.eq(0),
+                self._instruction_onehot.eq(1),
                 If(request_s1, watching.eq(1)).Else(watching.eq(0)),
             ).Else(
                 # not at start
@@ -137,6 +140,8 @@ class PipelinedRobustAutolock(RobustAutolock):
                         self.current_instruction_idx.eq(
                             self.current_instruction_idx + 1
                         ),
+                        self._instruction_onehot.eq(Cat(self._instruction_onehot[-1],
+                                                        self._instruction_onehot[:-1])),
                         waited_for.eq(0),
                     ).Else(waited_for.eq(waited_for + 1)),
                 ),
