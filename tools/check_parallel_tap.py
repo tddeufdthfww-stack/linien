@@ -18,9 +18,16 @@ def check_fastchain(out):
    self.clock_domains.cd_sys=ClockDomain('sys');self.ports={}
    for k,n,s in [('adc',14,1),('offset',14,1),('dx',25,1),('dy',25,1),('phase',32,0),('cei',1,0),('ceq',1,0),('csr_adr',14,0),('csr_we',1,0),('csr_dat_w',8,0)]:self.ports[k]=Signal((n,bool(s)),name_override=k)
    p=self.ports;maps=[]
-   offset_registered=Signal((14,True));self.sync += offset_registered.eq(p['offset'])
+   # Match Root: CSR storage is unsigned, its original shadow is signed14.
+   self.root_offset=CSRStorage(14,name='root_offset')
+   self.submodules.offset_bank=ob=CSRBank([self.root_offset])
+   assert not self.root_offset.storage.signed
+   offset_registered=Signal((14,True));self.sync += offset_registered.eq(self.root_offset.storage)
+   self.comb += [ob.bus.adr.eq(p['csr_adr'][:1]),ob.bus.we.eq(p['csr_we']),ob.bus.dat_w.eq(p['csr_dat_w'])]
+   offset_cfg=Signal(14,name_override='offset_cfg');self.ports['offset_cfg']=offset_cfg;self.comb += offset_cfg.eq(self.root_offset.storage)
+   self.root_offset_bytes=[(v.name,v.size) for v in ob.simple_csrs]
    for prefix,parallel in [('ref',False),('cand',True)]:
-    chain=FastChain(mod=SimpleNamespace(phase=p['phase']),offset_signal=offset_registered,pre_offset_signal=p['offset'] if parallel else None,coeff_width=25,iir_mac_impl='registered_c48' if parallel else 'split_c48',parallel_output=parallel)
+    chain=FastChain(mod=SimpleNamespace(phase=p['phase']),offset_signal=offset_registered,pre_offset_signal=self.root_offset.storage if parallel else None,coeff_width=25,iir_mac_impl='registered_c48' if parallel else 'split_c48',parallel_output=parallel)
     setattr(self.submodules,prefix,chain);bank=CSRBank(chain.get_csrs());setattr(self.submodules,prefix+'_bank',bank)
     self.comb += [chain.adc.eq(p['adc']),chain.signal_in[0].eq(p['dx']),chain.signal_in[1].eq(p['dy']),
                  chain.y_limit_1.update_en.eq(p['cei']),chain.y_limit_2.update_en.eq(p['ceq']),
@@ -35,8 +42,8 @@ module tb_fastchain_parallel;
 reg sys_clk=0;always #4 sys_clk=~sys_clk;reg sys_rst=1;
 reg signed [13:0] adc=0,offset=0;reg signed [24:0] dx=0,dy=0;reg [31:0] phase=0;
 reg cei=0,ceq=0;reg [13:0] csr_adr=0;reg csr_we=0;reg [7:0] csr_dat_w=0;
-wire [24:0] ref_i,cand_i,ref_q,cand_q,ref_pre,cand_pre;wire ref_ei,cand_ei,ref_eq,cand_eq;wire [7:0] ref_read,cand_read;
-reg [24:0] previous_i=0,previous_q=0,expected_i=0;integer i,changes=0,holds=0;integer seed=2026111021;
+wire [13:0] offset_cfg;wire [24:0] ref_i,cand_i,ref_q,cand_q,ref_pre,cand_pre;wire ref_ei,cand_ei,ref_eq,cand_eq;wire [7:0] ref_read,cand_read;
+reg [24:0] previous_i=0,previous_q=0,expected_i=0;integer i,changes=0,holds=0,negative_offsets=0;integer seed=2026111021;
 fastchain_parallel_pair dut(.*);
 initial begin
  for(i=0;i<30000;i=i+1)begin
@@ -46,9 +53,10 @@ initial begin
   #1;
   if(ref_i!==cand_i || ref_q!==cand_q || ref_pre!==cand_pre || ref_ei!==cand_ei || ref_eq!==cand_eq || ref_read!==cand_read || cand_i!==expected_i || (^(cand_i^cand_q^cand_pre))===1'bx)$fatal(1,"FASTCHAIN_PARALLEL_FAIL cycle=%0d i=%h/%h q=%h/%h pre=%h/%h",i,ref_i,cand_i,ref_q,cand_q,ref_pre,cand_pre);
   if(!cei && !sys_rst && cand_i!==previous_i)$fatal(1,"CE I hold");if(!ceq && !sys_rst && cand_q!==previous_q)$fatal(1,"CE Q hold");
+  if(offset_cfg[13])negative_offsets=negative_offsets+1;
   if(cand_i!==previous_i || cand_q!==previous_q)changes=changes+1;previous_i=cand_i;previous_q=cand_q;if(!cei && !ceq && !sys_rst)holds=holds+1;
  end
- if(changes<100 || holds<1000)$fatal(1,"coverage");$display("FASTCHAIN_PARALLEL_PAIR_PASS cycles=30000 changes=%0d both_hold=%0d",changes,holds);$finish;
+ if(changes<100 || holds<1000 || negative_offsets<1000)$fatal(1,"coverage");$display("FASTCHAIN_PARALLEL_PAIR_PASS cycles=30000 changes=%0d both_hold=%0d negative_offsets=%0d",changes,holds,negative_offsets);$finish;
 end
 endmodule
 '''
@@ -58,7 +66,7 @@ endmodule
   text=(res.stdout+b'\n'+res.stderr).decode(errors='replace');ok=res.returncode==0 and (not marker or marker in text) and not re.search(r'(?m)^(ERROR:|Fatal:|FATAL_ERROR:)',text)
   (out/(label+'.json')).write_bytes(json.dumps({'command':cmd,'exit_code':res.returncode,'passed':bool(ok)},indent=2).encode());print('fastchain',label,'PASS' if ok else 'FAIL',flush=True);assert ok,text[-6000:]
   if marker:print(re.search(marker+r'[^\r\n]*',text)[0],flush=True)
- (out/'results.json').write_bytes(json.dumps({'passed':True,'cycles':30000,'CSR_bytes_identical':d.csr_map,'scope':'Full two-phase production-width FastChain pair with real CSR banks, IIR order1/2, demod/offset/tap/invert/bounds hot writes and independent output CE; old expression vs parallel clamp, zero-cycle differential.'},indent=2).encode())
+ (out/'results.json').write_bytes(json.dumps({'passed':True,'cycles':30000,'CSR_bytes_identical':d.csr_map,'root_offset_CSR_bytes':d.root_offset_bytes,'pre_offset_type':'unsigned CSRStorage.storage, original signed14 shadow FF','scope':'Full two-phase production-width FastChain pair with real CSR banks, IIR order1/2, demod/offset/tap/invert/bounds hot writes and independent output CE; old expression vs parallel clamp, zero-cycle differential.'},indent=2).encode())
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);args=p.parse_args();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
