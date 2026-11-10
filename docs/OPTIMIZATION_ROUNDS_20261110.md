@@ -76,6 +76,7 @@ R16实际源码位置、diff统计和完整源码副本另存证据索引；没�
 | 现有约束覆盖的Hold/Pulse | 无违规，WHS +0.038ns、THS0、WPWS+1.5ns；不覆盖缺失外部约束 |
 | 最终STA | **FAIL** |
 | CDC/I/O/DRC最终签核 | **NOT SIGNED OFF** |
+| 全项目GUI/服务端软件测试 | NOT RUN；本轮只运行上表列出的gateware相关回归 |
 | bitstream/板上/激光闭环 | **NOT RUN**，未部署、未操作激光/PZT |
 
 R15的功能和综合明确是**REUSED R14 / NOT RERUN**，不是该轮重新执行。R12最初glbl缺失、DSP端口常量位宽错误，以及R14最初测试观测寄存器复位值错误的FAIL均已保留；修复后的输入重新回归，通过才送综合。未修改已安装Migen evaluator。上述覆盖不是形式等价证明或板级证据。
