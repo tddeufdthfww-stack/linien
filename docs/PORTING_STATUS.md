@@ -1,3 +1,5 @@
+> **2026-11-10 R20最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-1.838/-600.003ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R18最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-2.326/-1448.239ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-10 R18 RUNNING**：IIR C48精确MAC零新增周期候选。71760组全50位乘加、order1/2/5各约18000拍完整滤波器以及14/25位配置一拍对齐原生差分均PASS；尚无综合/route结果。当前保留R17 -2.800/-4213.790ns、STA FAIL，新增反馈8ns；R18相对R17新增0。R16/基线不改，见R18_PLAN.md。
@@ -411,3 +413,16 @@ R2b相对R1：WNS改善0.367 ns；TNS减少636.347 ns负裕量；Setup失败端�
 - CDC={'CDC-1': 444, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 2, 'CDC-15': 374}，严格名称差集新增378/移除370；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r18_iir_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R20 / 2026-11-10归档 / iir时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `ac35a5beb1860163f0d0658d04a05d77e2ebef01`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r20-iir-preg-relocation`；R4a/R2b/原用户工程保持原样。
+- 功能：原生UNISIM/真实CSR两拍联合帧14/25位44290/44292拍、512/512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；14/25 IIR配置帧与冻结RTL/28与50位整数oracle PASS（从未延迟输入到b0/b5=8/13拍，滤波器latency CSR仍6）；完整旧功能回归PASS。R19指定Bare/快慢串接组件数字模型正负脉冲确认72.1/108.1ns，较R16追加16ns；R20继承同组件契约，未重跑该组件模型，IIR周期由完整滤波器测试独立验证；新增时钟化原生DSP完整50位乘加71760组PASS，order1/2/5完整IIR/真实CSR/热写/hold/clear/reset/overflow-hold三方差分PASS；初始错误OPMODE0x65原生仿真FAIL，失败提交e113a81与日志保留，依据本机UNISIM Z-mux实现改为0x55后重新全套验证；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20只重定位既有IIR状态寄存器，新增周期0。
+- 综合（R15为REUSED_R14，其他为本轮COMPLETE），WNS/TNS=-1.811/-391.486ns。实际route COMPLETE，WNS/TNS=-1.838/-600.003ns，失败端点1287；WHS/WPWS=0.04/1.5ns，THS=0。
+- raw IIR内部最差=-0.518ns，入口=-0.519ns；全局最差 `linienmodule_fast_a_iir0_y2_reg[15]/C` → `DSP48E1_68_i_18_psdsp/D`，逻辑/布线=['3.805', '5.955']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 12064, 'ff': 14715, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=411。
+- CDC={'CDC-1': 436, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增381/移除381；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r20_iir_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
