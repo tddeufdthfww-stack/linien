@@ -130,6 +130,9 @@ def main():
             if (ROOT / 'tools/check_common_csr.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_common_csr.py', '--out', out / 'common_csr_checks'],
                         ROOT, out, 'common_csr', env, 'COMMON_CSR_SUITE_PASS')
+            if (ROOT / 'tools/check_pid_output_limit.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_pid_output_limit.py', '--out', out / 'pid_output_checks'],
+                        ROOT, out, 'pid_output_limit', env, 'PID_OUTPUT_LIMIT_SUITE_PASS')
             if (ROOT / 'tools/check_scope_average.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_scope_average.py', '--out', out / 'scope_average_checks'],
                         ROOT, out, 'scope_average', env, 'SCOPE_AVERAGE_SUITE_PASS')

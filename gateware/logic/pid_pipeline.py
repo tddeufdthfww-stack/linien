@@ -8,6 +8,7 @@ from migen import If, Signal
 from misoc.interconnect.csr import CSRStorage
 
 from .pid import PID
+from .pid_output_limit import pid_output_limit
 
 
 class PipelinedPID(PID):
@@ -88,3 +89,13 @@ class PipelinedPID(PID):
             self.kd_reg.eq(self.kd_mult >> (self.coeff_width - self.d_shift)),
             self.kd_reg_r.eq(self.kd_reg),
             self.output_d.eq(self.kd_reg - self.kd_reg_r))
+
+    def calculate_sum(self):
+        # Keep the inherited sum width, data register and CE edge exactly.
+        self.pid_sum = Signal(
+            (len(self.output_p) + len(self.int_out) + len(self.output_d), True)
+        )
+        self.pid_out = Signal((self.width, True))
+        pid_output_limit(self, self.pid_sum, self.pid_out)
+        self.sync += If(self.update_en,
+            self.pid_sum.eq(self.output_p + self.int_out + self.output_d))
