@@ -3,6 +3,7 @@ from linien_common.common import AUTOLOCK_MAX_N_INSTRUCTIONS
 from migen import Array,If,Signal,bits_for
 from .autolock import RobustAutolock,ROBUST_AUTOLOCK_FPGA_DELAY
 from .abs_threshold import signed_abs_over_threshold
+from .instruction_prefetch import prefetch_instruction
 
 class PipelinedRobustAutolock(RobustAutolock):
     def __init__(self, width=14, N_points=16383, max_delay=16383):
@@ -15,32 +16,17 @@ class PipelinedRobustAutolock(RobustAutolock):
         sum_diff_s1 = Signal.like(self.sum_diff_calculator.output)
         n_instructions_s1 = Signal(self.N_instructions.size)
         final_wait_s1 = Signal(self.final_wait_time.size)
-        peak_abs_s1,peak_positive_s1,wait_s1 = [],[],[]
-        peak_neg_abs_s1 = []
         current_peak_positive = Signal()
         self.sync += [at_start_s1.eq(self.at_start),request_s1.eq(self.request_lock),
             writing_s1.eq(self.writing_data_now),sweep_up_s1.eq(self.sweep_up),
             sum_diff_s1.eq(self.sum_diff_calculator.output),
             n_instructions_s1.eq(self.N_instructions.storage),
             final_wait_s1.eq(self.final_wait_time.storage)]
-        for peak in self.peak_heights:
-            signed_height = Signal((peak_height_bit,True))
-            magnitude = Signal.like(signed_height)
-            positive = Signal()
-            abs_next = Signal.like(signed_height)
-            abs_extended = Signal((peak_height_bit+1,True))
-            negative = Signal.like(abs_extended)
-            self.comb += [signed_height.eq(peak.storage),
-                If(signed_height>=0,abs_next.eq(signed_height)).Else(abs_next.eq(-1*signed_height)),
-                abs_extended.eq(abs_next)]
-            # Both polarities share the old CSR-cohort edge, including min wrap.
-            self.sync += [magnitude.eq(abs_next),negative.eq(-abs_extended),positive.eq(signed_height>0)]
-            peak_neg_abs_s1.append(negative)
-            peak_abs_s1.append(magnitude);peak_positive_s1.append(positive)
-        for wait in self.wait_for:
-            value = Signal(x_data_length_bit)
-            self.sync += value.eq(wait.storage);wait_s1.append(value)
-
+        self.current_instruction_idx = Signal(bits_for(AUTOLOCK_MAX_N_INSTRUCTIONS - 1))
+        advance = Signal(name='prefetch_advance')
+        prefetched = prefetch_instruction(self,self.peak_heights,self.wait_for,
+            self.current_instruction_idx,at_start_s1,advance)
+        self._instruction_prefetch = prefetched
 
         # is the autolock actively trying to detect peaks? This is set to true
         # if lock is requested and once the sweep is at start
@@ -48,22 +34,12 @@ class PipelinedRobustAutolock(RobustAutolock):
 
         # the following signals are property of the peak that the autolock is trying to
         # detect right now
-        self.current_instruction_idx = Signal(bits_for(AUTOLOCK_MAX_N_INSTRUCTIONS - 1))
         current_peak_height = Signal((peak_height_bit, True))
         abs_current_peak_height = Signal.like(current_peak_height)
         negative_current_peak_height = Signal((peak_height_bit+1,True))
         current_wait_for = Signal(x_data_length_bit)
         self.comb += [
-            current_peak_height.eq(
-                Array([peak_height.storage for peak_height in self.peak_heights])[
-                    self.current_instruction_idx
-                ]
-            ),
-            current_wait_for.eq(
-                Array(wait_s1)[
-                    self.current_instruction_idx
-                ]
-            ),
+            current_wait_for.eq(prefetched['wait']),
         ]
 
         # after detecting the last peak, how many cycles have passed?
@@ -91,14 +67,17 @@ class PipelinedRobustAutolock(RobustAutolock):
         # have we detected all peaks (and can turn on the lock)?
         all_instructions_triggered = Signal()
 
+        self.comb += advance.eq(writing_s1 & ~all_instructions_triggered & sweep_up_s1
+            & watching & sign_equal & over_threshold & waited_long_enough)
+
         self.comb += [
             sign_equal.eq((sum_diff > 0) == current_peak_positive),
             If(sum_diff >= 0, abs_sum_diff.eq(sum_diff)).Else(
                 abs_sum_diff.eq(-1 * sum_diff)
             ),
-            abs_current_peak_height.eq(Array(peak_abs_s1)[self.current_instruction_idx]),
-            current_peak_positive.eq(Array(peak_positive_s1)[self.current_instruction_idx]),
-            negative_current_peak_height.eq(Array(peak_neg_abs_s1)[self.current_instruction_idx]),
+            abs_current_peak_height.eq(prefetched['magnitude']),
+            current_peak_positive.eq(prefetched['positive']),
+            negative_current_peak_height.eq(prefetched['negative']),
             waited_long_enough.eq(waited_for > current_wait_for),
             all_instructions_triggered.eq(
                 self.current_instruction_idx >= n_instructions_s1
