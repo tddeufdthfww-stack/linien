@@ -18,8 +18,9 @@ def check_fastchain(out):
    self.clock_domains.cd_sys=ClockDomain('sys');self.ports={}
    for k,n,s in [('adc',14,1),('offset',14,1),('dx',25,1),('dy',25,1),('phase',32,0),('cei',1,0),('ceq',1,0),('csr_adr',14,0),('csr_we',1,0),('csr_dat_w',8,0)]:self.ports[k]=Signal((n,bool(s)),name_override=k)
    p=self.ports;maps=[]
+   offset_registered=Signal((14,True));self.sync += offset_registered.eq(p['offset'])
    for prefix,parallel in [('ref',False),('cand',True)]:
-    chain=FastChain(mod=SimpleNamespace(phase=p['phase']),offset_signal=p['offset'],coeff_width=25,iir_mac_impl='registered_c48' if parallel else 'split_c48',parallel_output=parallel)
+    chain=FastChain(mod=SimpleNamespace(phase=p['phase']),offset_signal=offset_registered,pre_offset_signal=p['offset'] if parallel else None,coeff_width=25,iir_mac_impl='registered_c48' if parallel else 'split_c48',parallel_output=parallel)
     setattr(self.submodules,prefix,chain);bank=CSRBank(chain.get_csrs());setattr(self.submodules,prefix+'_bank',bank)
     self.comb += [chain.adc.eq(p['adc']),chain.signal_in[0].eq(p['dx']),chain.signal_in[1].eq(p['dy']),
                  chain.y_limit_1.update_en.eq(p['cei']),chain.y_limit_2.update_en.eq(p['ceq']),

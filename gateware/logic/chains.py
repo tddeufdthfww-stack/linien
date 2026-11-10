@@ -28,7 +28,7 @@ from .pid import PID
 class FastChain(Module, AutoCSR):
     def __init__(
         self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
-        iir_mac_impl="native", parallel_output=False
+        iir_mac_impl="native", parallel_output=False, pre_offset_signal=None
     ):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
@@ -67,6 +67,11 @@ class FastChain(Module, AutoCSR):
         ]
         ya = Signal((width + 3, True))
         self.sync += (ya.eq(((dy >> s))),)
+        common_registered = None
+        if pre_offset_signal is not None:
+            assert parallel_output and len(pre_offset_signal) == width
+            common_registered = Signal((len(ya)+1, True))
+            self.sync += common_registered.eq((dy >> s)+pre_offset_signal)
 
         ###
 
@@ -113,7 +118,9 @@ class FastChain(Module, AutoCSR):
 
             output_signal_this_channel = (self.out_i, self.out_q)[sub_channel_idx]
             if parallel_output:
-                self.comb += [y_limit.common_a.eq(ya << s),y_limit.common_b.eq(offset_signal << s),
+                common_a = ya << s if common_registered is None else common_registered << s
+                common_b = offset_signal << s if common_registered is None else 0
+                self.comb += [y_limit.common_a.eq(common_a),y_limit.common_b.eq(common_b),
                               y_limit.tap_select.eq(self.y_tap.storage),y_limit.invert.eq(self.invert.storage)]
                 self.comb += [target.eq(source) for target,source in zip(y_limit.taps,ys)]
             else:
