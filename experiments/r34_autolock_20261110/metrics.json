@@ -265,15 +265,15 @@
     "direct_combinational_path_exists": false
   },
   "gpio_outputs_to": {
-    "slack": 0.873,
-    "source": "linienmodule_csr_adr_reg[1]/C",
-    "destination": "linienmodule_gpio_n_oes_storage_full_reg[2]/CE",
+    "slack": 1.999,
+    "source": "linienmodule_gpio_status_state_s1_reg[0]/C",
+    "destination": "linienmodule_gpio_n_o_reg[1]_lopt_replica/D",
     "data_logic_route_ns": [
-      "6.845",
-      "0.580",
-      "6.265"
+      "5.821",
+      "0.704",
+      "5.117"
     ],
-    "levels": "1  (LUT6=1)"
+    "levels": "2  (LUT4=1 LUT5=1)"
   },
   "raw_to_all_including_internal": {
     "slack": -0.08,
@@ -1391,5 +1391,44 @@
   "LED_state_branch_latency_added_ns": 8,
   "external_direct_software_outs_and_OE_changed": false,
   "external_contract_risk": "State-derived external GPIO/LED delayed8ns; board external loopback/trigger/reference not measured. Whole pad waveform with direct software outs/OE is not simply delayed.",
-  "comparison_provenance": "New GPIO-only pipeline, default full synth/route vs R28 default; R29 best physical point not inherited. PID/IIR/FSM unchanged; GPIO output contract intentionally changed."
+  "comparison_provenance": "New GPIO-only pipeline, default full synth/route vs R28 default; R29 best physical point not inherited. PID/IIR/FSM unchanged; GPIO output contract intentionally changed.",
+  "gpio_outputs_to_initial_broad_prefix_query": {
+    "slack": 0.873,
+    "source": "linienmodule_csr_adr_reg[1]/C",
+    "destination": "linienmodule_gpio_n_oes_storage_full_reg[2]/CE",
+    "data_logic_route_ns": [
+      "6.845",
+      "0.580",
+      "6.265"
+    ],
+    "levels": "1  (LUT6=1)"
+  },
+  "GPIO_pin_query_correction": {
+    "passed": true,
+    "input_dcp_sha256": "7ba296c6eddc84d1f7d168a3d204c255811d3dd9a4c79b8155ce209f0040447e",
+    "dcp_unchanged": true,
+    "old_prefix_query_included_GPIO_OES_CSR": {
+      "slack": 0.873,
+      "source": "linienmodule_csr_adr_reg[1]/C",
+      "destination": "linienmodule_gpio_n_oes_storage_full_reg[2]/CE",
+      "data_logic_route_ns": [
+        "6.845",
+        "0.580",
+        "6.265"
+      ],
+      "levels": "1  (LUT6=1)"
+    },
+    "exact_output_FF_query": {
+      "slack": 1.999,
+      "source": "linienmodule_gpio_status_state_s1_reg[0]/C",
+      "destination": "linienmodule_gpio_n_o_reg[1]_lopt_replica/D",
+      "data_logic_route_ns": [
+        "5.821",
+        "0.704",
+        "5.117"
+      ],
+      "levels": "2  (LUT4=1 LUT5=1)"
+    },
+    "correction": "Use *gpio_n_o_reg* not *gpio_n_o*: old prefix also matched gpio_n_oes_storage. Original reports/archive unchanged; WNS/TNS/global/other paths unaffected."
+  }
 }
