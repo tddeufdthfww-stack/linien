@@ -39,6 +39,7 @@ from .logic.limit import LimitCSR
 from .logic.registered_error_mixer import MixerFactorCSR, RegisteredErrorMixer
 from .logic.modulate import Modulate
 from .logic.pid_pipeline import PipelinedPID
+from .logic.feedback_pipeline import AlignedInputLimitCSR, FeedbackInputAlignment, MixerAlignedPID
 from .logic.slow_pipeline import PipelinedSlowChain, SlowOutputTransport
 from .logic.sweep import SweepCSR
 from .lowlevel.analog import PitayaAnalog
@@ -52,11 +53,12 @@ from .lowlevel.xadc import XADC
 
 class LinienLogic(Module, AutoCSR):
     def __init__(self, width=14, signal_width=25, chain_factor_width=8, coeff_width=25,
-                 pid_factory=PipelinedPID):
+                 pid_factory=PipelinedPID, error_limit_factory=LimitCSR,
+                 raw_iir_config_delay=0):
         self.init_csr(width, chain_factor_width)
-        self.init_submodules(width, signal_width, pid_factory)
+        self.init_submodules(width, signal_width, pid_factory, error_limit_factory)
         self.connect_pid()
-        self.connect_everything(width, signal_width, coeff_width)
+        self.connect_everything(width, signal_width, coeff_width, raw_iir_config_delay)
 
     def init_csr(self, width, chain_factor_width):
         self.dual_channel = CSRStorage(1)
@@ -89,10 +91,10 @@ class LinienLogic(Module, AutoCSR):
         self.chain_b_offset_signed = Signal((width, True))
         self.out_offset_signed = Signal((width, True))
 
-    def init_submodules(self, width, signal_width, pid_factory):
+    def init_submodules(self, width, signal_width, pid_factory, error_limit_factory):
         self.submodules.mod = Modulate(width=width)
         self.submodules.sweep = SweepCSR(width=width, step_width=30, step_shift=24)
-        self.submodules.limit_error_signal = LimitCSR(width=signal_width, guard=4)
+        self.submodules.limit_error_signal = error_limit_factory(width=signal_width, guard=4)
         self.submodules.limit_fast1 = LimitCSR(width=width, guard=5)
         self.submodules.limit_fast2 = LimitCSR(width=width, guard=5)
         self.submodules.pid = pid_factory(width=signal_width)
@@ -112,7 +114,7 @@ class LinienLogic(Module, AutoCSR):
             self.autolock.robust.sweep_up.eq(self.sweep.sweep.up),
         ]
 
-    def connect_everything(self, width, signal_width, coeff_width):
+    def connect_everything(self, width, signal_width, coeff_width, raw_iir_config_delay):
         combined_error_signal = Signal((signal_width, True))
         self.control_signal = Signal((signal_width, True))
 
@@ -123,6 +125,7 @@ class LinienLogic(Module, AutoCSR):
             coeff_width=coeff_width,
             shift=coeff_width - 2,
             order=5,
+            config_delay=raw_iir_config_delay,
         )
         combined_error_signal_filtered = Signal((signal_width, True))
         self.comb += [
@@ -177,7 +180,9 @@ class LinienModule(Module, AutoCSR):
         sys_double = ClockDomainsRenamer("sys_double")
 
         self.submodules.logic = LinienLogic(
-            coeff_width=coeff_width, chain_factor_width=chain_factor_bits
+            coeff_width=coeff_width, chain_factor_width=chain_factor_bits,
+            pid_factory=MixerAlignedPID, error_limit_factory=AlignedInputLimitCSR,
+            raw_iir_config_delay=1
         )
         self.submodules.analog = PitayaAnalog(
             platform.request("adc"), platform.request("dac")
@@ -268,7 +273,7 @@ class LinienModule(Module, AutoCSR):
         ]
 
         # Register copies occur on the original FastChain/CSR update edges.
-        self.submodules.error_mixer = mixer = RegisteredErrorMixer()
+        self.submodules.error_mixer = mixer = RegisteredErrorMixer(product_pipeline=True)
         mixed = mixer.y
         self.comb += [
             mixer.a.eq(self.fast_a.out_i), mixer.b.eq(self.fast_b.out_i),
@@ -292,13 +297,13 @@ class LinienModule(Module, AutoCSR):
 
         # FAST PID ---------------------------------------------------------------------
         pid_out = Signal((width, True))
+        self.submodules.feedback_alignment = alignment = FeedbackInputAlignment(width,signal_width)
         self.comb += [
-            If(
-                self.logic.pid_only_mode.storage,
-                self.logic.pid.input.eq(self.analog.adc_a << s),
-            ).Else(
-                self.logic.pid.input.eq(mixed_limited),
-            ),
+            alignment.direct_adc.eq(self.analog.adc_a),
+            alignment.mixed_error.eq(mixed_limited),
+            alignment.pid_only.eq(self.logic.pid_only_mode.storage),
+            self.logic.limit_error_signal.update_en.eq(alignment.limit_execute_en),
+            self.logic.pid.input.eq(alignment.output),
             pid_out.eq(self.logic.pid.pid_out >> s),
         ]
 

@@ -106,6 +106,12 @@ def main():
             if (ROOT / 'tools/check_registered_mixer.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_registered_mixer.py', '--out', out / 'registered_mixer_checks'],
                         ROOT, out, 'registered_mixer', env, 'REGISTERED_MIXER_SUITE_PASS')
+            if (ROOT / 'tools/check_feedback_frame.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_feedback_frame.py', '--out', out / 'feedback_frame_checks'],
+                        ROOT, out, 'feedback_frame', env, 'FEEDBACK_FRAME_SUITE_PASS')
+            if (ROOT / 'tools/check_iir_frame.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_iir_frame.py', '--out', out / 'iir_frame_checks'],
+                        ROOT, out, 'iir_frame', env, 'IIR_CONFIG_FRAME_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

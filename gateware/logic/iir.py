@@ -31,8 +31,10 @@ class Iir(Filter):
         coeff_width=18,
         shift=16,
         intermediate_width=None,
+        config_delay=0,
     ):
         Filter.__init__(self, width)
+        assert config_delay in (0,1)
         assert mode in ("pipelined", "iterative")
         if intermediate_width is None:
             intermediate_width = width + coeff_width
@@ -54,14 +56,24 @@ class Iir(Filter):
                     continue
                 ci = Signal((coeff_width, True), name=name)
                 rci = CSRStorage(len(ci), name=name)
-                self.sync += ci.eq(rci.storage)
+                source = rci.storage
+                if config_delay:
+                    cohort = Signal.like(source)
+                    self.sync += cohort.eq(source)
+                    source = cohort
+                self.sync += ci.eq(source)
                 c[name] = ci
                 setattr(self, "r_" + name, rci)
 
         ###
 
         z = Signal((intermediate_width, True), name="z0r")
-        self.sync += z.eq(self.z0.storage << shift)
+        z0_source = self.z0.storage
+        if config_delay:
+            z0_cohort = Signal.like(z0_source)
+            self.sync += z0_cohort.eq(z0_source)
+            z0_source = z0_cohort
+        self.sync += z.eq(z0_source << shift)
 
         y_lim = Signal.like(self.y)
         y_next = Signal.like(z)

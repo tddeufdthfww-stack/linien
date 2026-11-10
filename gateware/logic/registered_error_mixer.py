@@ -26,7 +26,7 @@ class RegisteredErrorMixer(Module):
     and CE. BREG copies an encoded CSR low byte on the same CSR write edge.
     DSP resets to zero, matching data=0 and F=128 (encoded low=0).
     """
-    def __init__(self):
+    def __init__(self, product_pipeline=False):
         self.a, self.b = Signal((25, True)), Signal((25, True))
         self.pre_a, self.pre_b = Signal((25, True)), Signal((25, True))
         self.ce_a, self.ce_b = Signal(reset=1), Signal(reset=1)
@@ -43,7 +43,7 @@ class RegisteredErrorMixer(Module):
         ):
             p = Signal((48, True))
             kwargs = dict(p_AREG=1, p_ACASCREG=1, p_BREG=1, p_BCASCREG=1,
-                          p_ADREG=0, p_MREG=0, p_PREG=0, p_CREG=0, p_DREG=0,
+                          p_ADREG=0, p_MREG=int(product_pipeline), p_PREG=0, p_CREG=0, p_DREG=0,
                           p_ALUMODEREG=0, p_CARRYINREG=0, p_CARRYINSELREG=0,
                           p_INMODEREG=0, p_OPMODEREG=0,
                           p_A_INPUT="DIRECT", p_B_INPUT="DIRECT",
@@ -58,16 +58,27 @@ class RegisteredErrorMixer(Module):
                          'CECARRYIN', 'CECTRL', 'CED', 'CEINMODE', 'CEM', 'CEP',
                          'RSTALLCARRYIN', 'RSTALUMODE', 'RSTC', 'RSTCTRL', 'RSTD',
                          'RSTINMODE', 'RSTM', 'RSTP'):
-                kwargs['i_' + name] = Constant(0, {'ACIN':30,'BCIN':18,'C':48,'D':25,'PCIN':48}.get(name,1))
+                kwargs['i_' + name] = Constant(int(product_pipeline) if name == 'CEM' else 0, {'ACIN':30,'BCIN':18,'C':48,'D':25,'PCIN':48}.get(name,1))
             self.specials += Instance('DSP48E1', **kwargs)
             product = Signal((37, True))
             triple = Signal((27, True))
             bias = Signal((37, True))
             self.comb += [product.eq(p), triple.eq(data + (data << 1)),
                           If(high, bias.eq(triple << 7)).Else(bias.eq(data << 7))]
+            if product_pipeline:
+                bias_cohort = Signal.like(bias)
+                self.sync += bias_cohort.eq(bias)
+                bias = bias_cohort
             operands += [product, bias]
         off = Signal((37, True))
         self.comb += off.eq(self.offset << 19)
+        selected_a, selected_dual = self.a, self.dual
+        if product_pipeline:
+            off_cohort = Signal.like(off)
+            a_cohort = Signal.like(self.a)
+            dual_cohort = Signal()
+            self.sync += [off_cohort.eq(off),a_cohort.eq(self.a),dual_cohort.eq(self.dual)]
+            off,selected_a,selected_dual = off_cohort,a_cohort,dual_cohort
         operands.append(off)
         while len(operands) > 2:
             u, v, w = operands[:3]
@@ -77,5 +88,5 @@ class RegisteredErrorMixer(Module):
             operands = operands[3:] + [total, carry]
         merged = Signal((37, True))
         self.comb += [merged.eq(operands[0] + operands[1]),
-                      If(self.dual, self.y.eq(merged)).Else(
-                          self.y.eq((self.a << 8) + (self.offset << 19)))]
+                      If(selected_dual, self.y.eq(merged)).Else(
+                          self.y.eq((selected_a << 8) + off))]
