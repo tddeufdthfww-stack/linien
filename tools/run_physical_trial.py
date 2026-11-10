@@ -23,14 +23,14 @@ def main():
     manifest={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         'source_hashes':hashes,'input_r28_trial':str(previous),'input_dcp_sha256':before,'r28_code_and_test_hash_matches':equal,
         'functional':'REUSED_R28_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R28_EXACT_DCP_NOT_RERUN','route':'NOT RUN','timing_signoff':'NOT EVALUATED',
-        'additional_latency_vs_r28_sys':0,'optimization':'post-route fanout_opt/placement_opt/routing_opt/rewire/critical_cell_opt + route Explore/tns_cleanup only; no retime, clock_opt, DSP/BRAM register changes, edge FF insertion or constraints'}
+        'additional_latency_vs_r28_sys':0,'optimization':'post-route placement_opt/routing_opt/rewire/critical_cell_opt + route Explore/tns_cleanup only; no retime, clock_opt, DSP/BRAM register changes, edge FF insertion or constraints'}
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
     for name in ['synth_timing.rpt','top.v','top.xdc','csrmap.py','synthesis.json']:
         if (previous/name).is_file():shutil.copyfile(previous/name,out/name)
     text=f'''set_param general.maxThreads 2
 open_checkpoint {{{dcp.as_posix()}}}
 report_timing_summary -file {{{(out/'input_routed_timing.rpt').as_posix()}}}
-phys_opt_design -fanout_opt -placement_opt -routing_opt -rewire -critical_cell_opt
+phys_opt_design -placement_opt -routing_opt -rewire -critical_cell_opt
 route_design -directive Explore -tns_cleanup
 report_route_status -file {{{(out/'routed_status.rpt').as_posix()}}}
 report_timing_summary -max_paths 30 -file {{{(out/'routed_timing.rpt').as_posix()}}}

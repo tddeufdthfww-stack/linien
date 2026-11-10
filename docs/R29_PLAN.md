@@ -4,6 +4,10 @@ R28代码9c5c32a/记录3f369c6，route−.788/−99.471ns、566违规端点，�
 
 依据：全局autolock instruction_idx rep3→GPIO[6]replica，logic2.430+route6.172ns，约72%布线；FastChain/tap和PID outgoing亦有4–5ns布线。尝试同网表真实物理改善，不能靠新false/multicycle/降频或未约束端点绕过。
 
-只读输入R28 routed.dcp（前后SHA），新目录写新DCP。明确功能REUSED_R28_EXACT_INPUTS_NOT_RERUN、综合REUSED_R28_EXACT_DCP_NOT_RERUN，不冒充本轮重新测试/综合。新执行phys_opt_design -fanout_opt -placement_opt -routing_opt -rewire -critical_cell_opt，随后route_design -directive Explore -tns_cleanup。参数来自本机Vivado2020.1 help；显式优化列表关闭未指定DSP/BRAM/retime/clock_opt/负沿FF插入；无新增串行数据周期/CSR变化。
+只读输入R28 routed.dcp（前后SHA），新目录写新DCP。明确功能REUSED_R28_EXACT_INPUTS_NOT_RERUN、综合REUSED_R28_EXACT_DCP_NOT_RERUN，不冒充本轮重新测试/综合。新执行phys_opt_design -placement_opt -routing_opt -rewire -critical_cell_opt，随后route_design -directive Explore -tns_cleanup。参数来自本机Vivado2020.1 help；显式优化列表关闭未指定DSP/BRAM/retime/clock_opt/负沿FF插入；无新增串行数据周期/CSR变化。
 
 物理复制是相同触发边沿/复位的逻辑副本；功能/延迟契约复用R28；不把RTL回归当作本轮post-route/SDF等价证明。比较WNS/TNS/违规端点、hold/pulse、全部关键分组和CDC/DRC/覆盖；即使内部WNS转正也仍未完成外部IO/CDC/板端签核。若退步或命令不支持，保留脚本、错误日志/诊断且不合并，不强行宣称有效。原R28/R26及保护基线不改。
+
+## R29a调用失败与R29b修正
+
+原65b4fcb调用失败：本机通用help列出-fanout_opt，但2020.1实际执行拒绝post-route使用(Vivado_Tcl4-265)。未完成物理优化/未执行route，没有新WNS；原DCP SHA不变。原脚本/源码提交、manifest和错误日志在experiments/r29_physical_setup_failure_20261110保留。移除此项，仅使用已支持的placement/routing/rewire/critical_cell四项，仍可关键单元复制；不能称本轮成功执行了fanout_opt。R29b新目录重跑，0额外周期。
