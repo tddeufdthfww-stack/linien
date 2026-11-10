@@ -160,3 +160,12 @@
 - CDC={'CDC-1': 425, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增380/移除391；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r25_mixer_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## 2026-11-10 / R25当前候选与生产类型复验
+
+R25代码759cba4（测试失败复现cba82d1），功能回归及真实unsigned CSR修复/完整中间值PASS，综合COMPLETE，route COMPLETE，**最终STA FAIL，未部署/不合并保护基线**。route WNS/TNS=-.981/-174.051ns，643端点，WHS=.019ns。快速PID所有映射顺序单元最差+.746ns，D+.920/S+.795/R+2.346/CE+.746；慢PID本体CSR和非CSR负端点均0，不能据此把其他慢链或整机写成PASS。全局Scope set_avg_en/C→adc_b_q_dat[0]/D，logic1.830+route6.959ns，下一轮独立R26只改组合选择结构，采样/反馈新增0周期。
+
+R23生产CSR类型错误（旧夹具signed而Root源unsigned），物理结果无效；R24继承缺陷已中止综合、route NOT RUN。两版不采用，真实CSR失败第45拍已保留。修复后同一夹具原样30000拍PASS（负偏置15053），完整common中间值14/25位30106/30134拍及独立整数oracle PASS，实际Root signed14别名/RHS核对PASS。详见CSR_SIGNEDNESS_AUDIT_20261110.md。旧PASS不追认R23/R24。
+
+当前R25保留的是未签核候选，不是可上板正式版。保护的R2b、R4a、R16及原用户工程SHA/head/status再次核对未变；已有Z7020平台、PS7、时钟、引脚、AXI/CDC修复保留。CDC425/14/4/1/10=1/13=1/15=374，数量减少不证明物理安全，NOT_PROVEN；DNA/I/O/DRC仍未签核，未新增掩盖问题的例外或放宽时钟。Bare72.1ns和特定快→慢108.1ns为R19已测组件模型的周期契约，R25继承零周期修改，未冒充完整Root/SDF/板端延迟或真实闭环带宽。
