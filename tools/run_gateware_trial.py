@@ -118,6 +118,9 @@ def main():
             if (ROOT / 'tools/check_c48_filter.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_c48_filter.py', '--out', out / 'c48_filter_checks'],
                         ROOT, out, 'c48_filter', env, 'C48_FILTER_SUITE_PASS')
+            if (ROOT / 'tools/check_parallel_tap.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_parallel_tap.py', '--out', out / 'parallel_tap_checks'],
+                        ROOT, out, 'parallel_tap', env, 'PARALLEL_TAP_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent
