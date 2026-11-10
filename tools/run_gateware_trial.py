@@ -127,6 +127,9 @@ def main():
             if (ROOT / 'tools/check_abs_threshold.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_abs_threshold.py', '--out', out / 'abs_threshold_checks'],
                         ROOT, out, 'abs_threshold', env, 'ABS_PREDICATE_SUITE_PASS')
+            if (ROOT / 'tools/check_common_csr.py').exists():
+                execute([sys.executable, ROOT / 'tools/check_common_csr.py', '--out', out / 'common_csr_checks'],
+                        ROOT, out, 'common_csr', env, 'COMMON_CSR_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
             toolbin = Path(args.vivado).parent

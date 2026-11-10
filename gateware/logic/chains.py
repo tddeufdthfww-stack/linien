@@ -21,6 +21,7 @@ from misoc.interconnect.csr import CSR, AutoCSR, CSRStatus, CSRStorage
 from .iir import Iir
 from .limit import LimitCSR
 from .parallel_tap_limit import ParallelTapLimitCSR
+from .same_edge_common import same_edge_common
 from .modulate import Demodulate
 from .pid import PID
 
@@ -70,8 +71,7 @@ class FastChain(Module, AutoCSR):
         common_registered = None
         if pre_offset_signal is not None:
             assert parallel_output and len(pre_offset_signal) == width
-            common_registered = Signal((len(ya)+1, True))
-            self.sync += common_registered.eq((dy >> s)+pre_offset_signal)
+            common_registered = same_edge_common(self,dy,pre_offset_signal,width,s)
 
         ###
 
