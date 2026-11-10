@@ -25,11 +25,11 @@
  *                /--------\      /-----------\            /-----\
  *   ADC CHA ---> | DFILT1 | ---> | AVG & DEC | ---------> | BUF | --->  SW
  *                \--------/      \-----------/     |      \-----/
- *                                                  ˇ         ^
+ *                                                  藝         ^
  *                                              /------\      |
  *   ext trigger -----------------------------> | TRIG | -----+
  *                                              \------/      |
- *                                                  ^         ˇ
+ *                                                  ^         藝
  *                /--------\      /-----------\     |      /-----\
  *   ADC CHB ---> | DFILT1 | ---> | AVG & DEC | ---------> | BUF | --->  SW
  *                \--------/      \-----------/            \-----/
@@ -139,6 +139,15 @@ reg  [ 32-1: 0] set_dec       ;
 reg  [ 32-1: 0] adc_dec_cnt   ;
 reg             set_avg_en    ;
 reg             adc_dv        ;
+wire [13:0] average_a;
+scope_average_select average_select_a(.raw_i(adc_a_filt_out),.sum_i(adc_a_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_a));
+wire [13:0] average_b;
+scope_average_select average_select_b(.raw_i(adc_b_filt_out),.sum_i(adc_b_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_b));
+wire [13:0] average_aq;
+scope_average_select average_select_aq(.raw_i(adc_a_q_filt_out),.sum_i(adc_a_q_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_aq));
+wire [13:0] average_bq;
+scope_average_select average_select_bq(.raw_i(adc_b_q_filt_out),.sum_i(adc_b_q_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_bq));
+
 
 always @(posedge adc_clk_i) begin
    if (adc_rstn_i == 1'b0) begin
@@ -167,43 +176,10 @@ always @(posedge adc_clk_i) begin
 
       adc_dv <= (adc_dec_cnt >= set_dec) ;
 
-      case (set_dec & {32{set_avg_en}})
-         32'h0     : begin adc_a_dat <= adc_a_filt_out;            adc_b_dat <= adc_b_filt_out;             adc_a_q_dat <= adc_a_q_filt_out;              adc_b_q_dat <= adc_b_q_filt_out;                  end
-         32'h1     : begin adc_a_dat <= adc_a_sum[15+0 :  0];      adc_b_dat <= adc_b_sum[15+0 :  0];       adc_a_q_dat <= adc_a_q_sum[15+0 :  0];        adc_b_q_dat <= adc_b_q_sum[15+0 :  0];            end
-         32'h2     : begin adc_a_dat <= adc_a_sum[15+1 :  1];      adc_b_dat <= adc_b_sum[15+1 :  1];       adc_a_q_dat <= adc_a_q_sum[15+1 :  1];        adc_b_q_dat <= adc_b_q_sum[15+1 :  1];            end
-         32'h4     : begin adc_a_dat <= adc_a_sum[15+2 :  2];      adc_b_dat <= adc_b_sum[15+2 :  2];       adc_a_q_dat <= adc_a_q_sum[15+2 :  2];        adc_b_q_dat <= adc_b_q_sum[15+2 :  2];            end
-         32'h8     : begin adc_a_dat <= adc_a_sum[15+3 :  3];      adc_b_dat <= adc_b_sum[15+3 :  3];       adc_a_q_dat <= adc_a_q_sum[15+3 :  3];        adc_b_q_dat <= adc_b_q_sum[15+3 :  3];            end
-         32'h10    : begin adc_a_dat <= adc_a_sum[15+4 :  4];      adc_b_dat <= adc_b_sum[15+4 :  4];       adc_a_q_dat <= adc_a_q_sum[15+4 :  4];        adc_b_q_dat <= adc_b_q_sum[15+4 :  4];            end
-         32'h20    : begin adc_a_dat <= adc_a_sum[15+5 :  5];      adc_b_dat <= adc_b_sum[15+5 :  5];       adc_a_q_dat <= adc_a_q_sum[15+5 :  5];        adc_b_q_dat <= adc_b_q_sum[15+5 :  5];            end
-         32'h40    : begin adc_a_dat <= adc_a_sum[15+6 :  6];      adc_b_dat <= adc_b_sum[15+6 :  6];       adc_a_q_dat <= adc_a_q_sum[15+6 :  6];        adc_b_q_dat <= adc_b_q_sum[15+6 :  6];            end
-         32'h80    : begin adc_a_dat <= adc_a_sum[15+7 :  7];      adc_b_dat <= adc_b_sum[15+7 :  7];       adc_a_q_dat <= adc_a_q_sum[15+7 :  7];        adc_b_q_dat <= adc_b_q_sum[15+7 :  7];            end
-         32'h100   : begin adc_a_dat <= adc_a_sum[15+8 :  8];      adc_b_dat <= adc_b_sum[15+8 :  8];       adc_a_q_dat <= adc_a_q_sum[15+8 :  8];        adc_b_q_dat <= adc_b_q_sum[15+8 :  8];            end
-         32'h200   : begin adc_a_dat <= adc_a_sum[15+9 :  9];      adc_b_dat <= adc_b_sum[15+9 :  9];       adc_a_q_dat <= adc_a_q_sum[15+9 :  9];        adc_b_q_dat <= adc_b_q_sum[15+9 :  9];            end
-         32'h400   : begin adc_a_dat <= adc_a_sum[15+10: 10];      adc_b_dat <= adc_b_sum[15+10: 10];       adc_a_q_dat <= adc_a_q_sum[15+10: 10];        adc_b_q_dat <= adc_b_q_sum[15+10: 10];            end
-         32'h800   : begin adc_a_dat <= adc_a_sum[15+11: 11];      adc_b_dat <= adc_b_sum[15+11: 11];       adc_a_q_dat <= adc_a_q_sum[15+11: 11];        adc_b_q_dat <= adc_b_q_sum[15+11: 11];            end
-         32'h1000  : begin adc_a_dat <= adc_a_sum[15+12: 12];      adc_b_dat <= adc_b_sum[15+12: 12];       adc_a_q_dat <= adc_a_q_sum[15+12: 12];        adc_b_q_dat <= adc_b_q_sum[15+12: 12];            end
-         32'h2000  : begin adc_a_dat <= adc_a_sum[15+13: 13];      adc_b_dat <= adc_b_sum[15+13: 13];       adc_a_q_dat <= adc_a_q_sum[15+13: 13];        adc_b_q_dat <= adc_b_q_sum[15+13: 13];            end
-         32'h4000  : begin adc_a_dat <= adc_a_sum[15+14: 14];      adc_b_dat <= adc_b_sum[15+14: 14];       adc_a_q_dat <= adc_a_q_sum[15+14: 14];        adc_b_q_dat <= adc_b_q_sum[15+14: 14];            end
-         32'h8000  : begin adc_a_dat <= adc_a_sum[15+15: 15];      adc_b_dat <= adc_b_sum[15+15: 15];       adc_a_q_dat <= adc_a_q_sum[15+15: 15];        adc_b_q_dat <= adc_b_q_sum[15+15: 15];            end
-         32'h10000 : begin adc_a_dat <= adc_a_sum[15+16: 16];      adc_b_dat <= adc_b_sum[15+16: 16];       adc_a_q_dat <= adc_a_q_sum[15+16: 16];        adc_b_q_dat <= adc_b_q_sum[15+16: 16];            end
-
-         32'h20000     : begin adc_a_dat <= adc_a_sum[15+17 :  17];      adc_b_dat <= adc_b_sum[15+17 :  17];       adc_a_q_dat <= adc_a_q_sum[15+17 :  17];        adc_b_q_dat <= adc_b_q_sum[15+17 :  17];            end
-         32'h40000     : begin adc_a_dat <= adc_a_sum[15+18 :  18];      adc_b_dat <= adc_b_sum[15+18 :  18];       adc_a_q_dat <= adc_a_q_sum[15+18 :  18];        adc_b_q_dat <= adc_b_q_sum[15+18 :  18];            end
-         32'h80000     : begin adc_a_dat <= adc_a_sum[15+19 :  19];      adc_b_dat <= adc_b_sum[15+19 :  19];       adc_a_q_dat <= adc_a_q_sum[15+19 :  19];        adc_b_q_dat <= adc_b_q_sum[15+19 :  19];            end
-         32'h100000    : begin adc_a_dat <= adc_a_sum[15+20 :  20];      adc_b_dat <= adc_b_sum[15+20 :  20];       adc_a_q_dat <= adc_a_q_sum[15+20 :  20];        adc_b_q_dat <= adc_b_q_sum[15+20 :  20];            end
-         32'h200000    : begin adc_a_dat <= adc_a_sum[15+21 :  21];      adc_b_dat <= adc_b_sum[15+21 :  21];       adc_a_q_dat <= adc_a_q_sum[15+21 :  21];        adc_b_q_dat <= adc_b_q_sum[15+21 :  21];            end
-         32'h400000    : begin adc_a_dat <= adc_a_sum[15+22 :  22];      adc_b_dat <= adc_b_sum[15+22 :  22];       adc_a_q_dat <= adc_a_q_sum[15+22 :  22];        adc_b_q_dat <= adc_b_q_sum[15+22 :  22];            end
-         32'h800000    : begin adc_a_dat <= adc_a_sum[15+23 :  23];      adc_b_dat <= adc_b_sum[15+23 :  23];       adc_a_q_dat <= adc_a_q_sum[15+23 :  23];        adc_b_q_dat <= adc_b_q_sum[15+23 :  23];            end
-         32'h1000000   : begin adc_a_dat <= adc_a_sum[15+24 :  24];      adc_b_dat <= adc_b_sum[15+24 :  24];       adc_a_q_dat <= adc_a_q_sum[15+24 :  24];        adc_b_q_dat <= adc_b_q_sum[15+24 :  24];            end
-         32'h2000000   : begin adc_a_dat <= adc_a_sum[15+25 :  25];      adc_b_dat <= adc_b_sum[15+25 :  25];       adc_a_q_dat <= adc_a_q_sum[15+25 :  25];        adc_b_q_dat <= adc_b_q_sum[15+25 :  25];            end
-         32'h4000000   : begin adc_a_dat <= adc_a_sum[15+26: 26];      adc_b_dat <= adc_b_sum[15+26: 26];       adc_a_q_dat <= adc_a_q_sum[15+26: 26];        adc_b_q_dat <= adc_b_q_sum[15+26: 26];            end
-         32'h8000000   : begin adc_a_dat <= adc_a_sum[15+27: 27];      adc_b_dat <= adc_b_sum[15+27: 27];       adc_a_q_dat <= adc_a_q_sum[15+27: 27];        adc_b_q_dat <= adc_b_q_sum[15+27: 27];            end
-         32'h10000000  : begin adc_a_dat <= adc_a_sum[15+28: 28];      adc_b_dat <= adc_b_sum[15+28: 28];       adc_a_q_dat <= adc_a_q_sum[15+28: 28];        adc_b_q_dat <= adc_b_q_sum[15+28: 28];            end
-         32'h20000000  : begin adc_a_dat <= adc_a_sum[15+29: 29];      adc_b_dat <= adc_b_sum[15+29: 29];       adc_a_q_dat <= adc_a_q_sum[15+29: 29];        adc_b_q_dat <= adc_b_q_sum[15+29: 29];            end
-         32'h40000000  : begin adc_a_dat <= adc_a_sum[15+30: 30];      adc_b_dat <= adc_b_sum[15+30: 30];       adc_a_q_dat <= adc_a_q_sum[15+30: 30];        adc_b_q_dat <= adc_b_q_sum[15+30: 30];            end
-         32'h80000000  : begin adc_a_dat <= adc_a_sum[15+31: 31];      adc_b_dat <= adc_b_sum[15+31: 31];       adc_a_q_dat <= adc_a_q_sum[15+31: 31];        adc_b_q_dat <= adc_b_q_sum[15+31: 31];            end
-         default   : begin adc_a_dat <= adc_a_sum[15+0 :  0];      adc_b_dat <= adc_b_sum[15+0 :  0];       adc_a_q_dat <= adc_a_q_sum[15+0 :  0];        adc_b_q_dat <= adc_b_q_sum[15+0 :  0];            end
-      endcase
+      adc_a_dat <= average_a;
+      adc_b_dat <= average_b;
+      adc_a_q_dat <= average_aq;
+      adc_b_q_dat <= average_bq;
 
    end
 end
@@ -666,3 +642,60 @@ bus_clk_bridge i_bridge
 
 endmodule
 
+
+// Purely combinational: preserve all original averaging/truncation cases.
+module scope_average_select(
+    input [13:0] raw_i, input [47:0] sum_i,
+    input [31:0] dec_i, input avg_i, output reg [13:0] value_o
+);
+(* KEEP = "TRUE" *) reg [13:0] mean;
+always @* begin
+   case (dec_i)
+      32'h0: mean = raw_i;
+      32'h1: mean = sum_i[15+0 :  0];
+      32'h2: mean = sum_i[15+1 :  1];
+      32'h4: mean = sum_i[15+2 :  2];
+      32'h8: mean = sum_i[15+3 :  3];
+      32'h10: mean = sum_i[15+4 :  4];
+      32'h20: mean = sum_i[15+5 :  5];
+      32'h40: mean = sum_i[15+6 :  6];
+      32'h80: mean = sum_i[15+7 :  7];
+      32'h100: mean = sum_i[15+8 :  8];
+      32'h200: mean = sum_i[15+9 :  9];
+      32'h400: mean = sum_i[15+10: 10];
+      32'h800: mean = sum_i[15+11: 11];
+      32'h1000: mean = sum_i[15+12: 12];
+      32'h2000: mean = sum_i[15+13: 13];
+      32'h4000: mean = sum_i[15+14: 14];
+      32'h8000: mean = sum_i[15+15: 15];
+      32'h10000: mean = sum_i[15+16: 16];
+      32'h20000: mean = sum_i[15+17 :  17];
+      32'h40000: mean = sum_i[15+18 :  18];
+      32'h80000: mean = sum_i[15+19 :  19];
+      32'h100000: mean = sum_i[15+20 :  20];
+      32'h200000: mean = sum_i[15+21 :  21];
+      32'h400000: mean = sum_i[15+22 :  22];
+      32'h800000: mean = sum_i[15+23 :  23];
+      32'h1000000: mean = sum_i[15+24 :  24];
+      32'h2000000: mean = sum_i[15+25 :  25];
+      32'h4000000: mean = sum_i[15+26: 26];
+      32'h8000000: mean = sum_i[15+27: 27];
+      32'h10000000: mean = sum_i[15+28: 28];
+      32'h20000000: mean = sum_i[15+29: 29];
+      32'h40000000: mean = sum_i[15+30: 30];
+      32'h80000000: mean = sum_i[15+31: 31];
+      default: mean = sum_i[15+0 :  0];
+   endcase
+end
+always @* begin
+   case (avg_i)
+      1'b0: value_o = raw_i;
+      1'b1: value_o = mean;
+      default: begin
+         // Exact original case behavior for an unknown averaging control.
+         if (dec_i === 32'd0) value_o = raw_i;
+         else value_o = sum_i[15:0];
+      end
+   endcase
+end
+endmodule
