@@ -2,7 +2,7 @@
 from linien_common.common import AUTOLOCK_MAX_N_INSTRUCTIONS
 from migen import Array,If,Signal,bits_for
 from .autolock import RobustAutolock,ROBUST_AUTOLOCK_FPGA_DELAY
-from .abs_threshold import signed_abs_over_threshold
+from .late_threshold_select import late_threshold_select
 
 class PipelinedRobustAutolock(RobustAutolock):
     def __init__(self, width=14, N_points=16383, max_delay=16383):
@@ -109,7 +109,8 @@ class PipelinedRobustAutolock(RobustAutolock):
             ),
         ]
 
-        signed_abs_over_threshold(self,sum_diff,abs_current_peak_height,negative_current_peak_height,over_threshold)
+        late_threshold_select(self, sum_diff, peak_abs_s1, peak_neg_abs_s1,
+                              self.current_instruction_idx, over_threshold)
 
         self.sync += [
             If(
