@@ -1,0 +1,27 @@
+            self.comb += fast_out.eq(
+                Mux(
+                    self.logic.control_channel.storage == n_channel,
+                    pid_out,
+                    0,
+                )
+                + Mux(
+                    self.logic.mod_channel.storage == n_channel,
+                    self.logic.mod.y,
+                    0,
+                )
+                + Mux(
+                    self.logic.sweep_channel.storage == n_channel,
+                    self.logic.sweep.y,
+                    0,
+                )
+                + Mux(
+                    self.logic.sweep_channel.storage == n_channel,
+                    self.logic.out_offset_signed,
+                    0,
+                )
+                + Mux(
+                    self.slow_transport.aligned_slow_channel == n_channel,
+                    self.slow_chain.output,
+                    0,
+                )
+            )

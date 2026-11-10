@@ -34,6 +34,7 @@ from .logic.autolock_pipeline import PipelinedRobustAutolock
 from .logic.chains import FastChain, SlowChain, cross_connect
 from .logic.decimation import DecimateEnable
 from .logic.delta_sigma import DeltaSigma
+from .logic.fast_output_sum import fast_output_sum
 from .logic.iir import Iir
 from .logic.limit import LimitCSR
 from .logic.registered_error_mixer import MixerFactorCSR, RegisteredErrorMixer
@@ -334,33 +335,13 @@ class LinienModule(Module, AutoCSR):
         # FAST OUTPUTS -----------------------------------------------------------------
         fast_outs = [Signal((width + 4, True)), Signal((width + 4, True))]
         for n_channel, fast_out in enumerate(fast_outs):
-            self.comb += fast_out.eq(
-                Mux(
-                    self.logic.control_channel.storage == n_channel,
-                    pid_out,
-                    0,
-                )
-                + Mux(
-                    self.logic.mod_channel.storage == n_channel,
-                    self.logic.mod.y,
-                    0,
-                )
-                + Mux(
-                    self.logic.sweep_channel.storage == n_channel,
-                    self.logic.sweep.y,
-                    0,
-                )
-                + Mux(
-                    self.logic.sweep_channel.storage == n_channel,
-                    self.logic.out_offset_signed,
-                    0,
-                )
-                + Mux(
-                    self.slow_transport.aligned_slow_channel == n_channel,
-                    self.slow_chain.output,
-                    0,
-                )
-            )
+            fast_output_sum(self, fast_out, (
+                Mux(self.logic.control_channel.storage == n_channel, pid_out, 0),
+                Mux(self.logic.mod_channel.storage == n_channel, self.logic.mod.y, 0),
+                Mux(self.logic.sweep_channel.storage == n_channel, self.logic.sweep.y, 0),
+                Mux(self.logic.sweep_channel.storage == n_channel, self.logic.out_offset_signed, 0),
+                Mux(self.slow_transport.aligned_slow_channel == n_channel, self.slow_chain.output, 0),
+            ))
 
         # ANALOG OUTPUTS ---------------------------------------------------------------
         # ANALOG OUT 0 gets a special treatment because it may contain signal of  slow
