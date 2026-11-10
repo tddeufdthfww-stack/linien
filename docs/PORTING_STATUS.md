@@ -1,3 +1,5 @@
+> **2026-11-10 R34最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.845/-146.894ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-10 R29最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.617/-91.147ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-10 R28最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.788/-99.471ns，最终STA FAIL。详细归档见本文末尾。
@@ -488,3 +490,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 441, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增380/移除375；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r29_physical_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R34 / 2026-11-10归档 / autolock时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `382f02498776e468fbe3a26a9dc4b50f33be55ae`，独立工作树 `D:\RP_Dev\linien_trials\20261110-r34-gpio-status-pipeline`；R4a/R2b/原用户工程保持原样。
+- 功能：原生UNISIM/真实CSR两拍联合帧14/25位44290/44292拍、512/512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；14/25 IIR配置帧与冻结RTL/28与50位整数oracle PASS（从未延迟输入到b0/b5=8/13拍，滤波器latency CSR仍6）；完整旧功能回归PASS。R28指定数字组件已重测Bare72.1ns/快慢108.1ns；本轮PID/Analog源码未改，继承同周期契约，本轮未重测组件模型，IIR周期由完整滤波器测试独立验证；并行tap限幅14/25位原生RTL/旧LimitCSR/独立整数oracle、全部tap与符号/非法上下限/回绕/真实CSR/CE/reset PASS；完整FastChain pair 30000拍、CSR字节映射、I/Q/原寄存器前信号/独立CE PASS（精确周期与统计见trial/parallel_tap_checks/results.json和fastchain/results.json）；包含公共求和优先及反相比较并行的数学变换，额外覆盖N位最小负数回绕及邻值；FastChain pair比较旧split_c48+串行tap与生产registered_c48+新tap组合，显式UNISIM/glbl；原生时钟MAC71760组及IIR order1/2/5/CSR/hold/clear/复位再次PASS；R23/R24生产类型缺陷已明确修复：先测试专用cba82d1真实unsigned CSR复现第45拍FAIL，再生产759cba4显式同宽signed解释；同一夹具原样30000拍PASS（负偏置15053），完整common中间值14/25位30106/30134拍与原FF及整数oracle PASS，实际Root signed14声明/RHS核对PASS。新增robust谓词90800已知+8000未知、父模块50076（55未知）严格四态PASS；覆盖不等于完整PS7/板级Root或物理签核；实际Scope helper/冻结原case/整数oracle161872组、32有效因子、低16位穷举65536及3000 X/Z PASS；完整双Scope+真实桥sys100/ADC125功能异步、配置/四路数据/触发/BRAM/接口逐拍四态PASS，Scope新增周期0（本轮精确统计以trial/scope_average_checks日志为准）；真实cross_connect/真实CSRBank，冻结R28与默认0模式逐拍同值、生产GPIO状态快照候选与独立原生1sys输出延迟参考/Python有限整数oracle共63366拍PASS（其中3000X/Z）；所有14状态位/8输出、部分字节热写/读回/清除/复位、内部state_in/signal_in同拍比较PASS。GPIO状态V和使能E同cohort快照，故新O[t+2]=旧O[t+1]，reset清空在途；ADC→DAC/内部PID和自动锁定FSM新增0，但外部状态GPIO/LED明确新增8ns，直写outs/OE不改；不能称整机零延迟。完整父模块保持50076拍原回归，非R33追加一热测试；未携入R30/R31/R33失败结构。外部触发/回接/相位参考未实测，需接口延迟校准，不能据此宣称闭环稳定；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20之后IIR/tap/common/阈值/Scope组合优化均新增周期0；本轮仅状态派生GPIO/LED新增1sys=8ns，ADC→DAC/PID/内部FSM新增0；直写outs/OE不延迟，外部回接未测。
+- 综合来源=COMPLETE_THIS_ROUND，WNS/TNS=-1.908/-297.382ns。实际route COMPLETE，WNS/TNS=-0.845/-146.894ns，失败端点575；WHS/WPWS=0.036/1.5ns，THS=0。
+- raw IIR内部最差=-0.08ns，入口=0.02ns；全局最差 `linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[1]_rep__3/C` → `linienmodule_autolock_pipelinedrobustautolock_waited_for_reg[6]/R`，逻辑/布线=['2.430', '5.772']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 15145, 'ff': 15856, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=408。
+- CDC={'CDC-1': 431, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增378/移除383；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r34_autolock_20261110/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
