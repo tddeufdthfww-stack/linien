@@ -1,5 +1,5 @@
 """Same-edge current/next/zero CSR cohort; no extra instruction/feedback edge."""
-from migen import Array, Case, Constant, If, Signal
+from migen import Array, Case, Cat, Constant, If, Signal
 
 
 def next_instruction_word(module, values, index):
@@ -23,7 +23,8 @@ def prefetch_instruction(module, peaks, waits, index, start, advance):
     for label, address in [('current', index), ('next', index), ('zero', Constant(0, len(index)))]:
         raw = Signal((width, True), name='prefetch_' + label + '_signed')
         absolute = Signal.like(raw)
-        extended = Signal((width + 1, True))
+        negative_low = Signal((width, True))
+        negative_sign = Signal()
         magnitude = Signal((width, True), name='prefetch_' + label + '_magnitude')
         negative = Signal((width + 1, True), name='prefetch_' + label + '_negative')
         positive = Signal(name='prefetch_' + label + '_positive')
@@ -34,8 +35,12 @@ def prefetch_instruction(module, peaks, waits, index, start, advance):
                      if label == 'next' else Array([w.storage for w in waits])[address])
         module.comb += [raw.eq(peak_word),
                         If(raw >= 0, absolute.eq(raw)).Else(absolute.eq(-raw)),
-                        extended.eq(absolute)]
-        module.sync += [magnitude.eq(absolute), negative.eq(-extended),
+                        If(raw < 0, negative_low.eq(raw)).Else(negative_low.eq(-raw)),
+                        # MIN wraps in the original signed abs_N; its widened
+                        # negative is positive. Keep this explicit sign exception.
+                        negative_sign.eq((raw > 0) | ((raw < 0) &
+                            (raw != Constant(-(1 << (width - 1)), (width, True)))))]
+        module.sync += [magnitude.eq(absolute), negative.eq(Cat(negative_low, negative_sign)),
                         positive.eq(raw > 0), wait.eq(wait_word)]
         slots.append(dict(magnitude=magnitude, negative=negative, positive=positive, wait=wait))
     selected = {}
