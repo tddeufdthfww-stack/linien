@@ -1,3 +1,5 @@
+> **2026-11-11 R60最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=0.003/0.0ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R59最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.204/-5.183ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R57最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.006/-0.016ns，最终STA FAIL。详细归档见本文末尾。
@@ -711,3 +713,16 @@ d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/C
 - CDC={'CDC-1': 449, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增379/移除360；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r59_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R60 / 2026-11-11归档 / physical时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `f544059e13ad6a2447903271bc099ad76b6f2f7e`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r60-phase-output-postroute`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R52_VIA_R59_EXACT_INPUTS_NOT_RERUN：94原始硬件测试工具SHA同R59，完整原生功能及综合继承R52，本轮未重跑。输入R59新2→6同拍FF拓扑做标准postroute placement/routing/rewire/critical-cell，再实际route TNS cleanup；日志35-558确认fullyrouted时Explore等其他选项忽略。完整状态图及所有已解析实例参数/端口在验证同状态Q别名和有序位展开后核对，任何变化的LUT切面另穷举已知Boolean；具体新增FF/LUT数量与局部证明见audit，不默许原始聚合负载相同。94DSP同真实R59，源/top/CSR/XDC及输入DCP/CSV SHA保持；新增串行采样周期0。最终受约束setup PASS（+.003ns/0/0端点），hold PASS（.014/0）、pulse PASS（1.5/0），最终STA仍FAIL：DNA无时钟1/内部未约束2/输入44/输出46缺延迟，以及物理CDC/DRC未关闭。不是全Root postmap/SDF/形式或板端等价/锁频性能证明。；没有修改Migen evaluator。
+- 源功能/综合REUSED_R52经R59_NOT_RERUN；本轮新映射状态/逻辑/94DSP审计PASS、实际物理优化/route COMPLETE、受约束setup与hold/pulse PASS、最终STA FAIL；CDC直接对R59/R57按实际路径差集核验而非只数数量；CSR map与XDC保持R4a一致。延迟=本轮仅标准postroute同拍复制/组合物理优化，新增ADC/反馈/CSR采样周期0；快速相对R2b累计32ns保持。组件模型数字延迟只继承，非本轮全Root/SDF/板测。
+- 综合来源=REUSED_R52_VIA_R59_EXACT_DCP_NOT_RERUN，WNS/TNS=-0.773/-60.316ns。实际route COMPLETE，WNS/TNS=0.003/0.0ns，失败端点0；WHS/WPWS=0.014/1.5ns，THS=0。
+- raw IIR内部最差=0.343ns，入口=0.883ns；全局最差 `linienmodule_fast_b_iir0_y2_reg[11]/C` → `linienmodule_fast_b_paralleltaplimitcsr0_y_reg[19]/D`，逻辑/布线=['3.081', '4.513']ns。
+- 受约束setup=PASS，hold=PASS，pulse_width=PASS。决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 11783, 'ff': 13540, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=405。
+- CDC={'CDC-1': 449, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增379/移除360；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r60_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
