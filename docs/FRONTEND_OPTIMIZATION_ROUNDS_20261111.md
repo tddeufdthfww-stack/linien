@@ -34,6 +34,10 @@
 | R34 | -1.908 / -297.382 | -0.845 / -146.894 | 575 | REJECTED_NOT_MERGED，STA FAIL |
 | R35 | -1.908 / -297.382（复用R34） | -0.702 / -159.35 | 724 | REJECTED_NOT_MERGED，STA FAIL |
 | R36 | -1.908 / -303.52 | -0.656 / -59.314 | 371 | REJECTED_NOT_MERGED，STA FAIL |
+| R37 | -1.908 / -277.354 | -0.874 / -157.785 | 836 | REJECTED_NOT_MERGED，STA FAIL |
+| R38 | -1.908 / -263.098 | -0.619 / -83.023 | 451 | REJECTED_NOT_MERGED，STA FAIL |
+| R39 | -1.908 / -263.098（复用R38） | -0.655 / -133.656 | 587 | REJECTED_NOT_MERGED，STA FAIL |
+| R40 | -1.908 / -263.098（复用R38） | -0.582 / -24.707 | 234 | CANDIDATE_NOT_SIGNED_OFF，STA FAIL |
 
 功能PASS、综合COMPLETE、布局布线COMPLETE与最终STA FAIL是四个不同结论。综合中的负hold不与route后hold混用；完整WHS/THS/WPWS和覆盖数据见逐轮索引。
 
@@ -82,6 +86,24 @@ R28另用当前生产PID实现对±123脉冲重新执行指定Bare和快慢串�
 
 ## 当前瓶颈与下一阶段
 
+
+## R37：解除限幅值属性的失败实验
+
+从R36仅删limiter.y和neg_value两条.keep调用。后端将其映射为24个DONT_TOUCH，完整生成top.v除这24个声明属性外与R36相同；common_sum和错误标志保护保留，完整行为AST与原生全套功能PASS，新增周期0。初次完整HDL审计正则只覆盖limit0..2而漏Q路limit3..5，匹配18/24；按实际实例编号修正后仍要求严格24个属性变化且整文件相同，旧checker和错误记录保留，无生产/断言改变。
+
+综合LUT12510/FF13280，比R36少118LUT；实际route−.874/−157.785ns、836端点反而恶化。全局FastA IIR输出→Mixer输入关联FF，12级/6CARRY4，logic3.076+route5.375。解除限制并不保证更好的算术映射或布线，本版本拒绝、不合并，也不作为R38的源基线。
+
+## R38：单独解除公共项别名属性
+
+回到R36，只删除common_sum.keep，正负限幅值/错误标志属性全部保留。R36真实网表确认关键common_sum_inst__10是LUT1 INIT2'h2（恒等BUF），旧路径额外LUT.124ns和net.888ns；去掉别名DONT_TOUCH为工具合并等价网提供机会。源行为AST相同、完整top.v除4处精确DONT_TOUCH声明外与R36相同，新增ADC/robust/GPIO周期0。仍须从实际映射确认BUF消除和源驱动扇出，不能按源属性减少预先判定收益；功能/综合/route/STA见表格和索引。
+
+## R39：Scope配置CE移到D的失败候选
+
+冻结R38综合DCP及78个原始硬件测试SHA。新postopt原生FDRE/FDSE14/25叶子43031拍PASS，366个Root Scope FF实际CE改常1、D=CE?D:Q，C/R/S/INIT边界保留，新增周期0。完整RTL和综合是明确REUSED_R38_NOT_RERUN，不是本轮重测。route−.655/−133.656ns、587端点，整体恶化；Scope FCLK−.527ns略改善，同ADC配置−.387ns恶化，拒绝不合并。CDC-15数量从374降到64只是CE→D分类变化，不证明跨域安全。
+
+## R40：CSR写数据物理分发改善
+
+从R38 routed.dcp内存unroute，在clk_2域非ASYNC_REG、CE恒1的CSR写数据2/3/4位高扇出网上force_replication；驱动FF30→57、最大负载517→161。复制前后D/C/CE/R/INIT与聚合负载集合相同，全部94DSP寄存器属性相同、输入DCP不变；78个原始硬件测试SHA一致，功能/综合明确复用R38未重跑。route−.582/−24.707ns、234端点、WHS.032/THS0/WPWS1.5，优于R38和此前最佳WNS R29−.617，保留未签核候选。新增串行周期0，CSR输出本组最差+.050ns，最差移至FastB IIR1的DSP乘加输出→反馈输入寄存器CEB2，5.972logic+2.003route。Scope FCLK配置仍−.320ns，ADC配置+.303ns。CDC-1增加27与新普通数据副本对应，不把复制等价当物理CDC证明；不是新增同步器、不是正式基线或可上板版本。
 
 ## R35与跨域审计
 
@@ -416,9 +438,124 @@ chains.cross_connect默认0保持旧行为，仅生产Root显式启用GPIO状态
 - scope_average_control: 2.757ns，`red_pitaya_scope/set_avg_en_reg/C` → `red_pitaya_scope/adc_a_dat_reg[8]/D`；逻辑/布线=['0.580', '4.538']ns，1  (LUT3=1)。
 - frontend_a_output: -0.35ns，`linienmodule_fast_a_iir0_y2_reg[0]/C` → `linienmodule_registerederrormixer_y[36]_i_14_psdsp_12/D`；逻辑/布线=['2.370', '5.587']ns，8  (CARRY4=2 LUT2=1 LUT5=1 LUT6=3 MUXF7=1)。
 - frontend_b_output: -0.437ns，`linienmodule_fast_b_iir0_y0_reg[1]_replica/C` → `linienmodule_fast_b_paralleltaplimitcsr0_y_reg[5]/D`；逻辑/布线=['3.380', '4.515']ns，12  (CARRY4=7 LUT2=1 LUT4=1 LUT5=1 LUT6=1 MUXF7=1)。
+- same_adc_domain: -0.656ns，`linienmodule_fast_a_common_reg[5]/C` → `linienmodule_fast_a_paralleltaplimitcsr0_y_reg[17]/D`；逻辑/布线=['2.435', '5.703']ns，9  (CARRY4=2 LUT1=1 LUT2=1 LUT5=1 LUT6=3 MUXF7=1)。
+- scope_adc_control: -0.158ns，`red_pitaya_scope/i_bridge/dst_sync_reg[1]/C` → `red_pitaya_scope/set_a_filt_pp_reg[1]/CE`；逻辑/布线=['1.450', '6.321']ns，5  (LUT3=1 LUT4=1 LUT6=3)。
+- scope_fclk_control: 0.02ns，`red_pitaya_scope/i_bridge/addr_o_reg[16]/C` → `red_pitaya_scope/set_a_filt_pp_reg[1]/CE`；逻辑/布线=['1.542', '7.505']ns，5  (LUT2=1 LUT3=1 LUT4=1 LUT6=2)。
+- prefetch_to: -0.148ns，`linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[0]_rep__3/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_current_negative_reg[28]/D`；逻辑/布线=['3.721', '4.365']ns，14  (CARRY4=9 LUT1=1 LUT3=1 LUT6=2 MUXF7=1)。
+- prefetch_from: -0.198ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[3]_lopt_replica/D`；逻辑/布线=['2.263', '5.692']ns，9  (CARRY4=3 LUT3=2 LUT5=2 LUT6=2)。
+- prefetch_choice_to: 0.599ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[0]/D`；逻辑/布线=['2.165', '4.841']ns，8  (CARRY4=3 LUT3=3 LUT5=1 LUT6=1)。
+- prefetch_choice_from: -0.198ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[3]_lopt_replica/D`；逻辑/布线=['2.263', '5.692']ns，9  (CARRY4=3 LUT3=2 LUT5=2 LUT6=2)。
 - gpio_outputs_to: -0.198ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[3]_lopt_replica/D`；逻辑/布线=['2.263', '5.692']ns，9  (CARRY4=3 LUT3=2 LUT5=2 LUT6=2)。
 - 资源={'lut': 12485, 'ff': 13648, 'dsp': 94, 'bram': 35, 'bufg': 6}；CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，相对R4a严格名称差集新增/移除=369/373，物理安全NOT_PROVEN。
 - 覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC=408；route WHS/THS/WPWS=0.015/0.0/1.5ns。
+
+### R37
+
+代码提交 `e8c1828e434709581662df2995225162933db58a`。
+
+- global_worst: -0.874ns，`linienmodule_fast_a_iir0_y0_reg[5]_replica/C` → `DSP48E1_68_i_18_psdsp/D`；逻辑/布线=['3.076', '5.375']ns，12  (CARRY4=6 LUT2=1 LUT3=1 LUT6=3 MUXF7=1)。
+- raw_internal: -0.225ns，`linienmodule_raw_acquisition_iir_z_low/CLK` → `linienmodule_raw_acquisition_iir_z_low/CEB2`；逻辑/布线=['5.972', '1.670']ns，3  (DSP48E1=1 LUT3=1 LUT5=1)。
+- raw_entry: 0.111ns，`linienmodule_csr_dat_w_reg[5]_rep__2/C` → `linienmodule_raw_acquisition_iir_csrstorage0_storage_full_reg[5]/D`；逻辑/布线=['0.518', '7.302']ns，0。
+- fast_D: 0.489ns，`linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[5]/C` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[30]/D`；逻辑/布线=['3.177', '4.285']ns，13  (CARRY4=7 LUT2=1 LUT3=1 LUT4=1 LUT6=3)。
+- fast_S: NO_MAPPED_PIN；本次映射没有该独立引脚，不能写成此项时序PASS。
+- fast_R: 2.252ns，`FD_replica_6/C` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[34]/R`；逻辑/布线=['0.573', '4.429']ns，1  (LUT3=1)。
+- fast_CE: 0.842ns，`linienmodule_csr_adr_reg[8]/C` → `linienmodule_mixeralignedpid_mixeralignedpid_kp_storage_full_reg[0]/CE`；逻辑/布线=['0.932', '5.887']ns，2  (LUT2=1 LUT6=1)。
+- fast_outgoing: -0.293ns，`linienmodule_mixeralignedpid_mixeralignedpid_pid_sum_reg[33]/C` → `linienmodule_limit_fast1_x_reg[17]/D`；逻辑/布线=['3.133', '5.058']ns，12  (CARRY4=5 LUT3=1 LUT5=2 LUT6=4)。
+- scope_average_control: 2.427ns，`red_pitaya_scope/set_avg_en_reg/C` → `red_pitaya_scope/i_bridge/dst_rdata_hold_reg[0]/D`；逻辑/布线=['0.952', '4.520']ns，4  (LUT5=1 LUT6=3)。
+- frontend_a_output: -0.874ns，`linienmodule_fast_a_iir0_y0_reg[5]_replica/C` → `DSP48E1_68_i_18_psdsp/D`；逻辑/布线=['3.076', '5.375']ns，12  (CARRY4=6 LUT2=1 LUT3=1 LUT6=3 MUXF7=1)。
+- frontend_b_output: -0.525ns，`linienmodule_fast_b_iir1_y0_reg[0]/C` → `linienmodule_fast_b_paralleltaplimitcsr1_y_reg[5]/D`；逻辑/布线=['2.411', '5.984']ns，9  (CARRY4=4 LUT2=1 LUT6=4)。
+- same_adc_domain: -0.874ns，`linienmodule_fast_a_iir0_y0_reg[5]_replica/C` → `DSP48E1_68_i_18_psdsp/D`；逻辑/布线=['3.076', '5.375']ns，12  (CARRY4=6 LUT2=1 LUT3=1 LUT6=3 MUXF7=1)。
+- scope_adc_control: -0.761ns，`red_pitaya_scope/i_bridge/dst_sync_reg[1]/C` → `red_pitaya_scope/set_a_filt_pp_reg[9]/CE`；逻辑/布线=['1.541', '6.744']ns，6  (LUT3=2 LUT4=2 LUT6=2)。
+- scope_fclk_control: -0.47ns，`red_pitaya_scope/i_bridge/addr_o_reg[19]/C` → `red_pitaya_scope/set_a_hyst_reg[0]/CE`；逻辑/布线=['1.441', '7.916']ns，5  (LUT3=1 LUT4=1 LUT5=1 LUT6=2)。
+- prefetch_to: -0.554ns，`linienmodule_autolock_pipelinedrobustautolock_csrstorage31_storage_full_reg[0]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_next_negative_reg[21]/D`；逻辑/布线=['3.833', '4.300']ns，15  (CARRY4=10 LUT2=1 LUT3=1 LUT6=2 MUXF7=1)。
+- prefetch_from: -0.025ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_current_negative_reg[21]/C` → `linienmodule_gpio_n_o_reg[6]_lopt_replica/D`；逻辑/布线=['2.077', '5.707']ns，8  (CARRY4=2 LUT3=2 LUT5=2 LUT6=2)。
+- prefetch_choice_to: 0.312ns，`linienmodule_autolock_pipelinedrobustautolock_sum_diff_s1_reg[9]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[0]/D`；逻辑/布线=['2.163', '5.026']ns，8  (CARRY4=3 LUT3=3 LUT5=1 LUT6=1)。
+- prefetch_choice_from: -0.015ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[6]_lopt_replica/D`；逻辑/布线=['1.971', '5.805']ns，7  (CARRY4=2 LUT4=2 LUT5=2 LUT6=1)。
+- gpio_outputs_to: -0.099ns，`linienmodule_autolock_pipelinedrobustautolock_sum_diff_s1_reg[9]/C` → `linienmodule_gpio_n_o_reg[6]_lopt_replica/D`；逻辑/布线=['2.263', '5.608']ns，9  (CARRY4=3 LUT3=2 LUT5=2 LUT6=2)。
+- 资源={'lut': 12372, 'ff': 13630, 'dsp': 94, 'bram': 35, 'bufg': 6}；CDC={'CDC-1': 439, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，相对R4a严格名称差集新增/移除=372/369，物理安全NOT_PROVEN。
+- 覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC=408；route WHS/THS/WPWS=0.026/0.0/1.5ns。
+
+### R38
+
+代码提交 `291fbec246fe0e7764aee34a03b9b8909c128186`。
+
+- global_worst: -0.619ns，`red_pitaya_scope/i_bridge/addr_o_reg[17]/C` → `red_pitaya_scope/set_a_filt_kk_reg[15]/CE`；逻辑/布线=['1.694', '8.021']ns，5  (LUT2=1 LUT3=1 LUT4=1 LUT6=2)。
+- raw_internal: -0.22ns，`linienmodule_raw_acquisition_iir_z_low/CLK` → `linienmodule_raw_acquisition_iir_z_high/CEB2`；逻辑/布线=['5.972', '1.644']ns，3  (DSP48E1=1 LUT3=1 LUT6=1)。
+- raw_entry: -0.125ns，`linienmodule_csr_dat_w_reg[2]/C` → `linienmodule_raw_acquisition_iir_csrstorage4_storage_full_reg[18]/D`；逻辑/布线=['0.456', '7.702']ns，0。
+- fast_D: 0.284ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[0]/D`；逻辑/布线=['2.565', '4.966']ns，11  (CARRY4=5 LUT2=2 LUT4=1 LUT5=1 LUT6=2)。
+- fast_S: 0.253ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[12]/S`；逻辑/布线=['2.801', '4.207']ns，13  (CARRY4=8 LUT2=1 LUT4=1 LUT5=1 LUT6=2)。
+- fast_R: 3.257ns，`FD_replica_18/C` → `linienmodule_mixeralignedpid_mixeralignedpid_ki_storage_full_reg[12]/R`；逻辑/布线=['0.518', '3.660']ns，0。
+- fast_CE: 1.244ns，`linienmodule_csr_adr_reg[6]/C` → `linienmodule_mixeralignedpid_mixeralignedpid_setpoint_storage_full_reg[1]/CE`；逻辑/布线=['1.002', '5.551']ns，2  (LUT2=1 LUT6=1)。
+- fast_outgoing: -0.251ns，`linienmodule_mixeralignedpid_mixeralignedpid_pid_sum_reg[30]/C` → `linienmodule_limit_fast1_x_reg[17]/D`；逻辑/布线=['3.172', '4.985']ns，11  (CARRY4=4 LUT3=1 LUT5=3 LUT6=3)。
+- scope_average_control: 0.406ns，`red_pitaya_scope/set_avg_en_reg/C` → `red_pitaya_scope/adc_a_q_dat_reg[3]/D`；逻辑/布线=['0.642', '6.935']ns，1  (LUT3=1)。
+- frontend_a_output: -0.416ns，`linienmodule_fast_a_iir0_y2_reg[14]/C` → `linienmodule_fast_a_paralleltaplimitcsr0_y_reg[7]/D`；逻辑/布线=['3.183', '4.794']ns，9  (CARRY4=4 LUT2=1 LUT4=1 LUT5=2 MUXF7=1)。
+- frontend_b_output: -0.189ns，`linienmodule_fast_b_iir0_y2_reg[19]/C` → `linienmodule_fast_b_paralleltaplimitcsr0_y_reg[15]/D`；逻辑/布线=['3.052', '4.735']ns，9  (CARRY4=4 LUT2=1 LUT4=1 LUT5=2 MUXF7=1)。
+- same_adc_domain: -0.555ns，`linienmodule_fast_b_iir1_z_low0/CLK` → `linienmodule_fast_b_iir1_z_high0/CEB2`；逻辑/布线=['5.972', '1.976']ns，3  (DSP48E1=1 LUT5=1 LUT6=1)。
+- scope_adc_control: -0.131ns，`red_pitaya_scope/i_bridge/dst_sync_reg[1]/C` → `red_pitaya_scope/set_a_hyst_reg[4]/CE`；逻辑/布线=['1.533', '6.125']ns，4  (LUT3=2 LUT5=1 LUT6=1)。
+- scope_fclk_control: -0.619ns，`red_pitaya_scope/i_bridge/addr_o_reg[17]/C` → `red_pitaya_scope/set_a_filt_kk_reg[15]/CE`；逻辑/布线=['1.694', '8.021']ns，5  (LUT2=1 LUT3=1 LUT4=1 LUT6=2)。
+- prefetch_to: -0.212ns，`linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[1]_rep__0/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_current_negative_reg[28]/D`；逻辑/布线=['3.673', '4.502']ns，16  (CARRY4=11 LUT2=1 LUT3=1 LUT6=2 MUXF7=1)。
+- prefetch_from: -0.2ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[2]/D`；逻辑/布线=['2.464', '5.660']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- prefetch_choice_to: 0.539ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[0]/D`；逻辑/布线=['2.490', '4.605']ns，9  (CARRY4=4 LUT3=3 LUT5=2)。
+- prefetch_choice_from: -0.2ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[2]/D`；逻辑/布线=['2.464', '5.660']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- gpio_outputs_to: -0.2ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[2]/D`；逻辑/布线=['2.464', '5.660']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- 资源={'lut': 12168, 'ff': 13573, 'dsp': 94, 'bram': 35, 'bufg': 6}；CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，相对R4a严格名称差集新增/移除=368/372，物理安全NOT_PROVEN。
+- 覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC=406；route WHS/THS/WPWS=0.032/0.0/1.5ns。
+
+### R39
+
+代码提交 `de00c4493a4a12d5622a4aa3b86f7388b7dbfd3f`。
+
+- global_worst: -0.655ns，`linienmodule_csr_dat_w_reg[4]/C` → `linienmodule_fast_b_iir0_storage_full0_reg[20]/D`；逻辑/布线=['0.456', '8.054']ns，0。
+- raw_internal: -0.235ns，`linienmodule_raw_acquisition_iir_z_low/CLK` → `linienmodule_raw_acquisition_iir_y0_reg[14]/CE`；逻辑/布线=['6.096', '1.747']ns，4  (DSP48E1=1 LUT3=1 LUT5=1 LUT6=1)。
+- raw_entry: -0.261ns，`linienmodule_csr_dat_w_reg[7]_rep__2/C` → `linienmodule_raw_acquisition_iir_csrstorage4_storage_full_reg[15]/D`；逻辑/布线=['0.456', '7.520']ns，0。
+- fast_D: 0.592ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[0]/D`；逻辑/布线=['3.267', '4.004']ns，15  (CARRY4=9 LUT2=2 LUT4=1 LUT5=1 LUT6=2)。
+- fast_S: 0.506ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[0]/S`；逻辑/布线=['2.915', '3.842']ns，14  (CARRY4=9 LUT2=1 LUT4=1 LUT5=1 LUT6=2)。
+- fast_R: 2.589ns，`FD_replica_1/C` → `linienmodule_mixeralignedpid_mixeralignedpid_kd_reg_r_reg[5]/R`；逻辑/布线=['0.518', '4.332']ns，0。
+- fast_CE: 0.972ns，`linienmodule_csr_adr_reg[6]/C` → `linienmodule_mixeralignedpid_mixeralignedpid_setpoint_storage_full_reg[0]/CE`；逻辑/布线=['1.016', '5.738']ns，2  (LUT2=1 LUT6=1)。
+- fast_outgoing: -0.486ns，`linienmodule_mixeralignedpid_mixeralignedpid_pid_sum_reg[29]/C` → `linienmodule_limit_fast1_x_reg[17]/D`；逻辑/布线=['3.215', '5.217']ns，12  (CARRY4=5 LUT3=1 LUT5=3 LUT6=3)。
+- scope_average_control: 1.855ns，`red_pitaya_scope/set_avg_en_reg/C` → `red_pitaya_scope/adc_b_q_dat_reg[13]/D`；逻辑/布线=['0.580', '5.307']ns，1  (LUT3=1)。
+- frontend_a_output: -0.581ns，`linienmodule_fast_a_iir0_y0_reg[10]/C` → `linienmodule_registerederrormixer_y[36]_i_14_psdsp_41/D`；逻辑/布线=['3.226', '4.721']ns，10  (CARRY4=6 LUT2=1 LUT5=2 MUXF7=1)。
+- frontend_b_output: -0.476ns，`linienmodule_fast_b_iir0_y0_reg[11]_replica/C` → `linienmodule_fast_b_paralleltaplimitcsr0_y_reg[15]/D`；逻辑/布线=['3.281', '4.820']ns，10  (CARRY4=5 LUT2=1 LUT4=1 LUT5=2 MUXF7=1)。
+- same_adc_domain: -0.655ns，`linienmodule_csr_dat_w_reg[4]/C` → `linienmodule_fast_b_iir0_storage_full0_reg[20]/D`；逻辑/布线=['0.456', '8.054']ns，0。
+- scope_adc_control: -0.387ns，`red_pitaya_scope/i_bridge/dst_do_reg/C` → `red_pitaya_scope/set_a_filt_bb_reg[15]/D`；逻辑/布线=['1.396', '6.847']ns，6  (LUT3=2 LUT4=1 LUT6=3)。
+- scope_fclk_control: -0.527ns，`red_pitaya_scope/i_bridge/addr_o_reg[19]/C` → `red_pitaya_scope/set_a_filt_bb_reg[15]/D`；逻辑/布线=['1.534', '8.290']ns，6  (LUT2=1 LUT3=2 LUT4=1 LUT6=2)。
+- prefetch_to: -0.44ns，`linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[1]_rep__2/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_next_negative_reg[28]/D`；逻辑/布线=['3.858', '4.515']ns，17  (CARRY4=12 LUT2=1 LUT3=1 LUT6=2 MUXF7=1)。
+- prefetch_from: -0.351ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[0]_lopt_replica/D`；逻辑/布线=['2.253', '6.053']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- prefetch_choice_to: 0.13ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[0]/D`；逻辑/布线=['2.247', '5.232']ns，9  (CARRY4=4 LUT3=3 LUT5=2)。
+- prefetch_choice_from: -0.351ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[0]_lopt_replica/D`；逻辑/布线=['2.253', '6.053']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- csr_data_from: -0.655ns，`linienmodule_csr_dat_w_reg[4]/C` → `linienmodule_fast_b_iir0_storage_full0_reg[20]/D`；逻辑/布线=['0.456', '8.054']ns，0。
+- csr_data_to: 3.177ns，`bus_clk_bridge/wdata_o_reg[1]/C` → `linienmodule_csr_dat_w_reg[1]/D`；逻辑/布线=['0.456', '5.850']ns，0。
+- gpio_outputs_to: -0.351ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[0]_lopt_replica/D`；逻辑/布线=['2.253', '6.053']ns，9  (CARRY4=4 LUT3=2 LUT5=2 LUT6=1)。
+- 资源={'lut': 12530, 'ff': 13540, 'dsp': 94, 'bram': 35, 'bufg': 6}；CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 64}，相对R4a严格名称差集新增/移除=386/700，物理安全NOT_PROVEN。
+- 覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC=405；route WHS/THS/WPWS=0.026/0.0/1.5ns。
+
+### R40
+
+代码提交 `079667f63d250d138dfc1d3fa8b0000655a5d214`。
+
+- global_worst: -0.582ns，`linienmodule_fast_b_iir1_z_low0/CLK` → `linienmodule_fast_b_iir1_z_high0/CEB2`；逻辑/布线=['5.972', '2.003']ns，3  (DSP48E1=1 LUT5=1 LUT6=1)。
+- raw_internal: -0.141ns，`linienmodule_raw_acquisition_iir_z_low/CLK` → `linienmodule_raw_acquisition_iir_z_high/CEB2`；逻辑/布线=['5.972', '1.565']ns，3  (DSP48E1=1 LUT3=1 LUT6=1)。
+- raw_entry: 0.475ns，`linienmodule_csr_dat_w_reg[4]_replica_1/C` → `linienmodule_raw_acquisition_iir_csrstorage3_storage_full_reg[20]/D`；逻辑/布线=['0.456', '6.962']ns，0。
+- fast_D: 0.395ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[0]/D`；逻辑/布线=['2.679', '4.740']ns，12  (CARRY4=6 LUT2=2 LUT4=1 LUT5=1 LUT6=2)。
+- fast_S: 0.354ns，`p_1_out/CLK` → `linienmodule_mixeralignedpid_mixeralignedpid_int_reg_reg[12]/S`；逻辑/布线=['2.915', '3.991']ns，14  (CARRY4=9 LUT2=1 LUT4=1 LUT5=1 LUT6=2)。
+- fast_R: 2.517ns，`FD_replica_18/C` → `linienmodule_mixeralignedpid_mixeralignedpid_kd_reg_r_reg[10]/R`；逻辑/布线=['0.518', '4.443']ns，0。
+- fast_CE: 1.342ns，`linienmodule_csr_adr_reg[5]/C` → `linienmodule_mixeralignedpid_mixeralignedpid_setpoint_storage_full_reg[16]/CE`；逻辑/布线=['0.642', '5.812']ns，1  (LUT6=1)。
+- fast_outgoing: -0.217ns，`linienmodule_mixeralignedpid_mixeralignedpid_pid_sum_reg[32]/C` → `linienmodule_limit_fast2_x_reg[17]/D`；逻辑/布线=['3.186', '4.935']ns，11  (CARRY4=4 LUT3=1 LUT5=3 LUT6=3)。
+- scope_average_control: 0.704ns，`red_pitaya_scope/set_avg_en_reg/C` → `red_pitaya_scope/adc_a_dat_reg[2]/D`；逻辑/布线=['0.642', '6.637']ns，1  (LUT3=1)。
+- frontend_a_output: -0.117ns，`linienmodule_fast_a_iir0_y2_reg[10]/C` → `linienmodule_registerederrormixer_y[36]_i_14_psdsp_35/D`；逻辑/布线=['3.419', '4.172']ns，9  (CARRY4=5 LUT4=1 LUT5=2 MUXF7=1)。
+- frontend_b_output: -0.093ns，`linienmodule_fast_b_iir0_y2_reg[20]/C` → `linienmodule_fast_b_paralleltaplimitcsr0_y_reg[13]/D`；逻辑/布线=['2.900', '4.788']ns，9  (CARRY4=4 LUT2=1 LUT4=1 LUT5=2 MUXF7=1)。
+- same_adc_domain: -0.582ns，`linienmodule_fast_b_iir1_z_low0/CLK` → `linienmodule_fast_b_iir1_z_high0/CEB2`；逻辑/布线=['5.972', '2.003']ns，3  (DSP48E1=1 LUT5=1 LUT6=1)。
+- scope_adc_control: 0.303ns，`red_pitaya_scope/i_bridge/dst_do_reg/C` → `red_pitaya_scope/set_a_filt_pp_reg[16]/CE`；逻辑/布线=['1.293', '6.195']ns，5  (LUT3=1 LUT4=1 LUT6=3)。
+- scope_fclk_control: -0.32ns，`red_pitaya_scope/i_bridge/addr_o_reg[17]/C` → `red_pitaya_scope/set_a_filt_pp_reg[15]/CE`；逻辑/布线=['1.583', '7.837']ns，5  (LUT2=1 LUT3=1 LUT4=1 LUT6=2)。
+- prefetch_to: -0.161ns，`linienmodule_autolock_pipelinedrobustautolock_current_instruction_idx_reg[1]_rep__2/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_next_negative_reg[28]/D`；逻辑/布线=['3.843', '4.248']ns，16  (CARRY4=11 LUT2=1 LUT3=1 LUT6=2 MUXF7=1)。
+- prefetch_from: -0.058ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[7]_lopt_replica/D`；逻辑/布线=['2.423', '5.611']ns，9  (CARRY4=4 LUT3=1 LUT4=1 LUT5=2 LUT6=1)。
+- prefetch_choice_to: 0.578ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[0]/D`；逻辑/布线=['2.449', '4.607']ns，9  (CARRY4=4 LUT3=2 LUT4=1 LUT5=2)。
+- prefetch_choice_from: -0.058ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[7]_lopt_replica/D`；逻辑/布线=['2.423', '5.611']ns，9  (CARRY4=4 LUT3=1 LUT4=1 LUT5=2 LUT6=1)。
+- csr_data_from: 0.05ns，`linienmodule_csr_dat_w_reg[0]_rep__0/C` → `linienmodule_fast_b_iir0_csrstorage2_storage_full0_reg[24]/D`；逻辑/布线=['0.580', '7.042']ns，1  (LUT3=1)。
+- csr_data_to: 0.5ns，`FD_replica_6/C` → `linienmodule_csr_dat_w_reg[4]_replica_4/R`；逻辑/布线=['0.456', '6.609']ns，0。
+- gpio_outputs_to: -0.058ns，`linienmodule_autolock_pipelinedrobustautolock_prefetch_choice_reg[1]/C` → `linienmodule_gpio_n_o_reg[7]_lopt_replica/D`；逻辑/布线=['2.423', '5.611']ns，9  (CARRY4=4 LUT3=1 LUT4=1 LUT5=2 LUT6=1)。
+- 资源={'lut': 12169, 'ff': 13601, 'dsp': 94, 'bram': 35, 'bufg': 6}；CDC={'CDC-1': 459, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，相对R4a严格名称差集新增/移除=395/372，物理安全NOT_PROVEN。
+- 覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC=406；route WHS/THS/WPWS=0.032/0.0/1.5ns。
 
 优先处理**功能有效候选**的实际最差路径，分别审查IIR内部DSP寄存器位置、FastChain/CORDIC算术、autolock控制、CSR译码与扇出。R23/R24不可用于选择有效最佳版本。当前总反馈延迟已使用用户0–16ns优选范围，不继续无评估叠加流水线。任何候选需先数学等价、真实Root CSR位宽/有符号类型、独立冻结参考与整数oracle，再同一8ns约束下实际route；失败版本保留而不合并。
 
@@ -447,5 +584,9 @@ R19/R20出现CDC-13=1：scope bridge sys_wr→SRL16E adc_rval[1]_srl2___iir_z0_c
 - R32: `cb3eea923c78364280667d7bd4d41da43d7523d4`，[opt/r32-place-explore-20261110](https://github.com/tddeufdthfww-stack/linien/tree/opt/r32-place-explore-20261110)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
 - R33: `f31297fd869f4c63a9557af1ac4d9e4d757f9cd5`，[opt/r33-autolock-onehot-20261110](https://github.com/tddeufdthfww-stack/linien/tree/opt/r33-autolock-onehot-20261110)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
 - R34: `7d0c84cfb8ddaeb5e0ed150e42676a178d4fc937`，[opt/r34-gpio-status-pipeline-20261110](https://github.com/tddeufdthfww-stack/linien/tree/opt/r34-gpio-status-pipeline-20261110)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
-- R35: `0c937efa685bf960cc71bfe3a6b63308eca9e447`，[opt/r35-index-driver-replication-20261110](https://github.com/tddeufdthfww-stack/linien/tree/opt/r35-index-driver-replication-20261110)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
-- R36: `52fba6b91be6e7db1e00a7603d77dabb617d7446`，[opt/r36-instruction-prefetch-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r36-instruction-prefetch-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R35: `69af487af3f57b897576e3756e3ae59086ea8ea0`，[opt/r35-index-driver-replication-20261110](https://github.com/tddeufdthfww-stack/linien/tree/opt/r35-index-driver-replication-20261110)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R36: `d7e570323f4b911ff5bda71f61acd6bfdb56fae0`，[opt/r36-instruction-prefetch-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r36-instruction-prefetch-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R37: `0065135bc3abd45c6a3ba53198e49a1796f6b504`，[opt/r37-tap-value-optimization-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r37-tap-value-optimization-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R38: `3fef5e4d774a6ba406c3c550025a1fddba5df6b9`，[opt/r38-common-alias-buffer-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r38-common-alias-buffer-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R39: `fd5cc77048d12fe2d469869ca88a847bf133528f`，[opt/r39-scope-enable-remap-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r39-scope-enable-remap-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
+- R40: `b018d47c718cc999aaa9775e7cbdc94175840f93`，[opt/r40-csr-data-distribution-20261111](https://github.com/tddeufdthfww-stack/linien/tree/opt/r40-csr-data-distribution-20261111)。这是当次推送后核验的提交，不承诺包含后续未推送文档。
