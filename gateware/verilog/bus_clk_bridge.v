@@ -59,7 +59,8 @@ module bus_clk_bridge
    output                ren_o         ,  //!< read enable
    input      [ 32-1: 0] rdata_i       ,  //!< read data
    input                 err_i         ,  //!< error indicator
-   input                 ack_i            //!< acknowledge signal
+   input                 ack_i         ,  //!< acknowledge signal
+   output                src_capture_o    //!< original source request capture condition
 );
 
 
@@ -131,6 +132,9 @@ always @(posedge clk_i) begin
       end
    end
 end
+
+// No state or CDC stage added; caller mirrors the existing source reset guard.
+assign src_capture_o = (sys_do == sys_done) && (sys_wen_i || sys_ren_i);
 
 assign ren_o = sys_rd && (dst_sync[1]^dst_do);
 assign wen_o = sys_wr && (dst_sync[1]^dst_do);

@@ -99,6 +99,36 @@ reg             adc_rst_do   ;
 //---------------------------------------------------------------------------------
 //  Input filtering
 
+// Source-domain predecode is captured on exactly the existing addr_o edge.
+// Holding while busy/reset matches addr_o, including its uninitialized reset state.
+wire scope_src_capture;
+reg [16:0] scope_addr_match;
+always @(posedge sys_clk_i) begin
+   if (sys_rstn_i == 1'b0) begin
+      // Original bridge addr_o also holds during source reset.
+   end else if (scope_src_capture) begin
+      scope_addr_match[0] <= (sys_addr_i[19:0] == 20'h0);
+      scope_addr_match[1] <= (sys_addr_i[19:0] == 20'h4);
+      scope_addr_match[2] <= (sys_addr_i[19:0] == 20'h8);
+      scope_addr_match[3] <= (sys_addr_i[19:0] == 20'hC);
+      scope_addr_match[4] <= (sys_addr_i[19:0] == 20'h10);
+      scope_addr_match[5] <= (sys_addr_i[19:0] == 20'h14);
+      scope_addr_match[6] <= (sys_addr_i[19:0] == 20'h20);
+      scope_addr_match[7] <= (sys_addr_i[19:0] == 20'h24);
+      scope_addr_match[8] <= (sys_addr_i[19:0] == 20'h28);
+      scope_addr_match[9] <= (sys_addr_i[19:0] == 20'h30);
+      scope_addr_match[10] <= (sys_addr_i[19:0] == 20'h34);
+      scope_addr_match[11] <= (sys_addr_i[19:0] == 20'h38);
+      scope_addr_match[12] <= (sys_addr_i[19:0] == 20'h3C);
+      scope_addr_match[13] <= (sys_addr_i[19:0] == 20'h40);
+      scope_addr_match[14] <= (sys_addr_i[19:0] == 20'h44);
+      scope_addr_match[15] <= (sys_addr_i[19:0] == 20'h48);
+      scope_addr_match[16] <= (sys_addr_i[19:0] == 20'h4C);
+   end
+end
+
+
+
 wire [ 14-1: 0] adc_a_filt_in  ;
 wire [ 14-1: 0] adc_a_filt_out ;
 wire [ 14-1: 0] adc_b_filt_in  ;
@@ -332,11 +362,11 @@ always @(posedge adc_clk_i) begin
       adc_trig      <= 1'b0 ;
    end
    else begin
-      adc_arm_do  <= (automatically_rearm_i && (adc_we == 1'b0)) || (wen && (addr[19:0]==20'h0) && wdata[0]) ; // SW ARM
-      adc_rst_do  <= wen && (addr[19:0]==20'h0) && wdata[1] ;
-      adc_trig_sw <= wen && (addr[19:0]==20'h4) ; // SW trigger
+      adc_arm_do  <= (automatically_rearm_i && (adc_we == 1'b0)) || (wen && (scope_addr_match[0]) && wdata[0]) ; // SW ARM
+      adc_rst_do  <= wen && (scope_addr_match[0]) && wdata[1] ;
+      adc_trig_sw <= wen && (scope_addr_match[1]) ; // SW trigger
 
-      if (wen && (addr[19:0]==20'h4))
+      if (wen && (scope_addr_match[1]))
          set_trig_src <= wdata[3:0] ;
       else if (((adc_dly_do || adc_trig) && (adc_dly_cnt == 32'h0)) || adc_rst_do) //delayed reached or reset
          set_trig_src <= 4'h0 ;
@@ -546,22 +576,22 @@ always @(posedge adc_clk_i) begin
    end
    else begin
       if (wen) begin
-         if (addr[19:0]==20'h8)    set_a_tresh <= wdata[14-1:0] ;
-         if (addr[19:0]==20'hC)    set_b_tresh <= wdata[14-1:0] ;
-         if (addr[19:0]==20'h10)   set_dly     <= wdata[32-1:0] ;
-         if (addr[19:0]==20'h14)   set_dec     <= wdata[32-1:0] ;
-         if (addr[19:0]==20'h20)   set_a_hyst  <= wdata[14-1:0] ;
-         if (addr[19:0]==20'h24)   set_b_hyst  <= wdata[14-1:0] ;
-         if (addr[19:0]==20'h28)   set_avg_en  <= wdata[     0] ;
+         if (scope_addr_match[2])    set_a_tresh <= wdata[14-1:0] ;
+         if (scope_addr_match[3])    set_b_tresh <= wdata[14-1:0] ;
+         if (scope_addr_match[4])   set_dly     <= wdata[32-1:0] ;
+         if (scope_addr_match[5])   set_dec     <= wdata[32-1:0] ;
+         if (scope_addr_match[6])   set_a_hyst  <= wdata[14-1:0] ;
+         if (scope_addr_match[7])   set_b_hyst  <= wdata[14-1:0] ;
+         if (scope_addr_match[8])   set_avg_en  <= wdata[     0] ;
 
-         if (addr[19:0]==20'h30)   set_a_filt_aa <= wdata[18-1:0] ;
-         if (addr[19:0]==20'h34)   set_a_filt_bb <= wdata[25-1:0] ;
-         if (addr[19:0]==20'h38)   set_a_filt_kk <= wdata[25-1:0] ;
-         if (addr[19:0]==20'h3C)   set_a_filt_pp <= wdata[25-1:0] ;
-         if (addr[19:0]==20'h40)   set_b_filt_aa <= wdata[18-1:0] ;
-         if (addr[19:0]==20'h44)   set_b_filt_bb <= wdata[25-1:0] ;
-         if (addr[19:0]==20'h48)   set_b_filt_kk <= wdata[25-1:0] ;
-         if (addr[19:0]==20'h4C)   set_b_filt_pp <= wdata[25-1:0] ;
+         if (scope_addr_match[9])   set_a_filt_aa <= wdata[18-1:0] ;
+         if (scope_addr_match[10])   set_a_filt_bb <= wdata[25-1:0] ;
+         if (scope_addr_match[11])   set_a_filt_kk <= wdata[25-1:0] ;
+         if (scope_addr_match[12])   set_a_filt_pp <= wdata[25-1:0] ;
+         if (scope_addr_match[13])   set_b_filt_aa <= wdata[18-1:0] ;
+         if (scope_addr_match[14])   set_b_filt_bb <= wdata[25-1:0] ;
+         if (scope_addr_match[15])   set_b_filt_kk <= wdata[25-1:0] ;
+         if (scope_addr_match[16])   set_b_filt_pp <= wdata[25-1:0] ;
       end
    end
 end
@@ -632,7 +662,8 @@ bus_clk_bridge i_bridge
    .ren_o         (  ren            ),
    .rdata_i       (  rdata          ),
    .err_i         (  err            ),
-   .ack_i         (  ack            )
+   .ack_i         (  ack            ),
+   .src_capture_o (  scope_src_capture )
 );
 
 

@@ -84,6 +84,8 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            execute([sys.executable, ROOT / 'tools/check_scope_predecode.py', '--out', out / 'scope_predecode_checks'],
+                    ROOT, out, 'scope_predecode', env, 'SCOPE_SOURCE_PREDECODE_SUITE_PASS')
             if (ROOT / 'tools/check_instruction_prefetch.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_instruction_prefetch.py', '--out', out / 'instruction_prefetch_checks'],
                         ROOT, out, 'instruction_prefetch', env, 'INSTRUCTION_PREFETCH_SUITE_PASS')
