@@ -497,3 +497,10 @@ F/S/B三个纯控制FF，以sys翻转在250 falling处差分建立A/B相位，�
 稳定边沿对照（启动2ns起）/四组包络/全部14位/复位/原A旧B新/负向样本检测PASS。
 PLL、相位、引脚和DRIVE保持，无计算通路放宽。新全回归/综合/route待执行，2ns控制
 路径和DAC I/O/PW/SEL、CDC/DRC仍未签核；全部原生原件在r64_shared_dac_native_20261112。
+
+R64实际：fresh全功能PASS、CSR PASS、新综合/route完成，输入a4b349d、输入SHA同且变化=[]。
+route -.748/-44.222、254端点；hold-1.901/-26.110、14端点；REJECTED。2ns select→ODDR
+路径-.748，frame→select-.331；DAC必要预算setup-.343/hold-1.901（后者ODDR fall路径，
+D1=D2的真实同边沿波形不翻转，不能cut，应下一候选用SDR FF表达）。ADC仍+.429/+3.304，
+DNA+.538/+.199，25对ASYNC实际同SLICE且首级仅次级D。完整原件/源码/输入输出SHA及非法
+DRIVE24内存诊断失败（未改DCP或源码）在experiments/r64_rejected_oddr_20261112。

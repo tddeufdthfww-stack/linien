@@ -1,4 +1,4 @@
-> **2026-11-12 R64候选：新综合/route待运行**。保留R63 ADC IOB/same-word，DAC data改250MHz SAME_EDGE ODDR，D1=D2，3个控制FF用真实sys边沿建立原A/B时隙；PLL/引脚/驱动不变。完整原生新旧analog（含启动）逐稳定边沿PASS，目标新增数据级0；物理2ns控制路径及全部I/O仍待验证。见R64_DAC_SHARED_CLOCK.md。以下为历史。
+> **2026-11-12 R64实际结果：REJECTED**。新完整功能PASS、CSR map PASS、新综合/route完成；WNS/TNS=-.748/-44.222ns、254端点，WHS/THS=-1.901/-26.110ns、14端点。2ns控制→ODDR路径FAIL；SAME_EDGE/D1=D2虽实际是SDR波形，STA仍有下降沿输出路径；下一候选用真实SDR IOB FF表达，不能cut路径。ADC仍+.429/+3.304ns。源/日志/DCP/SHA归档，不合并、不部署。以下为历史。
 
 > **2026-11-12 R63实际结果：ADC_COMPONENT_CANDIDATE**。28个ADC必要预算setup+.429/hold+3.304ns，真实0-cycle setup/-8ns hold边沿逐条核验PASS；新综合和route完成。整机WNS/TNS=-.835/-14.041、32端点，hold-.456/-5.876、14端点；DAC仍FAIL，内部18端点WNS-.389。最终未签核，不部署。完整功能本轮NOT RERUN，原生analog本轮PASS，其他组件参考R62同SHA完整回归。以下为历史。
 
@@ -860,3 +860,20 @@ F/S/B三个控制FF从sys翻转建立每4ns原A/B时隙，不增数据串行级�
 全部PASS；负向控制按预期失败。源码/fixture/完整命令/日志/SHA归档
 experiments/r64_shared_dac_native_20261112。新完整功能与新综合/route待运行；不能用
 原生对照冒称物理时序通过，DAC脉宽/SEL/真实PCB/物理CDC/DRC仍待签核。
+
+### R64 实际失败与后继方向
+
+输入a4b349dc8be3ae909a9490119c9451e7acc124d9，两独立trial的全部输入SHA同，source_changes=[]。
+本轮新完整功能PASS（含启动的新analog/全部旧组件/CSR/AXI/CDC），新综合/route完成。
+route WNS/TNS=-.748/-44.222ns、254端点，hold-1.901/-26.110ns、14端点，pulse1.5/0。
+最差FDRE_33_replica_1/C→ODDR_16/D1：2ns预算，logic.721+route1.049ns；ODDR输入
+setup要求使其仍差.748ns。frame→control另-.331ns。DAC外部setup-.343ns，相对R63
+-.835改善，但仍FAIL；hold报告为ODDR falling C→DAC，与真实D1=D2 SAME_EDGE不翻转
+波形存在结构性悲观，不能以此自行删路径，应改用真实SDR输出FF表达等价逻辑。
+ADC全部28条仍+.429/+3.304ns，0/-8ns关系核验保持；DNA setup+.538/hold+.199ns。
+实际50个ASYNC FF形成25个同SLICE双级对，首级Q仅驱动对应次级D；不是仅统计CDC数量，
+仍须审查级间时序/保持窗口/复位/故障响应，不能单靠结构就签核。
+一项内存IO参数诊断被非法LVCMOS33 DRIVE24拒绝（合法4/8/12/16），原DCP SHA未变、
+无源码/硬件修改，部分结果未选用，原失败完整另存。完整原件含fresh功能/综合/route、
+94DSP/路径只读审计、源/DCP/输入输出SHA在experiments/r64_rejected_oddr_20261112。
+REJECTED_NOT_MERGED，无烧录/激光/PZT操作；下一独立候选优先消除冗余DDR状态，不加数据级。

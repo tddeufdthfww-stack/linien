@@ -1,0 +1,164 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Thu Nov 12 03:58:21 2026
+# Process ID: 41588
+# Current directory: C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_extended
+# Command line: vivado.exe -mode batch -source C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_extended\audit.tcl -log C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_extended\audit.vivado.log -journal C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_extended\audit.jou
+# Log file: C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_extended/audit.vivado.log
+# Journal file: C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_extended\audit.jou
+#-----------------------------------------------------------
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_extended\audit.tcl}
+# if {[catch {
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_extended}
+# set_param general.maxThreads 2
+# set_param tcl.collectionResultDisplayLimit 100000
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r64-dac-shared-clock/gateware/build/trials/20261112_034833_r64_shared_dac_implementation/routed.dcp}
+# 
+# report_timing_summary -file "$out/timing.rpt"
+# report_exceptions -file "$out/exceptions.rpt"
+# report_clocks -file "$out/clocks.rpt"
+# check_timing -verbose -file "$out/checks.rpt"
+# report_timing -to [get_pins {DNA_PORT/DIN DNA_PORT/READ}] -max_paths 8 -file "$out/dna_setup.rpt"
+# report_timing -delay_type min -to [get_pins {DNA_PORT/DIN DNA_PORT/READ}] -max_paths 8 -file "$out/dna_hold.rpt"
+# foreach pair {{clk_fpga_0 clk_2} {clk_2 clk_fpga_0}} {
+#  set from [lindex $pair 0];set to [lindex $pair 1]
+#  foreach delay {max min} {
+#   set paths [get_timing_paths -from [get_clocks $from] -to [get_clocks $to] -delay_type $delay -max_paths 10000 -nworst 1]
+#   set f [open "$out/cdc_${from}_to_${to}_${delay}.tsv" w]
+#   puts $f "start\tend\tdata_ns\tlogic_ns\troute_ns\tslack\tlevels\trequirement_ns"
+#   foreach q $paths {set row {};foreach prop {STARTPOINT_PIN ENDPOINT_PIN DATAPATH_DELAY DATAPATH_LOGIC_DELAY DATAPATH_NET_DELAY SLACK LOGIC_LEVELS REQUIREMENT} {lappend row [get_property $prop $q]};puts $f [join $row "\t"]};close $f
+#  }
+# }
+# set sync [get_cells -hier -filter {ASYNC_REG == TRUE}]
+# report_timing -from $sync -to $sync -max_paths 1000 -file "$out/sync_setup.rpt"
+# report_timing -delay_type min -from $sync -to $sync -max_paths 1000 -file "$out/sync_hold.rpt"
+# set pair_first {};set pair_second {}
+# foreach c $sync {
+#  set loads [get_pins -leaf -of_objects [get_nets -of_objects [get_pins -of_objects $c -filter {REF_PIN_NAME == Q}]] -filter {DIRECTION == IN}]
+#  if {[llength $loads] == 1 && [get_property REF_PIN_NAME $loads] eq "D"} {
+#   set target [get_cells -of_objects $loads]
+#   if {[get_property ASYNC_REG $target] eq "TRUE" &&
+#       [get_nets -of_objects [get_pins -of_objects $c -filter {REF_PIN_NAME == C}]] eq [get_nets -of_objects [get_pins -of_objects $target -filter {REF_PIN_NAME == C}]]} {
+#    lappend pair_first [get_property NAME [get_pins -of_objects $c -filter {REF_PIN_NAME == C}]]
+#    lappend pair_second [get_property NAME $loads]
+#   }
+#  }
+# }
+# if {[llength $pair_first]} {
+#  report_timing -from [get_pins $pair_first] -to [get_pins $pair_second] -max_paths 1000 -file "$out/sync_pair_setup.rpt"
+#  report_timing -delay_type min -from [get_pins $pair_first] -to [get_pins $pair_second] -max_paths 1000 -file "$out/sync_pair_hold.rpt"
+# }
+# set dac_control {}
+# foreach c [get_cells -hier -filter {REF_NAME =~ FD*}] {
+#  set qnames [get_nets -of_objects [get_pins -of_objects $c -filter {REF_PIN_NAME == Q}]]
+#  if {[regexp {linienmodule_analog_(frame|frame_seen|select_b)$} $qnames]} {lappend dac_control $c}
+# }
+# if {[llength $dac_control]} {
+#  report_timing -to $dac_control -max_paths 30 -file "$out/dac_control_setup.rpt"
+#  report_timing -delay_type min -to $dac_control -max_paths 30 -file "$out/dac_control_hold.rpt"
+#  report_timing -from $dac_control -max_paths 50 -file "$out/dac_control_outgoing.rpt"
+# }
+# set f [open "$out/synchronizers.tsv" w];puts $f "cell\tref\tLOC\tBEL\tC\tD\tQ\tQ_loads"
+# foreach c $sync {
+#  set row [list $c [get_property REF_NAME $c] [get_property LOC $c] [get_property BEL $c]]
+#  foreach pin {C D Q} {lappend row [get_nets -of_objects [get_pins -of_objects $c -filter "REF_PIN_NAME == $pin"]]}
+#  set q [get_pins -of_objects $c -filter {REF_PIN_NAME == Q}]
+#  set loads {};foreach load [get_pins -leaf -of_objects [get_nets -of_objects $q] -filter {DIRECTION == IN}] {lappend loads [get_property NAME $load]}
+#  lappend row $loads
+#  puts $f [join $row "\t"]
+# };close $f
+# set ap {}
+# foreach pp [get_ports {adc_data_a[*] adc_data_b[*]}] {if {[regexp {^adc_data_[ab]\[([0-9]+)\]$} [get_property NAME $pp] whole index] && $index>=2} {lappend ap $pp}}
+# set dp [get_ports {dac_data[*]}]
+# foreach delay {max min} {
+#  report_timing -from $ap -delay_type $delay -max_paths 60 -nworst 2 -file "$out/adc_${delay}.rpt"
+#  report_timing -to $dp -delay_type $delay -max_paths 60 -nworst 2 -file "$out/dac_${delay}.rpt"
+# }
+# set adc_regs {}
+# foreach q [all_fanout -flat -endpoints_only -from $ap] {
+#  set c [get_cells -of_objects $q]
+#  if {[llength $c] && [get_property REF_NAME $c] in {FDRE FDSE FDCE FDPE}} {lappend adc_regs $c}
+# }
+# set adc_regs [lsort -unique $adc_regs]
+# set f [open "$out/adc_registers.tsv" w];puts $f "cell\tref\tLOC\tBEL\tIOB\tIS_C_INVERTED"
+# foreach c $adc_regs {puts $f [join [list $c [get_property REF_NAME $c] [get_property LOC $c] [get_property BEL $c] [get_property IOB $c] [get_property IS_C_INVERTED $c]] "\t"]};close $f
+# report_timing -from $adc_regs -max_paths 80 -file "$out/adc_to_consumers.rpt"
+# set f [open "$out/min_pulse_command_support.txt" w]
+# puts $f "matching_commands=[info commands *pulse*]"
+# set pulse_help_status [catch {help set_min_pulse_width} pulse_help]
+# puts $f "help_status=$pulse_help_status\nhelp_result=$pulse_help";close $f
+# report_drc -ruledeck bitstream_checks -file "$out/bitstream_drc.rpt"
+# puts EXTENDED_READONLY_AUDIT_COMPLETE
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r64-dac-shared-clock/gateware/build/trials/20261112_034833_r64_shared_dac_implementation/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 1073.391 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.295 . Memory (MB): peak = 1073.391 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2931 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1558.086 ; gain = 18.777
+Restored from archive | CPU: 3.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1558.086 ; gain = 18.777
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 1558.086 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:24 . Memory (MB): peak = 1558.086 ; gain = 484.695
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+report_timing_summary: Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 1643.098 ; gain = 85.012
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 8 -nworst 1 -delay_type max -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 8 -nworst 1 -delay_type min -sort_by slack.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -to_pins  -max_paths 1000 -nworst 1 -delay_type max -sort_by slack.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -to_pins  -max_paths 1000 -nworst 1 -delay_type min -sort_by slack.
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 30 -nworst 1 -delay_type max -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 30 -nworst 1 -delay_type min -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -max_paths 50 -nworst 1 -delay_type max -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -max_paths 60 -nworst 2 -delay_type max -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 60 -nworst 2 -delay_type max -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -max_paths 60 -nworst 2 -delay_type min -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 60 -nworst 2 -delay_type min -sort_by slack.
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -max_paths 80 -nworst 1 -delay_type max -sort_by slack.
+Command: report_drc -ruledeck bitstream_checks -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_extended/bitstream_drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2020.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Coretcl 2-168] The results of DRC are in file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_extended/bitstream_drc.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1777.930 ; gain = 115.887
+EXTENDED_READONLY_AUDIT_COMPLETE
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 03:59:13 2026...

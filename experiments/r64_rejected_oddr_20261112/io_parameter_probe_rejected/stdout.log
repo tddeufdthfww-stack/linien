@@ -1,0 +1,105 @@
+
+****** Vivado v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r64_dac_io_characterization\sweep.tcl}
+# if {[catch {
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r64_dac_io_characterization}
+# set_param general.maxThreads 2
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r64-dac-shared-clock/gateware/build/trials/20261112_034833_r64_shared_dac_implementation/routed.dcp}
+# 
+# set data_ports [get_ports {dac_data[*]}]
+# set clocks_ports [get_ports {dac_wrt dac_clk dac_sel dac_rst}]
+# if {[llength $data_ports]!=14 || [llength $clocks_ports]!=4} {error "Wrong DAC port selection"}
+# set original {}
+# foreach port [concat $data_ports $clocks_ports] {dict set original [get_property NAME $port] [list [get_property DRIVE $port] [get_property SLEW $port]]}
+# set f [open "$out/sweep.tsv" w];puts $f "data_drive	clock_drive	data_slew	clock_slew	setup_ns	hold_ns	data_delay_ns	data_logic_ns	setup_clock_skew_ns	hold_clock_skew_ns"
+# foreach data_drive {8 12 16 24} {
+#  foreach clock_drive {8 12 16 24} {
+#   foreach data_slew {FAST SLOW} {
+#    set_property DRIVE $data_drive $data_ports
+#    set_property DRIVE $clock_drive $clocks_ports
+#    set_property SLEW $data_slew $data_ports
+#    set_property SLEW FAST $clocks_ports
+#    set su [lindex [get_timing_paths -to $data_ports -delay_type max -max_paths 100 -nworst 1] 0]
+#    set ho [lindex [get_timing_paths -to $data_ports -delay_type min -max_paths 100 -nworst 1] 0]
+#    puts $f [join [list $data_drive $clock_drive $data_slew FAST [get_property SLACK $su] [get_property SLACK $ho] [get_property DATAPATH_DELAY $su] [get_property DATAPATH_LOGIC_DELAY $su] [get_property SKEW $su] [get_property SKEW $ho]] "	"]
+#    flush $f
+#   }
+#  }
+# }
+# close $f
+# dict for {name properties} $original {
+#  set_property DRIVE [lindex $properties 0] [get_ports $name]
+#  set_property SLEW [lindex $properties 1] [get_ports $name]
+# }
+# report_timing -to $data_ports -max_paths 14 -file "$out/restored_setup.rpt"
+# report_timing -delay_type min -to $data_ports -max_paths 14 -file "$out/restored_hold.rpt"
+# puts DAC_IO_PARAMETER_CHARACTERIZATION_COMPLETE_NOT_BOARD_SIGNOFF
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r64-dac-shared-clock/gateware/build/trials/20261112_034833_r64_shared_dac_implementation/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.044 . Memory (MB): peak = 1075.688 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.299 . Memory (MB): peak = 1075.688 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2931 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1556.992 ; gain = 18.312
+Restored from archive | CPU: 2.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1556.992 ; gain = 18.312
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 1556.992 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:24 . Memory (MB): peak = 1556.992 ; gain = 481.305
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1621.809 ; gain = 64.816
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1621.840 ; gain = 0.031
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1625.691 ; gain = 3.852
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1626.660 ; gain = 0.969
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1627.438 ; gain = 0.777
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1627.438 ; gain = 0.000
+ERROR: ERROR: [Common 17-69] Command failed: Illegal DRIVE value '24' for standard 'LVCMOS33'.  4, 8, 12, 16
+
+ERROR: [Common 17-69] Command failed: Illegal DRIVE value '24' for standard 'LVCMOS33'.  4, 8, 12, 16
+
+    while executing
+"rdi::set_property DRIVE 24 {dac_wrt dac_clk dac_sel dac_rst}"
+    invoked from within
+"set_property DRIVE $clock_drive $clocks_ports"
+    ("foreach" body line 3)
+    invoked from within
+"foreach data_slew {FAST SLOW} {
+   set_property DRIVE $data_drive $data_ports
+   set_property DRIVE $clock_drive $clocks_ports
+   set_property SLEW $d..."
+    ("foreach" body line 2)
+    invoked from within
+"foreach clock_drive {8 12 16 24} {
+  foreach data_slew {FAST SLOW} {
+   set_property DRIVE $data_drive $data_ports
+   set_property DRIVE $clock_drive ..."
+    ("foreach" body line 2)
+    invoked from within
+"foreach data_drive {8 12 16 24} {
+ foreach clock_drive {8 12 16 24} {
+  foreach data_slew {FAST SLOW} {
+   set_property DRIVE $data_drive $data_ports
+..."
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 03:59:24 2026...
