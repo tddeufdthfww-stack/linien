@@ -7,3 +7,8 @@
 3. 只unroute选中Q网后force_replication_on_nets；若工具仍判定post-route而不支持，则保留入口错误与源码/日志，在新目录通过显式--unroute-all兼容模式使用已验证全unroute流程，不重复未改命令。模式与源DCP SHA分别记录。不得覆盖原R53。
 4. 逐组D/C/CE/R/INIT/ASYNC_REG/DONT_TOUCH及完整leaf负载集合审计，必须确实有匹配副本且负载无丢失/无重复。随后仅route Explore -preserve -tns_cleanup，尽量保留其他完整路由；不再运行其他物理优化以便完整连接审计，不retime/clock/DSP/BRAM寄存器优化或新增pblock/时序例外。
 5. 全部94DSP与R53参数核对、实际FF数量增量与匹配副本数核对，记录source/top/CSR/XDC/DCP SHA和完整setup/hold/pulse/route/CDC/DRC/coverage。新增ADC/反馈/CSR采样周期0，CSR写操作没有CE冻结。时钟/器件/引脚/算法/精度/阶数/吞吐不改，失败保留不合并/不部署。
+
+
+## R56部分unroute兼容中止
+
+ae4f9a8默认只拆4条选中Q网后，工具仍以post-route执行，force_replication_on_nets在入口被Vivado_Tcl4-265拒绝；实际复制和新route均NOT RUN。原真实routed选择/源码/日志/manifest和纠正说明保存experiments/r56_partial_unroute_setup_failure_20261111。按既有CLI --unroute-all在全新目录改运行模式；先从原routed报告选4个来源，再全拆线，避免选择未布线估计负slack。该兼容模式不保留原全部走线，-preserve仅对执行时已完成的走线有效；原R53 DCP/源码保持。
