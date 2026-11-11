@@ -89,15 +89,34 @@ class Iir(Filter):
         y_pat = Signal.like(y_over, reset=2 ** (intermediate_width - skip) - 1)
         y = Signal.like(self.y)
         railed = Signal()
+        retimed_output = mode == "pipelined" and mac_impl == "registered_c48"
+        if retimed_output:
+            previous_output = Signal.like(self.y)
+            previous_feedback = Signal.like(y)
+            clear_q, hold_q = Signal(), Signal()
+            overflow_fallback = previous_output
+        else:
+            overflow_fallback = self.y
         self.comb += [
             railed.eq(~((y_over == y_pat) | (y_over == ~y_pat))),
-            If(railed, y_lim.eq(self.y)).Else(y_lim.eq(y_next[shift:])),
+            If(railed, y_lim.eq(overflow_fallback)).Else(y_lim.eq(y_next[shift:])),
         ]
-        self.sync += [
-            self.error.eq(railed),
-            self.y.eq(y_lim),
-            If(self.clear, y.eq(0)).Elif(~self.hold, y.eq(y_lim)),
-        ]
+        if retimed_output:
+            # Parallel history reconstructs the original hold decisions after
+            # moving the existing result edge into the final registered MAC.
+            self.sync += [
+                previous_output.eq(self.y), previous_feedback.eq(y),
+                clear_q.eq(self.clear), hold_q.eq(self.hold),
+            ]
+            self.comb += [
+                self.error.eq(railed), self.y.eq(y_lim),
+                If(clear_q, y.eq(0)).Elif(~hold_q, y.eq(y_lim)).Else(y.eq(previous_feedback)),
+            ]
+        else:
+            self.sync += [
+                self.error.eq(railed), self.y.eq(y_lim),
+                If(self.clear, y.eq(0)).Elif(~self.hold, y.eq(y_lim)),
+            ]
 
         if mode == "pipelined":
             r = [(f"b{i}", self.x) for i in reversed(range(order + 1))]
@@ -105,11 +124,9 @@ class Iir(Filter):
             if mac_impl == "registered_c48":
                 zr = Signal.like(z)
                 self.sync += zr.eq(z)
-                for i, (coeff, signal) in enumerate(r):
-                    if i < len(r)-1:
-                        zr = registered_c48_mac(self,zr,signal,c[coeff])
-                    else:
-                        z = split_c48_mac(self,zr,signal,c[coeff])
+                for coeff, signal in r:
+                    zr = registered_c48_mac(self,zr,signal,c[coeff])
+                z = zr
             else:
                 for coeff, signal in r:
                     zr = Signal.like(z)
