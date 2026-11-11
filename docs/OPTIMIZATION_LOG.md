@@ -1,4 +1,4 @@
-> **2026-11-11 R60最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=0.003/0.0ns，最终STA FAIL。详细归档见本文末尾。
+> **2026-11-11 R60最新结果**：受约束setup/hold/pulse均PASS，final WNS=+.003ns/TNS=0/0端点；最终STA仍FAIL（DNA/I/O覆盖、物理CDC和DRC未关闭）。候选不部署，完整功能/综合复用R52，见文末与R60_SIGNOFF_GAPS_20261111.md。
 
 > **2026-11-11 R59最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.204/-5.183ns，最终STA FAIL。详细归档见本文末尾。
 
@@ -445,3 +445,14 @@ d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/C
 - CDC={'CDC-1': 449, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增379/移除360；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r60_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R60 最终审计及下一阶段 / 2026-11-11
+
+受约束setup PASS：final WNS=+.003ns/TNS=0/0端点，hold .014/0、pulse1.5/0 PASS；完整源功能和综合明确REUSED_R52经R59_NOT_RERUN，综合本身仍-.773/-60.316ns，不混称综合时序通过。实际新增3 FDRE+1 FDSE平行副本（乘数bit0原INIT1/S保持），无新增/删除LUT；30,623→30,627已解析实例在同状态Q别名和真实声明的有序位展开后原实例参数/端口等价，94DSP与R59相同。94输入SHA、DCP/CSV冻结，新增串行周期0，快速相对R2b+32ns保持。原用户/R2b/R4a/R16保护核验PASS。
+
+当前最差转至B IIR y2[11]→tap限幅y19/D，+.003ns，logic3.081+route4.513ns，10级/5CARRY4；raw内部+.343ns；快速PID /D+.814，慢PID /D+1.224、/R+.558、/CE+1.790ns。3ps仅该实现正裕量，不是充足余量或板端安全证明。
+
+CDC对R57/R59严格路径差集0/0且计数同，但物理安全NOT_PROVEN。最终STA仍FAIL：DNA无时钟1/DIN-READ未约束2；ADC/扩展输入44、DAC/扩展/PWM/LED输出46未建外部延迟；FCLK↔ADC NoCommonClock/Timedunsafe。默认DRC405=333 Warning+72 Advisory；p_1_out PREG0的OPMODE={0,s,s,0,1,0,1}稳定二进制仅0x05/0x35、Z=0/C，已依本机原语模型解释不选P反馈的可达性，但动态/未知/物理毛刺未证明，原DPREG-4告警不删除、不声称签核关闭。
+
+本阶段暂以R60冻结候选；下一阶段先补DNA/CDC/I/O/DRC的真实证据和时序模型，再实际route/STA复核，不能靠例外或假延迟消警，也不盲加反馈流水线。完整变化、测试边界、输入输出SHA、物理阶段重放命令见docs/R60_SIGNOFF_GAPS_20261111.md及experiments/r60_signoff_readonly_20261111；无fullRoot/SDF/板测，无bitstream/部署/激光操作。
