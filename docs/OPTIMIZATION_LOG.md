@@ -569,3 +569,7 @@ CRG中sys_ps.clk继续直连原FCLK0；sys_ps.rst由原PS raw reset经过标准M
 R66继承的ADC/DAC与内部物理时序待实际结果，其他外部I/O协议、PCB、DAC脉宽解释和物理CDC签核仍OPEN。不生成正式上板镜像。
 
 实际CRG原生compile/elaborate/simulate全PASS，SYS及PS两域停钟/异步置位/两有效边沿释放PASS；实际RootModule对象身份和axi_slave instance reset端口连线PASS。归档experiments/r67_ps_reset_native_20261112。下一步新生成/综合；独立R67 route尚未运行，不虚报物理CDC签核。
+
+## 2026-11-12 R67实际组件验证
+
+输入78cd9df89241e02401733c9ba7b2931390f037a0，实际CRG原生reset停钟/两边沿释放及actual RootModule AXI wiring均PASS；CSR映射PASS，新综合COMPLETE。综合指标={"wns": -0.773, "tns": -80.399, "setup_failing": 312, "setup_total": 38033, "whs": -0.757, "ths": -365.89, "hold_failing": 864, "hold_total": 38031, "wpws": 1.5, "tpws": 0.0, "pulse_failing": 0}。独立route和完整功能本轮NOT RUN，不能冒用R66结果。后续R68包含完全相同PS reset改动后做组合实际route和新增同步器物理审查。归档experiments/r67_reset_synthesis_20261112含输入源码清单SHA、生成RTL、synth DCP和完整日志。新增正常数据级0，仅PS复位释放等待两FCLK。组件候选，整体尚未签核/不部署。

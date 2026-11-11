@@ -1,3 +1,5 @@
+> **2026-11-12 R67实际：PS reset组件原生PASS、实际连线PASS、新综合完成**。独立route和完整功能NOT RUN；由R68组合物理结果继续检验。增加复位释放两FCLK等待，正常数据流水级不变，整体未签核。
+
 > **2026-11-12 R67候选：PS reset释放整改待验证**。独立分支，新增sys_ps标准ASR和AXI reset连线；只加复位释放2个FCLK等待，不加正常数据反馈级。继承R66待完成物理输入，未假定其STA通过。
 
 > **2026-11-12 R66候选：待原生验证/综合/route**。DAC时隙改正边沿phase-history+XOR，以真实4ns预算代替2ns控制路径；新增数据级0，必须验证同边沿hold及完整A/B启动/复位波形。R65失败源码及报告冻结保留，其他I/O/CDC签核未关闭。
@@ -905,3 +907,7 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 实际route WNS/TNS=-.683/-55.023ns，312 setup端点；WHS/THS=+.024/0、0 hold端点，WPWS=+1.500ns。SDR表达消除了R64负hold；最差FDRE_33/C负边沿到FDRE_40/D正边沿，2ns路径仍FAIL。DAC必要零PCB预算setup/hold=-.343/+.070ns；ADC全28端点+.429/+3.304ns、0/-8ns边沿关系逐条PASS。内部clk_2 WNS=-.345ns。no_clock=0、内部未约束=0，16输入/32输出尚须接口分类/真实约束。物理CDC25对50FF同SLICE且一级Q只到二级D，仍不足以宣布跨域整体安全；PS原始异步reset释放已被独立实际CRG仿真确认为待修复项。
 
 源码、完整阶段日志、DCP、物理诊断及SHA归档experiments/r65_rejected_control_20261112，DCP SHA256=5e7c3b93c8a3e02d91b25586981e483a11e70d17319175f3d22cfba97d335aee。失败候选不合并/不部署。R65相对R64新增数据串行级0，继承相对R2b主反馈+32ns；最终STA/板级I/O/CDC/DRC仍未签核，没有生成发布bit/bin。
+
+## 2026-11-12 R67实际组件验证
+
+输入78cd9df89241e02401733c9ba7b2931390f037a0，实际CRG原生reset停钟/两边沿释放及actual RootModule AXI wiring均PASS；CSR映射PASS，新综合COMPLETE。综合指标={"wns": -0.773, "tns": -80.399, "setup_failing": 312, "setup_total": 38033, "whs": -0.757, "ths": -365.89, "hold_failing": 864, "hold_total": 38031, "wpws": 1.5, "tpws": 0.0, "pulse_failing": 0}。独立route和完整功能本轮NOT RUN，不能冒用R66结果。后续R68包含完全相同PS reset改动后做组合实际route和新增同步器物理审查。归档experiments/r67_reset_synthesis_20261112含输入源码清单SHA、生成RTL、synth DCP和完整日志。新增正常数据级0，仅PS复位释放等待两FCLK。组件候选，整体尚未签核/不部署。
