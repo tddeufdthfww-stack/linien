@@ -1,3 +1,5 @@
+> **2026-11-11 R47最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.282/-5.173ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R46最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.539/-18.344ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R44最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.691/-136.392ns，最终STA FAIL。详细归档见本文末尾。
@@ -302,3 +304,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 438, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增382/移除374；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r46_autolock_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R47 / 2026-11-11归档 / physical时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `d839e67c7977772cc2113a8d70cc91db2fa41020`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r47-iir-enable-placement`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R46_EXACT_INPUTS_NOT_RERUN：83个原始硬件测试SHA一致，R46完整14/25/28预取/真实CSR/父模块/Scope同cohort/IIR/PID/AXI/CDC原生PASS和综合明确复用，本轮未重跑。内存unroute R46 checkpoint后按实际BREG1/BCASCREG1/ADC时钟/CEB2驱动LUT查询，并以此时未布线估算负slack筛选8条网；这一筛选不是R46 routed slack，已单独记录，不混用。标准force_replication、placement/rewire/critical-cell与真实route Explore/tns_cleanup。CSR组当时未选中，CSR D/C/CE/R/INIT/聚合负载一致、18个DSP CEB2直接LUT函数在force前后完整truth-table含输入置换审计相同、全部94DSP参数及寄存器属性同真实输入R46、DCP SHA不变，新增串行周期0。最终route才用于候选优劣判断；不是fullRoot postroute/SDF/形式等价或CDC物理签核。；没有修改Migen evaluator。
+- 完整功能和综合REUSED_R46_NOT_RERUN；本轮新做LUT函数/结构/DSP审计与实际route/STA/CDC；CSR map与XDC保持R4a一致。延迟=本轮只标准工具物理复制IIR组合使能驱动，83个原始硬件/测试SHA同R46，新增任何ADC/反馈/CSR/采样边沿0；R28指定组件Bare72.1/快慢108.1ns只继承，不是本轮重测或板端。
+- 综合来源=REUSED_R46_EXACT_DCP_NOT_RERUN，WNS/TNS=-1.376/-180.925ns。实际route COMPLETE，WNS/TNS=-0.282/-5.173ns，失败端点70；WHS/WPWS=0.015/1.5ns，THS=0。
+- raw IIR内部最差=-0.202ns，入口=0.259ns；全局最差 `linienmodule_fast_b_iir0_z_low0/CLK` → `linienmodule_fast_b_iir0_z_high0/CEB2`，逻辑/布线=['5.972', '1.700']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 11692, 'ff': 13504, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=405。
+- CDC={'CDC-1': 438, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增382/移除374；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r47_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
