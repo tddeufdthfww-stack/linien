@@ -103,10 +103,18 @@ reg             adc_rst_do   ;
 // Holding while busy/reset matches addr_o, including its uninitialized reset state.
 wire scope_src_capture;
 reg [16:0] scope_addr_match;
+wire [4:0] scope_dec_shift_next;
+wire scope_dec_zero_next;
+reg [4:0] scope_dec_shift_source;
+reg scope_dec_zero_source;
+scope_dec_factor_decode source_factor_decode(
+    .dec_i(sys_wdata_i), .shift_o(scope_dec_shift_next), .zero_o(scope_dec_zero_next));
 always @(posedge sys_clk_i) begin
    if (sys_rstn_i == 1'b0) begin
       // Original bridge addr_o also holds during source reset.
    end else if (scope_src_capture) begin
+      scope_dec_shift_source <= scope_dec_shift_next;
+      scope_dec_zero_source <= scope_dec_zero_next;
       scope_addr_match[0] <= (sys_addr_i[19:0] == 20'h0);
       scope_addr_match[1] <= (sys_addr_i[19:0] == 20'h4);
       scope_addr_match[2] <= (sys_addr_i[19:0] == 20'h8);
@@ -166,17 +174,19 @@ reg  [ 48-1: 0] adc_b_sum     ;
 reg  [ 48-1: 0] adc_a_q_sum     ;
 reg  [ 48-1: 0] adc_b_q_sum     ;
 reg  [ 32-1: 0] set_dec       ;
+reg [4:0] set_dec_shift;
+reg set_dec_zero;
 reg  [ 32-1: 0] adc_dec_cnt   ;
 reg             set_avg_en    ;
 reg             adc_dv        ;
 wire [13:0] average_a;
-scope_average_select average_select_a(.raw_i(adc_a_filt_out),.sum_i(adc_a_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_a));
+scope_average_cached average_select_a(.raw_i(adc_a_filt_out),.sum_i(adc_a_sum),.shift_i(set_dec_shift),.zero_i(set_dec_zero),.avg_i(set_avg_en),.value_o(average_a));
 wire [13:0] average_b;
-scope_average_select average_select_b(.raw_i(adc_b_filt_out),.sum_i(adc_b_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_b));
+scope_average_cached average_select_b(.raw_i(adc_b_filt_out),.sum_i(adc_b_sum),.shift_i(set_dec_shift),.zero_i(set_dec_zero),.avg_i(set_avg_en),.value_o(average_b));
 wire [13:0] average_aq;
-scope_average_select average_select_aq(.raw_i(adc_a_q_filt_out),.sum_i(adc_a_q_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_aq));
+scope_average_cached average_select_aq(.raw_i(adc_a_q_filt_out),.sum_i(adc_a_q_sum),.shift_i(set_dec_shift),.zero_i(set_dec_zero),.avg_i(set_avg_en),.value_o(average_aq));
 wire [13:0] average_bq;
-scope_average_select average_select_bq(.raw_i(adc_b_q_filt_out),.sum_i(adc_b_q_sum),.dec_i(set_dec),.avg_i(set_avg_en),.value_o(average_bq));
+scope_average_cached average_select_bq(.raw_i(adc_b_q_filt_out),.sum_i(adc_b_q_sum),.shift_i(set_dec_shift),.zero_i(set_dec_zero),.avg_i(set_avg_en),.value_o(average_bq));
 
 
 always @(posedge adc_clk_i) begin
@@ -562,6 +572,8 @@ always @(posedge adc_clk_i) begin
       set_b_tresh   <= -14'd5000   ;
       set_dly       <=  32'd0      ;
       set_dec       <=  32'd1      ;
+      set_dec_shift <= 5'd0;
+      set_dec_zero <= 1'b0;
       set_a_hyst    <=  14'd20     ;
       set_b_hyst    <=  14'd20     ;
       set_avg_en    <=   1'b1      ;
@@ -579,7 +591,11 @@ always @(posedge adc_clk_i) begin
          if (scope_addr_match[2])    set_a_tresh <= wdata[14-1:0] ;
          if (scope_addr_match[3])    set_b_tresh <= wdata[14-1:0] ;
          if (scope_addr_match[4])   set_dly     <= wdata[32-1:0] ;
-         if (scope_addr_match[5])   set_dec     <= wdata[32-1:0] ;
+         if (scope_addr_match[5]) begin
+            set_dec <= wdata[32-1:0];
+            set_dec_shift <= scope_dec_shift_source;
+            set_dec_zero <= scope_dec_zero_source;
+         end
          if (scope_addr_match[6])   set_a_hyst  <= wdata[14-1:0] ;
          if (scope_addr_match[7])   set_b_hyst  <= wdata[14-1:0] ;
          if (scope_addr_match[8])   set_avg_en  <= wdata[     0] ;
@@ -728,5 +744,70 @@ always @* begin
          else value_o = sum_i[15:0];
       end
    endcase
+end
+endmodule
+
+
+// Parallel configuration metadata; exact case keeps X/Z inputs on default index0.
+module scope_dec_factor_decode(input [31:0] dec_i,
+    output reg [4:0] shift_o, output reg zero_o);
+always @* begin
+    shift_o = 5'd0;
+    zero_o = 1'b0;
+    case (dec_i)
+        32'h0: zero_o = 1'b1;
+        32'h1: shift_o = 5'd0;
+        32'h2: shift_o = 5'd1;
+        32'h4: shift_o = 5'd2;
+        32'h8: shift_o = 5'd3;
+        32'h10: shift_o = 5'd4;
+        32'h20: shift_o = 5'd5;
+        32'h40: shift_o = 5'd6;
+        32'h80: shift_o = 5'd7;
+        32'h100: shift_o = 5'd8;
+        32'h200: shift_o = 5'd9;
+        32'h400: shift_o = 5'd10;
+        32'h800: shift_o = 5'd11;
+        32'h1000: shift_o = 5'd12;
+        32'h2000: shift_o = 5'd13;
+        32'h4000: shift_o = 5'd14;
+        32'h8000: shift_o = 5'd15;
+        32'h10000: shift_o = 5'd16;
+        32'h20000: shift_o = 5'd17;
+        32'h40000: shift_o = 5'd18;
+        32'h80000: shift_o = 5'd19;
+        32'h100000: shift_o = 5'd20;
+        32'h200000: shift_o = 5'd21;
+        32'h400000: shift_o = 5'd22;
+        32'h800000: shift_o = 5'd23;
+        32'h1000000: shift_o = 5'd24;
+        32'h2000000: shift_o = 5'd25;
+        32'h4000000: shift_o = 5'd26;
+        32'h8000000: shift_o = 5'd27;
+        32'h10000000: shift_o = 5'd28;
+        32'h20000000: shift_o = 5'd29;
+        32'h40000000: shift_o = 5'd30;
+        32'h80000000: shift_o = 5'd31;
+        default: begin end
+    endcase
+end
+endmodule
+
+// Original 16-bit slices were truncated to14bits; shift_i is always0..31.
+module scope_average_cached(input [13:0] raw_i, input [47:0] sum_i,
+    input [4:0] shift_i, input zero_i, input avg_i, output reg [13:0] value_o);
+wire [47:0] shifted = sum_i >> shift_i;
+always @* begin
+    case (avg_i)
+        1'b0: value_o = raw_i;
+        1'b1: begin
+            if (zero_i) value_o = raw_i;
+            else value_o = shifted[13:0];
+        end
+        default: begin
+            if (zero_i === 1'b1) value_o = raw_i;
+            else value_o = sum_i[13:0];
+        end
+    endcase
 end
 endmodule
