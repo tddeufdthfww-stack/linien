@@ -1,4 +1,6 @@
-> **2026-11-11 R60最新结果**：受约束setup/hold/pulse均PASS，final WNS=+.003ns/TNS=0/0端点；最终STA仍FAIL（DNA/I/O覆盖、物理CDC和DRC未关闭）。候选不部署，完整功能/综合复用R52，见文末与R60_SIGNOFF_GAPS_20261111.md。
+> **2026-11-12 R61b实际新结果 / R62候选计划**：R61b完整功能PASS，新综合COMPLETE、新route COMPLETE；route WNS/TNS=-.232/-2.317ns、25端点，hold .010/0、pulse1.5/0；无时钟0/内部未约束0。最终STA FAIL，I/O/物理CDC/DRC未签核。独立R62只改ADC下降沿捕获和DAC data FAST8驱动，原生采样契约测试PASS，全回归/实际route待执行。详见文末及R62_PLAN.md。以下条目为历史快照。
+
+> **2026-11-11 R60历史结果**：受约束setup/hold/pulse均PASS，final WNS=+.003ns/TNS=0/0端点；最终STA仍FAIL（DNA/I/O覆盖、物理CDC和DRC未关闭）。候选不部署，完整功能/综合复用R52，见文末与R60_SIGNOFF_GAPS_20261111.md。
 
 > **2026-11-11 R59最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.204/-5.183ns，最终STA FAIL。详细归档见本文末尾。
 
@@ -773,3 +775,26 @@ ready=11。原三个测试脚本及四个硬件文件RAW SHA与4516124完整失�
 原严格立即复位测试仍FAIL。证据归档experiments/r61b_scope_recovery_contract_20261111。
 R60冻结基线410个文件RAW SHA/HEAD/干净状态再核验PASS。重新完整功能/综合/route
 仍必须单独执行，本次定向PASS不替代它们。
+
+## R61b 完整新构建实际结果 / 2026-11-12归档
+
+输入4aba6ce630de6feee5cd01dea79051f76f605cf2，trial 20261111_225502_r61b_recovery_contract_full。
+完整功能PASS（明确采用新复位契约入口，旧立即请求严格比较FAIL另存），CSR协议语义比较PASS；
+从源码新综合COMPLETE、布局布线COMPLETE，输入变动=[]。综合WNS/TNS=-.773/-60.316ns；
+routed=-.232/-2.317ns、25失败端点，WHS=.010/THS0、WPWS1.5/TPWS0。内部no_clock=0、
+unconstrained_internal=0。最差phase/CORDIC路径fast_a_zi0__8/C→fast_b_cordic17[16]/D，
+10级/6CARRY4+4LUT、logic3.282+route4.885ns。raw内部+.375ns。完整原件、只读审计、
+输入/输出SHA及DCP归档experiments/r61b_fresh_full_20261112，R61b工作树/代码冻结不变。
+此轮最终STA仍FAIL，尚无签核bitstream；外部接口与物理CDC/DRC不能沿用R60的正裕量。
+
+## R62 / 2026-11-12 / ADC捕获边沿与DAC驱动独立候选
+
+仅analog.py ADC输入FF改FDRE IS_C_INVERTED=1、IOB TRUE；hw_platform.py DAC data改FAST8，
+其余引脚/PLL/PS7/CSR/控制算法保持。ADC边沿移动4ns，不新增整拍串行FF；按CLKOUT rising n
+后的word[n]在following fall捕获、next rising消费，不能声称原未签核采样编号全瞬态等价。
+真实半周期4ns到下游路径必须STA。DAC驱动效益及板端SI待验证，不能先写PASS。
+实际Migen+厂商FDRE/ODDR原生测试PASS：两路完整14位、低2位变化、0.6ns位间到达展开、
+复位及下一sys样本消费、原DAC编码/时隙。全功能回归和新综合/route尚待执行。新增硅器件
+必要I/O预算在综合后checkpoint前生效：ADC0..0.6ns、DACsetup2/hold1.5ns，明确零PCB偏斜
+诊断假设，非真实PCB签核。IQSEL/复位/CLK-WRT先后及3.5ns脉宽另核查，不隐去。
+来源/数学依据/采样行为/风险见R62_PLAN.md。候选不部署，原工程/R2b/R4a/R60/R61b不覆盖。

@@ -61,8 +61,10 @@ _io += [
         Subsignal(
             "data",
             Pins("M19 M20 L19 L20 K19 J19 J20 H20 " "G19 G20 F19 F20 D20 D19"),
-            Misc("SLEW SLOW"),
-            Drive(4),
+            # Match the forwarded DAC clocks' drive class. PVT setup/hold and
+            # board-level signal integrity still require independent review.
+            Misc("SLEW FAST"),
+            Drive(8),
         ),
         # Misc("IOB TRUE")
         Subsignal("wrt", Pins("M17"), Drive(8), Misc("SLEW FAST")),

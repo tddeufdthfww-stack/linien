@@ -456,3 +456,17 @@ d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/C
 CDC对R57/R59严格路径差集0/0且计数同，但物理安全NOT_PROVEN。最终STA仍FAIL：DNA无时钟1/DIN-READ未约束2；ADC/扩展输入44、DAC/扩展/PWM/LED输出46未建外部延迟；FCLK↔ADC NoCommonClock/Timedunsafe。默认DRC405=333 Warning+72 Advisory；p_1_out PREG0的OPMODE={0,s,s,0,1,0,1}稳定二进制仅0x05/0x35、Z=0/C，已依本机原语模型解释不选P反馈的可达性，但动态/未知/物理毛刺未证明，原DPREG-4告警不删除、不声称签核关闭。
 
 本阶段暂以R60冻结候选；下一阶段先补DNA/CDC/I/O/DRC的真实证据和时序模型，再实际route/STA复核，不能靠例外或假延迟消警，也不盲加反馈流水线。完整变化、测试边界、输入输出SHA、物理阶段重放命令见docs/R60_SIGNOFF_GAPS_20261111.md及experiments/r60_signoff_readonly_20261111；无fullRoot/SDF/板测，无bitstream/部署/激光操作。
+# R61b 新构建与 R62 接口候选 / 2026-11-12
+
+R61b 输入4aba6ce，完整功能PASS、CSR语义PASS、新综合/route完成，route WNS/TNS
+-.232/-2.317ns、25端点，hold .010/0、pulse1.5/0，no_clock/internal-unconstrained均0；
+最终STA FAIL。真实原件及SHA归档experiments/r61b_fresh_full_20261112，R61b/R60冻结。
+
+R62硬件只改gateware/lowlevel/analog.py的ADC输入捕获FF到同sys下降沿及IOB TRUE，
+gateware/hw_platform.py的DAC data到FAST/8mA。新增完整sys流水级0，ADC采样边沿移4ns，
+明确word[n]在fall捕获next rising使用，不冒称旧采样编号等价。完整原生双路14位/复位/
+样本号/DAC原时隙功能PASS，工具/fixture/日志另存；全回归及route待实际结果。
+run_gateware_trial纳入该原生测试及io_intrinsic_probe.tcl器件必要预算、maxThreads2。
+零PCB偏斜仅诊断假设；PLL/引脚/CSR保持，IQSEL/CLK-WRT/脉宽/物理CDC/DRC均不能借此
+宣称关闭。失败保留不合并。详细计划/原理/风险见docs/R62_PLAN.md与PORTING_STATUS文末。
+

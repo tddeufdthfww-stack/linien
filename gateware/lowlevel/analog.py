@@ -32,7 +32,24 @@ class PitayaAnalog(Module):
 
         adca = Signal.like(adc.data_b)
         adcb = Signal.like(adc.data_a)
-        self.sync += adca.eq(adc.data_a), adcb.eq(adc.data_b)
+        # LTC2145 full-rate CMOS data changes after CLKOUT+ rising (0..0.6 ns
+        # intrinsic skew). Capture halfway through that word, using the same
+        # 125 MHz clock's falling edge. IS_C_INVERTED is a dedicated FF clock
+        # inversion, not a LUT-generated clock. The following sys consumers
+        # now have a real half-cycle path, which must pass STA explicitly.
+        for lane, captured in ((adc.data_a, adca), (adc.data_b, adcb)):
+            for data_bit, captured_bit in zip(lane, captured):
+                self.specials += Instance(
+                    "FDRE",
+                    p_INIT=0,
+                    p_IS_C_INVERTED=1,
+                    i_C=ClockSignal("sys"),
+                    i_CE=1,
+                    i_R=ResetSignal("sys"),
+                    i_D=data_bit,
+                    o_Q=captured_bit,
+                    attr={("IOB", "TRUE")},
+                )
         # self.sync += self.adc_a.eq(-(sign ^ adca[2:])),
         # self.adc_b.eq(-(sign ^ adcb[2:]))
         self.comb += [

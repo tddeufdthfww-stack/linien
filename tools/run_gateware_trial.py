@@ -84,6 +84,8 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            execute([sys.executable, ROOT / 'tools/check_r62_analog.py', '--out', out / 'r62_analog_checks'],
+                    ROOT, out, 'r62_analog', env, 'R62_ANALOG_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_dna_read_control.py', '--out', out / 'dna_read_control_checks'],
                     ROOT, out, 'dna_read_control', env, 'DNA_READ_CONTROL_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r61_cdc_reset.py', '--out', out / 'r61_cdc_reset_checks'],
@@ -199,14 +201,15 @@ def main():
             # per-run PS inputs as siblings, without touching the shared BD.
             prefix = prefix.replace('create_project -force -name top -part',
                                     'create_project -force -name top -dir vivado_project -part', 1)
-            script = prefix + '\nsynth_design -top top -part xc7z020clg400-1\n'
+            script = prefix + '\nset_param general.maxThreads 2\nsynth_design -top top -part xc7z020clg400-1\n'
             script += 'source {' + (ROOT / 'gateware/constraints/dna_clock.tcl').as_posix() + '}\n'
+            script += 'source {' + (ROOT / 'gateware/constraints/io_intrinsic_probe.tcl').as_posix() + '}\n'
             script += 'report_timing_summary -file synth_timing.rpt\nreport_utilization -file synth_utilization.rpt\n'
             script += 'write_checkpoint -force synth.dcp\nputs SYNTHESIS_COMPLETE\n'
             tcl_run(script, out, 'synthesis', env, 'SYNTHESIS_COMPLETE', args.vivado)
             manifest['synthesis'] = 'COMPLETE'; save()
         if 'route' in stages:
-            script = 'open_checkpoint synth.dcp\nopt_design\nplace_design\nphys_opt_design\nroute_design\n'
+            script = 'set_param general.maxThreads 2\nopen_checkpoint synth.dcp\nopt_design\nplace_design\nphys_opt_design\nroute_design\n'
             script += 'report_route_status -file routed_status.rpt\n'
             script += 'report_timing_summary -max_paths 30 -file routed_timing.rpt\n'
             script += 'report_timing -delay_type max -max_paths 100 -file routed_setup.rpt\n'
