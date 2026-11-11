@@ -1,3 +1,5 @@
+> **2026-11-12 R66实际：全功能PASS，最终STA FAIL**。route WNS/TNS=-.343/-6.398ns、47端点；WHS+.024/THS0。4ns DAC控制路径已通过，DAC数据setup和内部路径仍FAIL，I/O/CDC签核未闭合。输入代码decd142，记录与SHA见文末。以下“待运行”是历史。
+
 > **2026-11-12 R66候选：待原生验证/综合/route**。DAC时隙改正边沿phase-history+XOR，以真实4ns预算代替2ns控制路径；新增数据级0，必须验证同边沿hold及完整A/B启动/复位波形。R65失败源码及报告冻结保留，其他I/O/CDC签核未关闭。
 
 > **2026-11-12 R65实际：REJECTED**。新综合/route完成，WNS/TNS=-.683/-55.023ns、312端点；WHS/THS=+.024/0、无hold违例，最终STA FAIL。原生analog PASS，完整功能本轮NOT RERUN。ADC+.429/+3.304，DAC-.343/+.070ns（必要零PCB模型）。失败源码/DCP/日志/SHA保留，不部署。以下待运行条目是历史。
@@ -903,3 +905,13 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 实际route WNS/TNS=-.683/-55.023ns，312 setup端点；WHS/THS=+.024/0、0 hold端点，WPWS=+1.500ns。SDR表达消除了R64负hold；最差FDRE_33/C负边沿到FDRE_40/D正边沿，2ns路径仍FAIL。DAC必要零PCB预算setup/hold=-.343/+.070ns；ADC全28端点+.429/+3.304ns、0/-8ns边沿关系逐条PASS。内部clk_2 WNS=-.345ns。no_clock=0、内部未约束=0，16输入/32输出尚须接口分类/真实约束。物理CDC25对50FF同SLICE且一级Q只到二级D，仍不足以宣布跨域整体安全；PS原始异步reset释放已被独立实际CRG仿真确认为待修复项。
 
 源码、完整阶段日志、DCP、物理诊断及SHA归档experiments/r65_rejected_control_20261112，DCP SHA256=5e7c3b93c8a3e02d91b25586981e483a11e70d17319175f3d22cfba97d335aee。失败候选不合并/不部署。R65相对R64新增数据串行级0，继承相对R2b主反馈+32ns；最终STA/板级I/O/CDC/DRC仍未签核，没有生成发布bit/bin。
+
+## 2026-11-12 R66实际：控制路径候选保留，整机STA FAIL
+
+代码decd142b1f1f98f736efc15ce7861a3bc541d71e，新完整功能PASS（全部原生算术/14/25位/CE/CSR/复位/AXI背压/CDC/Scope回归），CSR映射PASS，新综合和actual route COMPLETE；两manifest raw输入SHA完全一致且运行中源码变化0。
+
+综合WNS/TNS=-.773/-77.722ns（301端点），综合hold-.757/-361.422不是布线值。route WNS/TNS=-.343/-6.398ns（47端点），WHS/THS=+.024/0（0端点），WPWS=+1.500ns。最差已转为FDRE_34/C→dac_data[1]，3.726ns数据延迟（logic3.725/route.001，1OBUF）。时隙控制frame→FDRE_33/D自然4ns路径+.098ns，R65的2ns控制瓶颈消除，未用时序例外；同域最差fast_b_zi0__11/C→fast_a_cordic17[16]/D仍-.249ns，11级（7CARRY4+4LUT）。
+
+ADC28端点setup/hold+.429/+3.304ns，0/-8ns真实边沿逐条PASS。DAC必要零PCB预算-.343/+.070ns；DNA+.376/+.174ns。LUT11700/FF13478/DSP94/BRAM35/BUFG6，no_clock0/内部未约束0、no_input16/no_output32仍待接口分类约束。50ASYNC FF/25配对同SLICE、一级Q只驱动二级D；整体物理CDC仍NOT PROVEN。数据反馈新增级0，继承相对R2b+32ns。
+
+归档experiments/r66_fullcycle_candidate_20261112含完整功能/新物理/源码/SHA及R65补充I/O诊断（工具失败与不可能ODDR边沿已分别标明）。R66 routed DCP SHA256=06ca5db5b7f81432e015401c05cc57017eea6067be737fd726c0820ac3f60f6b。候选不部署，R67 PS复位同步修复与R68同pad波形DAC clock重编码独立继续。最终STA/I/O/CDC/DRC不通过，没有正式bit/bin。
