@@ -5,14 +5,14 @@ import argparse,hashlib,json,re,shutil,subprocess
 ROOT=Path(__file__).resolve().parents[1]
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
- p=argparse.ArgumentParser();p.add_argument('--input-trial',type=Path,required=True);p.add_argument('--label',required=True);p.add_argument('--unroute-all',action='store_true');a=p.parse_args();assert re.fullmatch('[A-Za-z0-9_-]+',a.label)
+ p=argparse.ArgumentParser();p.add_argument('--input-trial',type=Path,required=True);p.add_argument('--label',required=True);p.add_argument('--unroute-all',action='store_true',default=True);a=p.parse_args();assert re.fullmatch('[A-Za-z0-9_-]+',a.label)
  prior=a.input_trial.resolve();old=json.loads((prior/'manifest.json').read_text());assert old['route']=='COMPLETE' and old['postopt']=='COMPLETE' and old['input_r52_dcp_unchanged'] and not old['source_changes_during_run']
  names=[n for n in old['source_hashes'] if n.startswith(('gateware/','tools/')) and not n.startswith(('gateware/build/','gateware/ps_project/'))]
  same={n:sha(ROOT/n)==old['source_hashes'][n] for n in names};assert all(same.values()),[n for n,v in same.items() if not v]
  out=ROOT/'gateware/build/trials'/(datetime.now().strftime('%Y%m%d_%H%M%S')+'_'+a.label);out.mkdir(parents=True,exist_ok=False)
  files=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0')+subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z'],cwd=ROOT).decode().split('\0')
  hashes={n:sha(ROOT/n) for n in sorted(set(files)-{''}) if (ROOT/n).is_file()};dcp=prior/'routed.dcp';before=sha(dcp)
- m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r53_trial':str(prior),'input_dcp_sha256':before,'r53_code_and_test_hash_matches':same,'functional':'REUSED_R52_VIA_R53_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R52_VIA_R53_EXACT_DCP_NOT_RERUN','replication':'NOT_RUN','unroute_scope':'all' if a.unroute_all else 'selected_Q_nets','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_cycles':0,'optimization':'Select actual original routed negative-path ordinary FDRE sources before unroute, ADC clock/non-ASYNC/non-protected/Q loads>=4. Force only driver replication, same D/C/CE/R/INIT and exact aggregated load sets. Preserve existing completed routes while Explore/TNS cleanup. No retime/clock/DSP/BRAM register optimization, RTL/XDC or serial stages. Optional all-unroute compatibility mode is separately recorded.'}
+ m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r53_trial':str(prior),'input_dcp_sha256':before,'r53_code_and_test_hash_matches':same,'functional':'REUSED_R52_VIA_R53_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R52_VIA_R53_EXACT_DCP_NOT_RERUN','replication':'NOT_RUN','unroute_scope':'all' if a.unroute_all else 'selected_Q_nets','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_cycles':0,'optimization':'Select actual original routed negative-path ordinary FDRE sources before unroute, ADC clock/non-ASYNC/non-protected/Q loads>=4. Force only driver replication, same D/C/CE/R/INIT and exact aggregated load sets. Default all-unroute compatibility mode; actual Explore/TNS cleanup without incompatible preserve flag. No retime/clock/DSP/BRAM register optimization, RTL/XDC or serial stages. Optional all-unroute compatibility mode is separately recorded.'}
  mp=out/'manifest.json';mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
  for n in ('top.v','top.xdc','csrmap.py','synth_timing.rpt','synth_utilization.rpt','synthesis.json'):shutil.copyfile(prior/n,out/n)
  tcl=f'set out {{{out.as_posix()}}}\nset input_dcp {{{dcp.as_posix()}}}\n'+r'''
@@ -71,7 +71,7 @@ set afterCount [family_table "$out/ff_after.tsv" $signatures]
 if {$afterCount<=$beforeCount} {error "Force replication produced no additional matching FDRE: $beforeCount -> $afterCount"}
 write_checkpoint "$out/replicated.dcp"
 puts CRITICAL_FF_TARGETS_COMPLETE
-route_design -directive Explore -preserve -tns_cleanup
+route_design -directive Explore -tns_cleanup
 family_table "$out/ff_routed.tsv" $signatures
 report_route_status -file "$out/routed_status.rpt"
 report_timing_summary -max_paths 30 -file "$out/routed_timing.rpt"

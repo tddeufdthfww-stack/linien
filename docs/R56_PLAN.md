@@ -12,3 +12,8 @@
 ## R56部分unroute兼容中止
 
 ae4f9a8默认只拆4条选中Q网后，工具仍以post-route执行，force_replication_on_nets在入口被Vivado_Tcl4-265拒绝；实际复制和新route均NOT RUN。原真实routed选择/源码/日志/manifest和纠正说明保存experiments/r56_partial_unroute_setup_failure_20261111。按既有CLI --unroute-all在全新目录改运行模式；先从原routed报告选4个来源，再全拆线，避免选择未布线估计负slack。该兼容模式不保留原全部走线，-preserve仅对执行时已完成的走线有效；原R53 DCP/源码保持。
+
+
+## R56复制完成后的路由选项兼容修正
+
+d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/CE/R/INIT/属性和完整负载集合初检PASS；replicated.dcp已保存。随后Explore+preserve被本机执行器Common17-69拒绝，虽然同机help文字称兼容；实际新route NOT RUN，全部源码/日志/表格和帮助对照保存experiments/r56_route_option_setup_failure_20261111。去掉preserve（全unroute本就无原完整路线可保留），默认全unroute的fresh-run驱动已修正；本次另用恢复工具从该已验证replicated.dcp继续，复制不重跑，新目录保存完整route/STA。输入原R53与复制DCP SHA分别冻结，不把本次入口失败当时序失败或成功。
