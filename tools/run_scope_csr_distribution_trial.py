@@ -69,7 +69,7 @@ proc scope_lut_table {{file}} {{
   set ins {{}}
   foreach pin [lsort [get_pins -of_objects $c -filter {{DIRECTION == IN}}]] {{lappend ins "[get_property REF_PIN_NAME $pin]=[get_nets -quiet -of_objects $pin]"}}
   set q [get_nets -quiet -of_objects [get_pins -of_objects $c -filter {{REF_PIN_NAME == O}}]]
-  set loads [lsort [get_pins -quiet -of_objects $q -filter {{DIRECTION == IN}}]]
+  set loads [lsort [get_pins -quiet -leaf -of_objects [get_nets -quiet -segments -of_objects [get_pins -of_objects $c -filter {{REF_PIN_NAME == O}}]] -filter {{DIRECTION == IN}}]]
   puts $f "$c\t[get_property REF_NAME $c]\t[get_property INIT $c]\t[join $ins |]\t$q\t[llength $loads]\t[join $loads |]"
  }};close $f
 }}
@@ -77,7 +77,7 @@ scope_lut_table {{{(out/'scope_lut_before.tsv').as_posix()}}}
 set scope_chosen {{}}
 foreach c [get_cells -hier -quiet -filter {{NAME =~ red_pitaya_scope/average_select_*/* && REF_NAME =~ LUT?}}] {{
  foreach n [get_nets -quiet -of_objects [get_pins -of_objects $c -filter {{REF_PIN_NAME == O}}]] {{
-  if {{[llength [get_pins -quiet -of_objects $n -filter {{DIRECTION == IN}}]] >= 96}} {{lappend scope_chosen $n}}
+  if {{[llength [get_pins -quiet -leaf -of_objects [get_nets -quiet -segments -of_objects [get_pins -of_objects $c -filter {{REF_PIN_NAME == O}}]] -filter {{DIRECTION == IN}}]] >= 96}} {{lappend scope_chosen $n}}
  }}
 }}
 if {{![llength $scope_chosen]}} {{error "No identified Scope high-fanout LUT net found"}}
