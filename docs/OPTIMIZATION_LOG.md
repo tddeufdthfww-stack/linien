@@ -490,3 +490,10 @@ ADC组件取得零PCB必要预算setup+.429/hold+3.304，28个源/目的、0/-8n
 继续；本轮未重跑完整组件功能，明确继承R62共同输入RAW SHA相同的完整回归，analog本轮
 新原生PASS。输入7ef3cf5，源码变化=[]，全部DCP/日志/输入输出SHA与范围说明归档
 experiments/r63_adc_solution_candidate_20261112。不烧录，不把元件级通过当作最终签核。
+
+R64候选：analog data ODDR125 OPPOSITE_EDGE→250 SAME_EDGE/D1=D2；原数据FF保持，新增
+F/S/B三个纯控制FF，以sys翻转在250 falling处差分建立A/B相位，目标数据额外0级。
+数学逐时隙和启动/复位依据见R64_DAC_SHARED_CLOCK.md。实际完整analog49位新旧原生
+稳定边沿对照（启动2ns起）/四组包络/全部14位/复位/原A旧B新/负向样本检测PASS。
+PLL、相位、引脚和DRIVE保持，无计算通路放宽。新全回归/综合/route待执行，2ns控制
+路径和DAC I/O/PW/SEL、CDC/DRC仍未签核；全部原生原件在r64_shared_dac_native_20261112。

@@ -1,3 +1,5 @@
+> **2026-11-12 R64候选：新综合/route待运行**。保留R63 ADC IOB/same-word，DAC data改250MHz SAME_EDGE ODDR，D1=D2，3个控制FF用真实sys边沿建立原A/B时隙；PLL/引脚/驱动不变。完整原生新旧analog（含启动）逐稳定边沿PASS，目标新增数据级0；物理2ns控制路径及全部I/O仍待验证。见R64_DAC_SHARED_CLOCK.md。以下为历史。
+
 > **2026-11-12 R63实际结果：ADC_COMPONENT_CANDIDATE**。28个ADC必要预算setup+.429/hold+3.304ns，真实0-cycle setup/-8ns hold边沿逐条核验PASS；新综合和route完成。整机WNS/TNS=-.835/-14.041、32端点，hold-.456/-5.876、14端点；DAC仍FAIL，内部18端点WNS-.389。最终未签核，不部署。完整功能本轮NOT RERUN，原生analog本轮PASS，其他组件参考R62同SHA完整回归。以下为历史。
 
 > **2026-11-12 R62实际结果：REJECTED**。完整功能PASS，新综合及route完成；硅器件必要I/O预算下WNS/TNS=-1.261/-2245.782ns、3604端点；WHS/THS=-.696/-23.517ns、42端点，最终STA FAIL。下降沿导致ADC→CORDIC只有4ns预算，实际5.209ns。原源码/全部阶段日志/DCP/SHA均保留，不合并。原R61b/R60冻结。以下条目为历史快照。
@@ -846,3 +848,15 @@ WHS/THS=-.456/-5.876、14端点，内部clk_2 WNS=-.389/18端点，pulse1.5/0。
 原manifest功能NOT RUN保持原样，不改写成重跑PASS。完整真实DCP/报告/参数/输入输出SHA
 见experiments/r63_adc_solution_candidate_20261112。保留ADC组件候选供下一轮，不合并正式
 版本、不签发bitstream、不操作板卡或激光。
+
+## R64 共享DAC时钟的独立候选
+
+冻结R63 43438021，在20261112-r64-dac-shared-clock工作树只改analog DAC输出前端。
+保留125MHz daca/dacb原数据FF/编码/复位；data ODDR用sys_double250 SAME_EDGE且D1=D2，
+F/S/B三个控制FF从sys翻转建立每4ns原A/B时隙，不增数据串行级。严格数学时隙依据/
+启动建立与2ns物理控制风险见R64_DAC_SHARED_CLOCK.md。PLL/相位/引脚/DRIVE8/FAST/CSR
+和所有算法保持。新check_r64_analog.py按四组包络与冻结R61b完整analog49位稳定输出
+从2ns起逐边沿比较，含GSR启动/复位/原A旧字B新字时隙、双路完整14位/下一拍样本，
+全部PASS；负向控制按预期失败。源码/fixture/完整命令/日志/SHA归档
+experiments/r64_shared_dac_native_20261112。新完整功能与新综合/route待运行；不能用
+原生对照冒称物理时序通过，DAC脉宽/SEL/真实PCB/物理CDC/DRC仍待签核。

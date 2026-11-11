@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Linien.  If not, see <http://www.gnu.org/licenses/>.
 
-from migen import Cat, ClockSignal, Instance, Module, ResetSignal, Signal
+from migen import Cat, ClockSignal, Instance, Module, Mux, ResetSignal, Signal
 
 
 class PitayaAnalog(Module):
@@ -68,6 +68,29 @@ class PitayaAnalog(Module):
             dacb.eq(Cat(~self.dac_b[:-1], self.dac_b[-1])),
         ]
 
+        # Derive the original A/B slot phase from real sys edges. Observe a
+        # resetless frame toggle on sys_double falling edges, 2 ns away from
+        # those sys edges. This avoids sampling a clock as ordinary data and
+        # avoids a free-running divider whose phase could flip at startup.
+        # These are control FFs only: the original data registers are retained.
+        frame = Signal(reset=0, reset_less=True)
+        frame_seen = Signal(reset=0)
+        select_b = Signal(reset=0)
+        self.sync += frame.eq(~frame)
+        for source, target in ((frame, frame_seen), (frame ^ frame_seen, select_b)):
+            self.specials += Instance(
+                "FDRE",
+                p_INIT=0,
+                p_IS_C_INVERTED=1,
+                i_C=ClockSignal("sys_double"),
+                i_CE=1,
+                i_R=0,
+                i_D=source,
+                o_Q=target,
+            )
+        dac_word = Signal.like(dac.data)
+        self.comb += dac_word.eq(Mux(select_b, dacb, daca))
+
         self.comb += dac.rst.eq(ResetSignal("sys"))
         self.specials += [
             Instance(
@@ -104,14 +127,15 @@ class PitayaAnalog(Module):
             [
                 Instance(
                     "ODDR",
+                    p_DDR_CLK_EDGE="SAME_EDGE",
                     i_D1=a,
                     i_D2=b,
-                    i_C=ClockSignal("sys"),
+                    i_C=ClockSignal("sys_double"),
                     o_Q=d,
                     i_CE=1,
                     i_R=0,
                     i_S=0,
                 )
-                for a, b, d in zip(daca, dacb, dac.data)
+                for a, b, d in zip(dac_word, dac_word, dac.data)
             ],
         ]
