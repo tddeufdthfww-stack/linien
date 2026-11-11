@@ -1,3 +1,5 @@
+> **2026-11-11 R41最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.791/-90.059ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R38最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.619/-83.023ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R36最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.656/-59.314ns，最终STA FAIL。详细归档见本文末尾。
@@ -237,3 +239,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增368/移除372；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r38_autolock_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R41 / 2026-11-11归档 / physical时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `9479e4e72e84a0b5464bf6492544eb0a1ad6d1e6`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r41-scope-source-predecode`；R4a/R2b/原用户工程保持原样。
+- 功能：原生UNISIM/真实CSR两拍联合帧14/25位44290/44292拍、512/512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；14/25 IIR配置帧与冻结RTL/28与50位整数oracle PASS（从未延迟输入到b0/b5=8/13拍，滤波器latency CSR仍6）；完整旧功能回归PASS。R19指定Bare/快慢串接组件数字模型正负脉冲确认72.1/108.1ns，较R16追加16ns；后续版本继承同组件契约，未重跑该组件模型，IIR周期由完整滤波器测试独立验证；并行tap限幅14/25位原生RTL/旧LimitCSR/独立整数oracle、全部tap与符号/非法上下限/回绕/真实CSR/CE/reset PASS；完整FastChain pair 30000拍、CSR字节映射、I/Q/原寄存器前信号/独立CE PASS（精确周期与统计见trial/parallel_tap_checks/results.json和fastchain/results.json）；包含公共求和优先及反相比较并行的数学变换，额外覆盖N位最小负数回绕及邻值；FastChain pair比较旧split_c48+串行tap与生产registered_c48+新tap组合，显式UNISIM/glbl；原生时钟MAC71760组及IIR order1/2/5/CSR/hold/clear/复位再次PASS；R23/R24生产类型缺陷已明确修复：先测试专用cba82d1真实unsigned CSR复现第45拍FAIL，再生产759cba4显式同宽signed解释；同一夹具原样30000拍PASS（负偏置15053），完整common中间值14/25位30106/30134拍与原FF及整数oracle PASS，实际Root signed14声明/RHS核对PASS。新增robust谓词90800已知+8000未知、父模块50076（55未知）严格四态PASS；覆盖不等于完整PS7/板级Root或物理签核；实际Scope helper/冻结原case/整数oracle161872组、32有效因子、低16位穷举65536及3000 X/Z PASS；完整双Scope+真实桥sys100/ADC125功能异步、配置/四路数据/触发/BRAM/接口逐拍四态PASS，Scope新增周期0（本轮精确统计以trial/scope_average_checks日志为准）；Scope源域同请求沿17个地址预译码替换19处写配置/ARM/复位/触发比较，桥只增加原请求接收条件输出，原状态/2FF/ACK/数据快照逐句不变，其他Scope逻辑词法还原完全相同；冻结R38完整Scope和bridge独立原生四相位0/1/2/3ns、每组1652事务，全部配置/控制/保持/热写/读回/高位别名/非法/XZ地址、源忙时输入变化与协调复位逐拍严格四态PASS，ADC/CSR/触发新增0周期；旧Scope回归源码未改，完整旧功能重新运行。源码检查初版把CRLF原始文件与git LF blob作字节比较误报，改为R38原始字节与独立规范化git检查，保留旧checker；未改生产或弱化原功能断言。源码数学同cohort等价与新物理CDC预算是不同结论，独立复位/亚稳态/板端物理安全未由该测试证明；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20之后IIR/tap/common/阈值/Scope组合优化均新增周期0。
+- 综合来源=COMPLETE_THIS_ROUND，WNS/TNS=-1.908/-250.466ns。实际route COMPLETE，WNS/TNS=-0.791/-90.059ns，失败端点522；WHS/WPWS=0.05/1.5ns，THS=0。
+- raw IIR内部最差=-0.114ns，入口=0.17ns；全局最差 `red_pitaya_scope/set_dec_reg[23]/C` → `red_pitaya_scope/adc_a_dat_reg[7]/D`，逻辑/布线=['1.634', '6.943']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 12108, 'ff': 13548, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=406。
+- CDC={'CDC-1': 422, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增398/移除412；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r41_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
