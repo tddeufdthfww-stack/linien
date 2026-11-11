@@ -476,3 +476,10 @@ hold-.696/-23.517、42端点；最终STA FAIL，REJECTED不合并。ADC falling�
 预算而实际5.209ns，28输入FF实际IOB；DAC必要预算setup-.835/hold-.456。异常AXI+bridge
 4相位集成PASS，bitstream_checks无Error/Critical但406 Warning/Advisory，仍需处置。
 源码/manifest/全部阶段报告/DCP/功能和输入输出SHA见experiments/r62_failed_physical_20261112。
+
+R63：ADC恢复原rising FF/IOB，新增整数反馈级0。以明确same-word源同步协议收紧28个
+ADC pad→IOB D的setup8ns到0-cycle，并验证下一word hold；不是计算通路多周期放宽。
+详见R63_ADC_CAPTURE_PROTOCOL.md公式、AMD语义、确切端点断言及拟核验报告边沿。
+四组完整14位/复位/位间偏差/新旧R61b完整analog settled输出/消费者样本号原生PASS，
+独立负向控制按预期失败，证明oracle可检测旧字；两处测试器入口错误原样另存。
+新综合和route待执行，DAC必要预算/脉宽、物理CDC/DRC仍OPEN，不部署不合并。

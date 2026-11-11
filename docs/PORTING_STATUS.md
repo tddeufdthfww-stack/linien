@@ -1,3 +1,5 @@
+> **2026-11-12 R63候选：物理实现待运行**。恢复原rising ADC FF并要求IOB，原生完整新旧analog settled对照/四组数据时钟包络PASS，独立样本号负向用例按预期失败。对28个确切ADC→IOB D使用同字0-cycle setup（收紧8ns）和下一字hold模型，依据/公式/例外边界见R63_ADC_CAPTURE_PROTOCOL.md。DAC/CDC/DRC仍未签核，不能部署。以下为历史。
+
 > **2026-11-12 R62实际结果：REJECTED**。完整功能PASS，新综合及route完成；硅器件必要I/O预算下WNS/TNS=-1.261/-2245.782ns、3604端点；WHS/THS=-.696/-23.517ns、42端点，最终STA FAIL。下降沿导致ADC→CORDIC只有4ns预算，实际5.209ns。原源码/全部阶段日志/DCP/SHA均保留，不合并。原R61b/R60冻结。以下条目为历史快照。
 
 > **2026-11-11 R60历史结果**：受约束setup/hold/pulse均PASS，final WNS=+.003ns/TNS=0/0端点；最终STA仍FAIL（DNA/I/O覆盖、物理CDC和DRC未关闭）。候选不部署，完整功能/综合复用R52，见文末与R60_SIGNOFF_GAPS_20261111.md。
@@ -816,3 +818,17 @@ bitstream_checks规则集406项（334 Warning+72 Advisory，无Error/Critical）
 风险处置，默认FPGA pulse1.5不等于AD9767外部3.5ns脉宽已签核。全部真实源码、fresh
 综合/route/原生/集成/只读审计/DCP/输入输出SHA归档experiments/r62_failed_physical_20261112。
 决策REJECTED_NOT_MERGED；不生成可部署声明、不烧录，后续候选在新工作树实施。
+
+## R63 候选输入与验证范围
+
+独立工作树20261112-r63-adc-same-word，以冻结d0f7823为父。不改R62/R61b/R60。
+analog仅恢复原rising逻辑并IOB TRUE，新增整数sys反馈级0；保留DAC FAST8待后续优化。
+对确切28个ADC pad→rising IOB/D设置set_multicycle_path 0 -setup，收紧setup8ns，
+用同一源边沿后word[n]、实际PLL/clock插入延迟捕获；hold检查下一word[n+1]。
+不是放宽周期或切路径，必须核对setup Requirement0和hold Requirement-8以及全部PVT。
+完整数学/硬件依据和限定结构见R63_ADC_CAPTURE_PROTOCOL.md。四组原生延迟包络及原R61b
+analog的49位全部settled输出严格比较PASS；两路完整14位/位间skew/复位/下一拍样本号
+PASS，0插入延迟负控制按预期捕获ADC_WORD_INDEX_FAIL。两处testbench模型错误源码/旧FAIL
+日志另存，未删断言，最终native03证据归档experiments/r63_analog_native_20261112。
+本轮选择先新综合/route验证ADC约束/实现是否有效；完整组件功能参考R62同源回归，
+不写成本轮又重跑完整功能。最终合并/发布前仍须对最终冻结输入跑完整流程。

@@ -32,17 +32,17 @@ class PitayaAnalog(Module):
 
         adca = Signal.like(adc.data_b)
         adcb = Signal.like(adc.data_a)
-        # LTC2145 full-rate CMOS data changes after CLKOUT+ rising (0..0.6 ns
-        # intrinsic skew). Capture halfway through that word, using the same
-        # 125 MHz clock's falling edge. IS_C_INVERTED is a dedicated FF clock
-        # inversion, not a LUT-generated clock. The following sys consumers
-        # now have a real half-cycle path, which must pass STA explicitly.
+        # Preserve the original rising-edge register function, and put it
+        # in the input IOB. The source-synchronous same-word timing model
+        # explicitly checks data after CLKOUT+ rising against the delayed
+        # physical sys rising edge; it tightens setup to a zero-cycle check.
+        # Both that setup and next-word hold must pass at every PVT corner.
         for lane, captured in ((adc.data_a, adca), (adc.data_b, adcb)):
             for data_bit, captured_bit in zip(lane, captured):
                 self.specials += Instance(
                     "FDRE",
                     p_INIT=0,
-                    p_IS_C_INVERTED=1,
+                    p_IS_C_INVERTED=0,
                     i_C=ClockSignal("sys"),
                     i_CE=1,
                     i_R=ResetSignal("sys"),
