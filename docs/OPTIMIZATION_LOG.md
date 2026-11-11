@@ -1,3 +1,5 @@
+> **2026-11-11 R57最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.006/-0.016ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R56最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.205/-0.942ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R53最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.014/-0.052ns，最终STA FAIL。详细归档见本文末尾。
@@ -400,3 +402,16 @@ d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/C
 - CDC={'CDC-1': 449, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增379/移除360；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r56_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R57 / 2026-11-11归档 / physical时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `6a7705d36288e39888c85ec83b974b2db7279500`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r57-critical-ff-postroute`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R52_VIA_R56_EXACT_INPUTS_NOT_RERUN：92原始硬件测试/工具SHA同R56，完整原生功能及综合继承R52，本轮未重跑。从R56已验证4→21同拍FDRE拓扑继续兼容postroute四项及实际TNS cleanup；fully-routed时Explore被忽略，不称从零全局route。工具实际新增3个平行FDRE及1个LUT。全部既有FDRE状态输入与INIT在验证副本Q别名后同，3个新增FF分别精确匹配原commonA3/commonB0/系数B2的D/C/CE/R/INIT；其余既有LUT在副本别名后同。原4家族21FF签名保持，但原始聚合负载并不相同：B相位11网多一直接重连LUT输入，差异原样记录。原i20+i9到新i20_replica_rewire+i9_rewire完整同输出组合切面8个独立输入/256组穷举Boolean PASS，解释该负载变化。94DSP属性同R56、源/top/CSR/XDC与DCP/CSV SHA保持，串行新增周期0。不是任意XZ组合函数或全Root postmap/SDF/形式等价，也非物理CDC证明。；没有修改Migen evaluator。
+- 源功能/综合REUSED_R52经R56_NOT_RERUN；本轮新增FDRE逐拍归纳、局部LUT穷举/连接/94DSP审计PASS，实际postroute/route/STA/CDC/DRC新执行；setup仍FAIL；CSR map与XDC保持R4a一致。延迟=本轮只同拍平行寄存器复制及组合LUT重连，新增ADC/反馈/CSR采样周期0；快速路径相对R2b累计32ns保持。指定组件数字延迟仅继承，非本轮全Root/SDF或板端重测。
+- 综合来源=REUSED_R52_VIA_R56_EXACT_DCP_NOT_RERUN，WNS/TNS=-0.773/-60.316ns。实际route COMPLETE，WNS/TNS=-0.006/-0.016ns，失败端点5；WHS/WPWS=0.014/1.5ns，THS=0。
+- raw IIR内部最差=0.332ns，入口=0.678ns；全局最差 `linienmodule_fast_b_zi0__9/C` → `linienmodule_fast_b_cordic17_reg[16]/D`，逻辑/布线=['3.982', '3.991']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 11783, 'ff': 13532, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=405。
+- CDC={'CDC-1': 449, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增379/移除360；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r57_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
