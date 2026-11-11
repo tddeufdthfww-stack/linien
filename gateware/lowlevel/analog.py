@@ -68,26 +68,27 @@ class PitayaAnalog(Module):
             dacb.eq(Cat(~self.dac_b[:-1], self.dac_b[-1])),
         ]
 
-        # Derive the original A/B slot phase from real sys edges. Observe a
-        # resetless frame toggle on sys_double falling edges, 2 ns away from
-        # those sys edges. This avoids sampling a clock as ordinary data and
-        # avoids a free-running divider whose phase could flip at startup.
-        # These are control FFs only: the original data registers are retained.
+        # Same-edge registered phase history, with a full fast-clock cycle
+        # available to the output mux. On a common sys/sys_double rising
+        # edge both registers sample pre-edge state: the IOB emits old A,
+        # frame toggles, and frame_seen retains old frame. Thus XOR is 1
+        # for the next +4 ns B slot, then returns to 0 for the next A slot.
+        # The coincident-edge frame -> frame_seen hold check remains real.
         frame = Signal(reset=0, reset_less=True)
         frame_seen = Signal(reset=0)
         select_b = Signal(reset=0)
         self.sync += frame.eq(~frame)
-        for source, target in ((frame, frame_seen), (frame ^ frame_seen, select_b)):
-            self.specials += Instance(
-                "FDRE",
-                p_INIT=0,
-                p_IS_C_INVERTED=1,
-                i_C=ClockSignal("sys_double"),
-                i_CE=1,
-                i_R=0,
-                i_D=source,
-                o_Q=target,
-            )
+        self.specials += Instance(
+            "FDRE",
+            p_INIT=0,
+            p_IS_C_INVERTED=0,
+            i_C=ClockSignal("sys_double"),
+            i_CE=1,
+            i_R=0,
+            i_D=frame,
+            o_Q=frame_seen,
+        )
+        self.comb += select_b.eq(frame ^ frame_seen)
         dac_word = Signal.like(dac.data)
         self.comb += dac_word.eq(Mux(select_b, dacb, daca))
 

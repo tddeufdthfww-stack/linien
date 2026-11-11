@@ -1,3 +1,5 @@
+> **2026-11-12 R66候选：待原生验证/综合/route**。DAC时隙改正边沿phase-history+XOR，以真实4ns预算代替2ns控制路径；新增数据级0，必须验证同边沿hold及完整A/B启动/复位波形。R65失败源码及报告冻结保留，其他I/O/CDC签核未关闭。
+
 > **2026-11-12 R65实际：REJECTED**。新综合/route完成，WNS/TNS=-.683/-55.023ns、312端点；WHS/THS=+.024/0、无hold违例，最终STA FAIL。原生analog PASS，完整功能本轮NOT RERUN。ADC+.429/+3.304，DAC-.343/+.070ns（必要零PCB模型）。失败源码/DCP/日志/SHA保留，不部署。以下待运行条目是历史。
 
 > **2026-11-12 R65候选：物理实现待运行**。14个SAME_EDGE/D1=D2 data ODDR换为250MHz SDR IOB FDRE，原控制/数据FF保持，数学同波形、目标额外数据级0。完整原生新旧analog49位稳定边沿/启动/复位/四包络/样本负例PASS；新综合/route待结果。其他组件暂参考R64同源完整PASS，不写成本轮完整重跑。见R65_DAC_SDR_IOB.md；I/O/物理CDC/DRC未最终签核。
