@@ -94,9 +94,9 @@ def main():
                     ROOT, out, 'c48_carry_fold', env, 'C48_CARRY_FOLD_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_c48_fold_filter.py', '--out', out / 'c48_fold_filter_checks'],
                     ROOT, out, 'c48_fold_filter', env, 'C48_FOLD_FILTER_CONFIG2_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_scope_factor_cache.py', '--out', out / 'scope_factor_cache_checks'],
+            execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'factor-cache', '--out', out / 'scope_factor_cache_checks'],
                     ROOT, out, 'scope_factor_cache', env, 'SCOPE_FACTOR_CACHE_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_scope_predecode.py', '--out', out / 'scope_predecode_checks'],
+            execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'predecode', '--out', out / 'scope_predecode_checks'],
                     ROOT, out, 'scope_predecode', env, 'SCOPE_SOURCE_PREDECODE_SUITE_PASS')
             if (ROOT / 'tools/check_instruction_prefetch.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_instruction_prefetch.py', '--out', out / 'instruction_prefetch_checks'],
@@ -151,7 +151,7 @@ def main():
                 execute([sys.executable, ROOT / 'tools/check_pid_output_limit.py', '--out', out / 'pid_output_checks'],
                         ROOT, out, 'pid_output_limit', env, 'PID_OUTPUT_LIMIT_SUITE_PASS')
             if (ROOT / 'tools/check_scope_average.py').exists():
-                execute([sys.executable, ROOT / 'tools/check_scope_average.py', '--out', out / 'scope_average_checks'],
+                execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'average', '--out', out / 'scope_average_checks'],
                         ROOT, out, 'scope_average', env, 'SCOPE_AVERAGE_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()

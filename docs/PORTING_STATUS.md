@@ -737,3 +737,39 @@ d8c429b全unroute后force复制成功，4→21 FDRE、max Q负载28→13，D/C/C
 CDC对R57/R59严格路径差集0/0且计数同，但物理安全NOT_PROVEN。最终STA仍FAIL：DNA无时钟1/DIN-READ未约束2；ADC/扩展输入44、DAC/扩展/PWM/LED输出46未建外部延迟；FCLK↔ADC NoCommonClock/Timedunsafe。默认DRC405=333 Warning+72 Advisory；p_1_out PREG0的OPMODE={0,s,s,0,1,0,1}稳定二进制仅0x05/0x35、Z=0/C，已依本机原语模型解释不选P反馈的可达性，但动态/未知/物理毛刺未证明，原DPREG-4告警不删除、不声称签核关闭。
 
 本阶段暂以R60冻结候选；下一阶段先补DNA/CDC/I/O/DRC的真实证据和时序模型，再实际route/STA复核，不能靠例外或假延迟消警，也不盲加反馈流水线。完整变化、测试边界、输入输出SHA、物理阶段重放命令见docs/R60_SIGNOFF_GAPS_20261111.md及experiments/r60_signoff_readonly_20261111；无fullRoot/SDF/板测，无bitstream/部署/激光操作。
+
+## R61b / 2026-11-11 / 复位与 DNA 候选，尚未完成物理实现
+
+状态：CANDIDATE / NOT SIGNED OFF。冻结 R60 保持不变。代码 4516124 的四处局部
+硬件变更为 DNA READ 控制 FF、标准 CRG 异步断言/两拍释放、CDC 桥复位 epoch
+与恢复错误响应、AXI 对 sys_err_i 的响应锁存；具体数学依据和复位行为差异见 R61B_PLAN。
+正常反馈新增串行周期为0；快速通路相对R2b累计+32ns继承，非本轮全链路实测。
+复位恢复时间改变必须单列，不能称所有旧复位瞬态逐拍相同。
+
+已执行定向 DNA 完整64位/四组原生值/复位对照 PASS；五组频率相位的 CDC 正常事务、
+独立复位、不重放、停钟期间错误响应及恢复 PASS；AXI 读写 SLVERR/背压修复定向 PASS，
+同一错误用例对冻结 R60 失败的证据保留。上述不证明物理跨域或板端可用。
+
+首次完整回归 `20261111_223325_r61b_protocol_full` 在 Scope 严格立即复位比较 FAIL，
+综合/route NOT RUN。经定位，新旧恢复契约不同；只加三SYS周期恢复等待、不改变任何
+比较断言的 phase0 诊断 PASS（28781 ADC周期、2036事务、210已知存储读取）。原严格
+FAIL 及原始源码/SHA/日志已归档，不静默改判。新增测试适配入口保留原三个Scope
+测试与所有断言，独立检查恢复ready；全部相位及重新完整回归尚待结果。
+
+R61a 真实 DNA 时钟消除无时钟1/内部未约束2后，hold 曾为READ-.320/DIN-.188ns；
+物理hold修补/局部重布令hold通过，但READ setup分别-.315/-.372ns，均不能采用。
+R61b新控制FF只有定向等价证据，实际新综合/route WNS/TNS/CDC/DRC均待验证，不能
+借用R60+.003ns。ADC/DAC数据手册零PCB偏斜必要预算诊断分别出现ADC hold-2.788ns、
+DAC setup-2.571ns；该模型不是实物PCB签核，完整I/O/物理CDC/DRC仍未关闭。
+尚无签核bitstream，无烧录、板上反馈或激光/PZT操作。
+
+### R61b 恢复契约 Scope 定向回归结果
+
+新的明确恢复契约入口已实际执行：factor-cache/predecode各4组相位、average完整
+父模块合计9组 PASS，225588 ADC周期/15404事务；两组scalar各161872已知向量与
+3000 X/Z PASS。每拍状态/响应/数值断言保持启用，factor-cache/predecode还检查实际
+ready=11。原三个测试脚本及四个硬件文件RAW SHA与4516124完整失败试验相同；
+仅新adapter在共同复位释放后增加3 SYS negedge的stimulus等待，未删除断言。
+原严格立即复位测试仍FAIL。证据归档experiments/r61b_scope_recovery_contract_20261111。
+R60冻结基线410个文件RAW SHA/HEAD/干净状态再核验PASS。重新完整功能/综合/route
+仍必须单独执行，本次定向PASS不替代它们。

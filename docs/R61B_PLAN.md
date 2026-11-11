@@ -9,3 +9,27 @@ R60仍冻结；R61a真实DNA时钟揭示hold，物理缓冲/局部重布可修ho
 5. 先定向DNA/双桥正常与独立复位/恢复时请求错误/AXI错误和背压，再完整已有功能回归，重新生成CSR/XDC、全新综合和route（不复用R60物理时序）。DNA时钟在综合后按真实8ns主时钟生成并随DCP保存。ASR使用Migen标准实现带必要的精确同步器复位例外；不得全局cut异步数据。资源/STA/CDC/DRC按本轮实际结果判定，失败只归档不合并；I/O仍须独立板级预算，不把逻辑修复当作外部接口通过。
 
 本轮只在独立工作树修改上述4个硬件文件和构建约束工具；不部署、不改软件CSR、原用户/R2b/R4a/R16/R60/R61a不覆盖。
+
+## 首次完整回归中止与复位契约的测试区分
+
+45161240d27b86d2c037e96e72c9b1446a381af0 的完整流程在 Scope factor-cache
+严格新旧比较处 FAIL（80056 ns，第二次共同复位后立即请求）；综合、route 均 NOT RUN。
+旧桥无恢复等待，新桥明确增加两个本域边沿的恢复期，不能声称该复位瞬态逐拍等价。
+失败源码、原始 fixture、完整阶段日志、输入 SHA 见
+`experiments/r61b_immediate_reset_differential_failure_20261111/`。
+
+只读诊断仅将第二次共同复位释放后的 stimulus 增加三个 SYS negedge 的等待，
+不移除、屏蔽或修改任何逐拍状态/数值/响应断言，phase 0 PASS：28781 ADC 周期、
+2036 bus 事务、210 次已知 BRAM 数据读取。该诊断不能代替全部相位与完整回归。
+
+新的 `tools/check_r61_scope_reset_contract.py` 保持三个旧 Scope 测试和冻结参考
+文件原样，通过明确的生成 fixture 适配执行恢复后的功能比较，记录前后 SHA，
+并在 factor-cache/predecode 的共同复位恢复处检查实际 src_ready/dst_ready。
+原立即请求测试仍为 FAIL，不改成 PASS；恢复期间错误响应、单侧复位、停钟及不重放
+由独立 R61 CDC/AXI 测试核验。完整流程将采用此明确的新复位契约入口，不能写成
+“全部旧复位行为逐拍等价”。本次没有追加硬件源码修改或正常 ADC→DAC 串行延迟。
+
+定向执行结果：factor-cache/predecode各4相位、average父模块共9组PASS，225588 ADC
+周期/15404事务；两组scalar各161872已知/3000 XZ PASS。新旧生成fixture、逐阶段
+日志、输入原始SHA、runner源码见experiments/r61b_scope_recovery_contract_20261111。
+原三个测试脚本与四个硬件文件对首次失败输入RAW SHA保持。完整重新构建尚待执行。
