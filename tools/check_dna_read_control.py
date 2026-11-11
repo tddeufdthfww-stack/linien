@@ -21,7 +21,7 @@ def main():
    for i,pattern in enumerate(patterns):
     old=ref.DNA();new=DNA();setattr(self.submodules,'old'+str(i),old);setattr(self.submodules,'new'+str(i),new)
     for label,d in [('old',old),('new',new)]:
-     inst=next(v for v in d.specials if isinstance(v,Instance));inst.items.append(Instance.Parameter('SIM_DNA_VALUE',Constant(pattern,57)))
+     inst=next(v for v in d._fragment.specials if isinstance(v,Instance));inst.items.append(Instance.Parameter('SIM_DNA_VALUE',Constant(pattern,57)))
      ins={v.name:v.expr for v in inst.items if isinstance(v,Instance.Input)}
      for suffix,size,value in [('status',64,d.dna.status),('read',1,ins['READ'])]+([('count',8,ins['CLK'].value)] if label=='new' else []):
       name=label+str(i)+'_'+suffix;s=Signal(size,name_override=name);self.ports[name]=s;self.comb+=s.eq(value)
