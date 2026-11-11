@@ -26,7 +26,10 @@ class CRG(Module):
         self.clock_domains.cd_sys = ClockDomain()
         self.clock_domains.cd_sys_slow = ClockDomain(reset_less=True)
         self.clock_domains.cd_sys_ps = ClockDomain()
-        self.comb += [self.cd_sys_ps.clk.eq(clk_ps), self.cd_sys_ps.rst.eq(rst)]
+        self.comb += self.cd_sys_ps.clk.eq(clk_ps)
+        # PS FCLK_RESET is asynchronous to PL. Assert immediately even if
+        # FCLK stops; release only on two valid FCLK edges, as for sys.
+        self.specials += AsyncResetSynchronizer(self.cd_sys_ps, rst)
 
         clk_adci = Signal()
         clk_adcb = Signal()

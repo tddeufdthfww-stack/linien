@@ -84,8 +84,12 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
-            execute([sys.executable, ROOT / 'tools/check_r66_analog.py', '--out', out / 'r65_analog_checks'],
-                    ROOT, out, 'r65_analog', env, 'R66_ANALOG_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r67_crg_reset.py', '--out', out / 'r67_crg_reset_checks'],
+                    ROOT, out, 'r67_crg_reset', env, 'CRG_RESET_DIAGNOSTIC_FINISHED sync')
+            execute([sys.executable, ROOT / 'tools/check_r67_ps_reset_wiring.py', '--out', out / 'r67_ps_reset_wiring_checks'],
+                    ROOT, out, 'r67_ps_reset_wiring', env, 'R67_ACTUAL_ROOT_RESET_WIRING_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r66_analog.py', '--out', out / 'r66_analog_checks'],
+                    ROOT, out, 'r66_analog', env, 'R66_ANALOG_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_dna_read_control.py', '--out', out / 'dna_read_control_checks'],
                     ROOT, out, 'dna_read_control', env, 'DNA_READ_CONTROL_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r61_cdc_reset.py', '--out', out / 'r61_cdc_reset_checks'],

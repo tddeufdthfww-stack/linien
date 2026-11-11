@@ -102,7 +102,9 @@ class PitayaPS(Module):
         axi = self.axi.axi
         self.comb += [
             axi.aclk.eq(self.fclk[0]),
-            axi.arstn.eq(self.frstn[0]),
+            # Keep CRG's raw PS reset input separate; AXI shares the
+            # reset synchronized to this same FCLK/sys_ps domain.
+            axi.arstn.eq(~ResetSignal("sys_ps")),
         ]
         # Z20 Gen2: PS/DDR configuration is managed by linien_ps_only.bd.
         # FCLK0 drives M_AXI_GP0_ACLK inside the block design.
