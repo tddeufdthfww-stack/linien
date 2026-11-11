@@ -7,3 +7,8 @@
 3. 新读R50 synth DCP，opt后逐组验证名称/32/32/22数量；创建仅含DSP资源、IS_SOFT=false的三列pblock，未约束LUT/FF/BRAM、没有CONTAIN_ROUTING/时序例外。不改原top.xdc，但这些pblock是本轮新增物理放置限制，必须记录，不能声称所有物理约束未变。
 4. 新place Explore、显式placement/routing/rewire/critical-cell、真实route Explore/tns_cleanup；不retime/clock_opt/DSP或BRAM寄存器优化，数据/反馈/CSR/控制新增采样周期0。检查全部94DSP属性、每个86组成员最终所在列、输入两个DCP SHA和源冻结；功能/综合不重复计为本轮重跑。
 5. 记录实际WNS/TNS/端点/hold/pulse/CDC/DRC/覆盖，既比较直接R50也比较最佳R48。若局部改善但整体不胜R48则保留失败诊断，不合并/不部署。PS7/PLL/器件/引脚/ADC/DAC/CSR/AXI/CDC源码保持，无false/multicycle/clock-group或降频。
+
+
+## R51 首次流程中止与兼容修正
+
+2cb44af 的 place_design 已成功，但后续误将 post-route routing_opt 用于 post-place，Vivado_Tcl4-254 在物理优化入口拒绝，实际route NOT RUN，无本轮WNS。原始源码、日志、manifest和纠正说明独立保留 experiments/r51_option_setup_failure_20261111。旧placement FAIL标的是包含postopt的组合阶段未完成，不能误称place_design失败；现在拆分独立精确执行行标记。仅删除post-place不支持的routing_opt，仍placement/rewire/critical-cell，另新目录重跑，物理列/RTL/时钟/延迟/约束目标不变。

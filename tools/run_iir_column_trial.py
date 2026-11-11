@@ -12,7 +12,7 @@ def main():
  out=ROOT/'gateware/build/trials'/(datetime.now().strftime('%Y%m%d_%H%M%S')+'_'+a.label);out.mkdir(parents=True,exist_ok=False)
  files=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0')+subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z'],cwd=ROOT).decode().split('\0')
  hashes={n:sha(ROOT/n) for n in sorted(set(files)-{''}) if (ROOT/n).is_file()};inputs={n:sha(prior/n) for n in ('synth.dcp','routed.dcp')}
- m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r50_trial':str(prior),'input_dcp_sha256':inputs,'r50_code_and_test_hash_matches':same,'functional':'REUSED_R50_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R50_EXACT_DCP_NOT_RERUN','placement':'NOT_RUN','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_ADC_CSR_feedback_cycles':0,'optimization':'Actual DSP site inventory and minimum horizontal relocation assign distinct capacity-qualified columns for fastA32, fastB32, raw22. Hard placement pblocks contain DSP cells only; no routing containment or timing exceptions. Reuse R50 synth, new opt/place/explicit placement-routing-rewire-critical-cell/route Explore TNS cleanup. No retime, clock_opt, DSP/BRAM register optimization or source changes.'}
+ m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r50_trial':str(prior),'input_dcp_sha256':inputs,'r50_code_and_test_hash_matches':same,'functional':'REUSED_R50_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R50_EXACT_DCP_NOT_RERUN','placement':'NOT_RUN','postopt':'NOT_RUN','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_ADC_CSR_feedback_cycles':0,'optimization':'Actual DSP site inventory and minimum horizontal relocation assign distinct capacity-qualified columns for fastA32, fastB32, raw22. Hard placement pblocks contain DSP cells only; no routing containment or timing exceptions. Reuse R50 synth, new opt/place/explicit placement-rewire-critical-cell/route Explore TNS cleanup. No retime, clock_opt, DSP/BRAM register optimization or source changes.'}
  mp=out/'manifest.json';mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
  for n in ('top.v','top.xdc','csrmap.py','synth_timing.rpt','synth_utilization.rpt','synthesis.json'):shutil.copyfile(prior/n,out/n)
  tcl=f'set out {{{out.as_posix()}}}\nset prior {{{prior.as_posix()}}}\n'+r'''
@@ -77,7 +77,8 @@ foreach kind {fast_a fast_b raw} {
     foreach c [dict get $newGroups $kind] {puts $f "$kind\t$c"}
 };close $f
 place_design -directive Explore
-phys_opt_design -placement_opt -routing_opt -rewire -critical_cell_opt
+puts IIR_COLUMN_PLACE_ONLY_COMPLETE
+phys_opt_design -placement_opt -rewire -critical_cell_opt
 report_timing_summary -file "$out/postopt_timing.rpt"
 write_checkpoint "$out/placed.dcp"
 puts IIR_COLUMN_PLACEMENT_COMPLETE
@@ -110,7 +111,7 @@ puts IIR_COLUMN_TRIAL_COMPLETE
  text=(res.stdout+b'\n'+res.stderr).decode(errors='replace');ok=res.returncode==0 and bool(re.search(r'(?m)^IIR_COLUMN_TRIAL_COMPLETE\s*$',text)) and not re.search('(?m)^ERROR:',text)
  (out/'implementation.json').write_text(json.dumps({'command':cmd,'exit_code':res.returncode,'passed':bool(ok)},indent=2),encoding='utf-8')
  changed=[n for n,d in hashes.items() if not (ROOT/n).is_file() or sha(ROOT/n)!=d]
- m.update(placement='COMPLETE' if re.search(r'(?m)^IIR_COLUMN_PLACEMENT_COMPLETE\s*$',text) else 'FAIL',route='COMPLETE' if ok else 'FAIL',source_changes_during_run=changed,input_r50_dcps_unchanged=all(sha(prior/n)==d for n,d in inputs.items()));mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
+ m.update(placement='COMPLETE' if re.search(r'(?m)^IIR_COLUMN_PLACE_ONLY_COMPLETE\s*$',text) else 'FAIL',postopt='COMPLETE' if re.search(r'(?m)^IIR_COLUMN_PLACEMENT_COMPLETE\s*$',text) else 'FAIL',route='COMPLETE' if ok else 'FAIL',source_changes_during_run=changed,input_r50_dcps_unchanged=all(sha(prior/n)==d for n,d in inputs.items()));mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
  assert ok and not changed and m['input_r50_dcps_unchanged'],text[-7000:]
  print('IIR_COLUMN_SUITE_COMPLETE',flush=True)
 if __name__=='__main__':main()

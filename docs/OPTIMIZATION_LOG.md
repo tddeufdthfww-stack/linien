@@ -352,3 +352,8 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 442, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增380/移除368；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r50_iir_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R51 首次流程中止与兼容修正
+
+2cb44af 的 place_design 已成功，但后续误将 post-route routing_opt 用于 post-place，Vivado_Tcl4-254 在物理优化入口拒绝，实际route NOT RUN，无本轮WNS。原始源码、日志、manifest和纠正说明独立保留 experiments/r51_option_setup_failure_20261111。旧placement FAIL标的是包含postopt的组合阶段未完成，不能误称place_design失败；现在拆分独立精确执行行标记。仅删除post-place不支持的routing_opt，仍placement/rewire/critical-cell，另新目录重跑，物理列/RTL/时钟/延迟/约束目标不变。
