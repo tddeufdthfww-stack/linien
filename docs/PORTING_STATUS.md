@@ -1,3 +1,5 @@
+> **2026-11-12 R68实际：REJECTED**。route WNS/TNS=-.829/-16.583ns、45端点，WHS/THS=-.412/-5.257ns、14端点，较R66恶化。原生四包络/实际PLL PASS，完整功能本轮NOT RERUN。失败clock方案不采用；R69恢复R66 DAC+R67 PS ASR，继续故障取消整改。以下待运行条目均为历史。
+
 > **2026-11-12 R68候选：同pad波形正边沿DAC时钟输出，待原生/实际PLL/物理实现**。父R67 PS reset修复原生PASS；R66 route -.343/-6.398ns仍FAIL。WRT/CLK通过实际PLL相位+ODDR极性重编码保留引脚边沿，新增数据级0，未降低采样率或改I/O预算。
 
 > **2026-11-12 R67候选：PS reset释放整改待验证**。独立分支，新增sys_ps标准ASR和AXI reset连线；只加复位释放2个FCLK等待，不加正常数据反馈级。继承R66待完成物理输入，未假定其STA通过。
@@ -907,3 +909,11 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 实际route WNS/TNS=-.683/-55.023ns，312 setup端点；WHS/THS=+.024/0、0 hold端点，WPWS=+1.500ns。SDR表达消除了R64负hold；最差FDRE_33/C负边沿到FDRE_40/D正边沿，2ns路径仍FAIL。DAC必要零PCB预算setup/hold=-.343/+.070ns；ADC全28端点+.429/+3.304ns、0/-8ns边沿关系逐条PASS。内部clk_2 WNS=-.345ns。no_clock=0、内部未约束=0，16输入/32输出尚须接口分类/真实约束。物理CDC25对50FF同SLICE且一级Q只到二级D，仍不足以宣布跨域整体安全；PS原始异步reset释放已被独立实际CRG仿真确认为待修复项。
 
 源码、完整阶段日志、DCP、物理诊断及SHA归档experiments/r65_rejected_control_20261112，DCP SHA256=5e7c3b93c8a3e02d91b25586981e483a11e70d17319175f3d22cfba97d335aee。失败候选不合并/不部署。R65相对R64新增数据串行级0，继承相对R2b主反馈+32ns；最终STA/板级I/O/CDC/DRC仍未签核，没有生成发布bit/bin。
+
+## 2026-11-12 R68实际：REJECTED，回到R66 DAC组件
+
+输入82924f5deaf33d20255def030599c162a264973d；目标原生四包络49位/启动/复位/14位/负例PASS，实际两个CRG+PLL+analog两锁定epoch对照PASS；新综合/route均COMPLETE，CSR map PASS；完整功能本轮NOT RERUN，不冒用R66完整回归。综合WNS/TNS=-.873/-86.177ns，hold-.757/-368.604。actual route WNS/TNS=-.829/-16.583ns（45端点），WHS/THS=-.412/-5.257ns（14端点），WPWS+1.500；DAC必要预算-.829/-.412恶化，同域内部最差-.554（fast_a_zi0__8/C→fast_b_cordic17[16]/D），均FAIL。
+
+ADC28端点+.429/+3.304和0/-8ns边沿逐条PASS；DNA+.337/+.188ns；PS ASR加入后52ASYNC FF/26pair同SLICE、一级Q仅二级D，没有把数量增加/减少当整体安全证明。noClock0/内部未约束0、noInput16/noOutput32；LUT11720/FF13398/DSP94/BRAM35/BUFG7。源码/所有阶段日志/DCP/输入输出SHA及只读诊断归档experiments/r68_rejected_positive_forward_20261112，DCP SHA256=df47a79ed4bd5c5780412d5ed5e07f4386c94b49e5070a09530e4a7d4d29ae0a。
+
+同pad波形正边沿clock重编码没有物理收益，拒绝合并；R69在冻结输入前恢复R66 DAC+R67 PS ASR的精确raw文件，不丢PS reset成果，不覆盖R68失败现场。新增正常反馈级0。额外故障诊断确证目标停钟超时后旧写重放等缺口，结果独立记录，旧完整常规回归不假装覆盖这些情景。I/O/物理CDC/最终STA/DRC仍未签核，不部署。

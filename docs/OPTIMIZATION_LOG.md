@@ -592,3 +592,11 @@ R66继承的ADC/DAC与内部物理时序待实际结果，其他外部I/O协议�
 本方案尚不解决SEL低窗口、CLK领先WRT严格裕量、DAC外部3.5ns pulse手册解释/PCB实测及异常复位return-data物理CDC问题。所有都必须独立处理，不能签发正式板用镜像或宣称可闭环。
 
 实际四包络/49位/启动GSR/复位/14位/样本负例PASS；实际old/new CRG+PLL+analog两锁定复位释放epoch的49位严格比较及真实C source phase1.5/2.0ns PASS。初版fixture忽略ODDR原语传播100ps导致相位断言FAIL，已保留失败日志并改为检查C source，pad49位严格比较未放宽。归档experiments/r68_positive_forward_native_20261112。随后新生成/综合/route；本轮全功能暂NOT RERUN，未改组件对应R66完整同源PASS，不把继承写作本轮重跑。
+
+## 2026-11-12 R68实际：REJECTED，回到R66 DAC组件
+
+输入82924f5deaf33d20255def030599c162a264973d；目标原生四包络49位/启动/复位/14位/负例PASS，实际两个CRG+PLL+analog两锁定epoch对照PASS；新综合/route均COMPLETE，CSR map PASS；完整功能本轮NOT RERUN，不冒用R66完整回归。综合WNS/TNS=-.873/-86.177ns，hold-.757/-368.604。actual route WNS/TNS=-.829/-16.583ns（45端点），WHS/THS=-.412/-5.257ns（14端点），WPWS+1.500；DAC必要预算-.829/-.412恶化，同域内部最差-.554（fast_a_zi0__8/C→fast_b_cordic17[16]/D），均FAIL。
+
+ADC28端点+.429/+3.304和0/-8ns边沿逐条PASS；DNA+.337/+.188ns；PS ASR加入后52ASYNC FF/26pair同SLICE、一级Q仅二级D，没有把数量增加/减少当整体安全证明。noClock0/内部未约束0、noInput16/noOutput32；LUT11720/FF13398/DSP94/BRAM35/BUFG7。源码/所有阶段日志/DCP/输入输出SHA及只读诊断归档experiments/r68_rejected_positive_forward_20261112，DCP SHA256=df47a79ed4bd5c5780412d5ed5e07f4386c94b49e5070a09530e4a7d4d29ae0a。
+
+同pad波形正边沿clock重编码没有物理收益，拒绝合并；R69在冻结输入前恢复R66 DAC+R67 PS ASR的精确raw文件，不丢PS reset成果，不覆盖R68失败现场。新增正常反馈级0。额外故障诊断确证目标停钟超时后旧写重放等缺口，结果独立记录，旧完整常规回归不假装覆盖这些情景。I/O/物理CDC/最终STA/DRC仍未签核，不部署。
