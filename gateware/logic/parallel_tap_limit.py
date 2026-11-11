@@ -21,7 +21,6 @@ class ParallelTapLimitCSR(Filter):
         self.neg_bound_min = Signal.like(self.bound_min)
         self.neg_bound_max = Signal.like(self.bound_max)
         common_sum = Signal((width+guard, True))
-        common_sum.attr.add('keep')
         self.comb += common_sum.eq(self.common_a+self.common_b)
         positive, negative, pos_rail, neg_rail = [], [], [], []
         for tap in self.taps:
