@@ -272,3 +272,14 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 494, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 392}，严格名称差集新增488/移除412；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r43_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R45小模块预验证 / 2026-11-11 / 未整机构建
+
+独立分支仅对registered_c48+pipelined IIR试验把既有输出边沿移入最后50位MAC（高DSP PREG、低17和补偿FF），并保存上一输出/反馈/hold/clear以同拍重建溢出保持。代码5948ae6，扩充测试dee0bc8。没有新增采样边沿、没有改变滤波器阶数/量纲/latency CSR；输出与error现在是寄存结果后的组合选择，后续实际STA/瞬态风险仍待验证，不能当作新整机已可用。
+
+- 原样config0 IIR真实CSR/50位oracle/冻结原版：order1/2/5分别17940/17964/18036拍PASS，b0=2/3/6、bN=3/5/11原周期不变。
+- 新config2匹配原工程两拍配置cohort：同规模已知值与显式两影子队列整数oracle、冻结R44 registered_c48参考PASS；每阶另外3000拍X/Z输入/hold/clear/CSR载荷严格四态PASS。不是物理亚稳态测试。
+- 未启用重定时的native14/25位、order1/2/5、config0/2、pipelined/iterative，以及25位split_c48：全部30份实际生成Verilog逐字节等同冻结原实现；旧c48_filter测试、MAC helpers、PID/Root/AXI/CDC/Scope/平台源原始字节保持。
+- 当前仅小模块PASS；整机功能NOT RUN、综合NOT RUN、route NOT RUN、最终STA/CDC/I/O/DRC尚未评估。不把R40/R43物理结果移用此源码。R44完整route完成并核查后，才按用户授权决定下一实际试验。
+- 每条命令、向量、原生UNISIM/glbl日志、冻结参考、输入逐文件SHA与候选源码归档experiments/r45_precheck_20261111。无bitstream/板卡/激光操作。
