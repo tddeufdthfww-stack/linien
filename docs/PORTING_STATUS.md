@@ -1,3 +1,5 @@
+> **2026-11-12 R65候选：物理实现待运行**。14个SAME_EDGE/D1=D2 data ODDR换为250MHz SDR IOB FDRE，原控制/数据FF保持，数学同波形、目标额外数据级0。完整原生新旧analog49位稳定边沿/启动/复位/四包络/样本负例PASS；新综合/route待结果。其他组件暂参考R64同源完整PASS，不写成本轮完整重跑。见R65_DAC_SDR_IOB.md；I/O/物理CDC/DRC未最终签核。
+
 > **2026-11-12 R64实际结果：REJECTED**。新完整功能PASS、CSR map PASS、新综合/route完成；WNS/TNS=-.748/-44.222ns、254端点，WHS/THS=-1.901/-26.110ns、14端点。2ns控制→ODDR路径FAIL；SAME_EDGE/D1=D2虽实际是SDR波形，STA仍有下降沿输出路径；下一候选用真实SDR IOB FF表达，不能cut路径。ADC仍+.429/+3.304ns。源/日志/DCP/SHA归档，不合并、不部署。以下为历史。
 
 > **2026-11-12 R63实际结果：ADC_COMPONENT_CANDIDATE**。28个ADC必要预算setup+.429/hold+3.304ns，真实0-cycle setup/-8ns hold边沿逐条核验PASS；新综合和route完成。整机WNS/TNS=-.835/-14.041、32端点，hold-.456/-5.876、14端点；DAC仍FAIL，内部18端点WNS-.389。最终未签核，不部署。完整功能本轮NOT RERUN，原生analog本轮PASS，其他组件参考R62同SHA完整回归。以下为历史。
@@ -877,3 +879,15 @@ ADC全部28条仍+.429/+3.304ns，0/-8ns关系核验保持；DNA setup+.538/hold
 无源码/硬件修改，部分结果未选用，原失败完整另存。完整原件含fresh功能/综合/route、
 94DSP/路径只读审计、源/DCP/输入输出SHA在experiments/r64_rejected_oddr_20261112。
 REJECTED_NOT_MERGED，无烧录/激光/PZT操作；下一独立候选优先消除冗余DDR状态，不加数据级。
+
+## R65 原语简化候选
+
+独立20261112-r65-dac-sdr-iob工作树，父9d773b1保持。analog只将14个DAC data ODDR
+SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/3控制FF
+保持，PLL/引脚/电气/CSR/数值算法/吞吐率不变，额外数据采样级0。已按实际厂商原语
+完整对照冻结R61b analog：2ns后每个快速时钟稳定边沿49位输出、启动/GSR/复位、
+四组声明包络/全部14位/样本号/负控制全部PASS；新结构46个positiveFDRE/2个negative
+控制FDRE/0个SAME_EDGE data ODDR在生成RTL匹配。原件在r65_sdr_dac_native_20261112。
+同边沿相同D1/D2到SDR的逐时隙等价、范围和风险见R65_DAC_SDR_IOB.md。此轮先新
+综合/route，未重跑完整组件功能，明确参考R64同源完整回归；最终签发前必须完整重跑。
+外部DAC WRT setup/hold仅必要模型，图64的CLK/WRT/SEL与脉宽、真实PCB/SI及CDC/DRC仍待核验。

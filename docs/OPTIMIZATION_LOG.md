@@ -504,3 +504,9 @@ route -.748/-44.222、254端点；hold-1.901/-26.110、14端点；REJECTED。2ns
 D1=D2的真实同边沿波形不翻转，不能cut，应下一候选用SDR FF表达）。ADC仍+.429/+3.304，
 DNA+.538/+.199，25对ASYNC实际同SLICE且首级仅次级D。完整原件/源码/输入输出SHA及非法
 DRIVE24内存诊断失败（未改DCP或源码）在experiments/r64_rejected_oddr_20261112。
+
+R65候选：14个DAC data SAME_EDGE/D1=D2 ODDR→250MHz SDR FDRE/IOB TRUE，原数据/3控制FF
+保持，额外数据级0。声明数字契约下数学等价，并实际UNISIM新旧49位全输出/启动/复位/
+四组完整14位/样本负例PASS；生成结构46正/2负FDRE和无dataSAMEEDGE检查PASS，原件在
+experiments/r65_sdr_dac_native_20261112。新综合/route待执行；其他完整功能明确暂参考
+R64同源PASS不重跑，最终候选发布前完整回归。PLL/引脚/驱动/CSR未改，无新增例外。

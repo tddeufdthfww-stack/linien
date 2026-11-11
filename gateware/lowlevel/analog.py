@@ -126,16 +126,16 @@ class PitayaAnalog(Module):
             ),
             [
                 Instance(
-                    "ODDR",
-                    p_DDR_CLK_EDGE="SAME_EDGE",
-                    i_D1=a,
-                    i_D2=b,
+                    "FDRE",
+                    p_INIT=0,
+                    p_IS_C_INVERTED=0,
+                    i_D=value,
                     i_C=ClockSignal("sys_double"),
-                    o_Q=d,
+                    o_Q=pad,
                     i_CE=1,
                     i_R=0,
-                    i_S=0,
+                    attr={("IOB", "TRUE")},
                 )
-                for a, b, d in zip(dac_word, dac_word, dac.data)
+                for value, pad in zip(dac_word, dac.data)
             ],
         ]

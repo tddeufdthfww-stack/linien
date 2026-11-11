@@ -84,8 +84,8 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
-            execute([sys.executable, ROOT / 'tools/check_r64_analog.py', '--out', out / 'r64_analog_checks'],
-                    ROOT, out, 'r64_analog', env, 'R64_ANALOG_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r65_analog.py', '--out', out / 'r65_analog_checks'],
+                    ROOT, out, 'r65_analog', env, 'R65_ANALOG_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_dna_read_control.py', '--out', out / 'dna_read_control_checks'],
                     ROOT, out, 'dna_read_control', env, 'DNA_READ_CONTROL_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r61_cdc_reset.py', '--out', out / 'r61_cdc_reset_checks'],
