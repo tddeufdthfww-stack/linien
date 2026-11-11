@@ -84,6 +84,8 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            execute([sys.executable, ROOT / 'tools/check_iir_output_edge.py', '--out', out / 'iir_output_edge_checks'],
+                    ROOT, out, 'iir_output_edge', env, 'IIR_OUTPUT_EDGE_CONFIG2_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_scope_factor_cache.py', '--out', out / 'scope_factor_cache_checks'],
                     ROOT, out, 'scope_factor_cache', env, 'SCOPE_FACTOR_CACHE_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_scope_predecode.py', '--out', out / 'scope_predecode_checks'],
