@@ -1,3 +1,5 @@
+> **2026-11-11 R43最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.578/-43.286ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R41最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.791/-90.059ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R38最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.619/-83.023ns，最终STA FAIL。详细归档见本文末尾。
@@ -538,3 +540,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 ## R43首次物理流程查询中止 / 2026-11-11
 
 失败代码1403c56：只计Scope局部层次net负载（最大43）而非整条网全部层次segment的leaf负载（真实4网154/169/99/121），因此没有选出>=96目标，主动ERROR并在复制前退出。属于流程查询错误，不是本轮物理优化WNS结果；本轮新route NOT RUN。输入R41 DCP SHA不变、源码运行中无修改，原FAIL日志/TCL/源码/manifest和只读全segment诊断归档experiments/r43_query_setup_failure_20261111。修正为get_nets -segments/get_pins -leaf后新建试验目录重跑，不覆盖初版。
+
+
+## R43 / 2026-11-11归档 / physical时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `4038738b7ca622dba2b7a741f4b8c496e2bf7790`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r43-scope-csr-distribution`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R41_EXACT_INPUTS_NOT_RERUN：81个原始硬件测试SHA一致，原生全功能/Scope冻结四相位/14与25位/真实CSR/PID/IIR/AXI/CDC明确复用R41，本轮未重跑RTL或综合。对ADC域CE恒1非ASYNC_REG的CSR Q>=192网及Scope average_select单输出LUT>=96 leaf负载网作工具物理复制，Scope LUT638→675、最大leaf169→69，CSR FD16→70、最大负载598→193。CSR复制D/C/CE/R/INIT及聚合负载完全一致、全部94DSP寄存器属性相同，输入DCP SHA不变，追加串行周期0。首次局部segment计数漏跨层次负载而在复制前主动中止，失败源码/日志与诊断保留，修正全segment/leaf后新目录重跑成功；不是把中止当实际route失败/成功。完整Root postroute/SDF形式等价NOT_RUN，跨域物理安全NOT_PROVEN。；没有修改Migen evaluator。
+- 完整功能与综合REUSED_R41_NOT_RERUN；本轮新做物理复制结构/DSP审计及实际route/STA/CDC；CSR map与XDC保持R4a一致。延迟=本轮只复制同拍CSR数据驱动/Scope组合译码，ADC/CSR/Scope/触发新增周期0；R41原始硬件测试SHA完全一致，R28组件Bare72.1ns/串接108.1ns只继承，不是本轮重测或板端测量。
+- 综合来源=REUSED_R41_EXACT_DCP_NOT_RERUN，WNS/TNS=-1.908/-250.466ns。实际route COMPLETE，WNS/TNS=-0.578/-43.286ns，失败端点366；WHS/WPWS=0.019/1.5ns，THS=0。
+- raw IIR内部最差=-0.124ns，入口=0.552ns；全局最差 `red_pitaya_scope/set_dec_reg[17]_replica/C` → `red_pitaya_scope/adc_a_dat_reg[11]/D`，逻辑/布线=['1.634', '6.728']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 12146, 'ff': 13620, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=406。
+- CDC={'CDC-1': 494, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 392}，严格名称差集新增488/移除412；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r43_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
