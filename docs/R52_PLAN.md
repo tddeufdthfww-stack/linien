@@ -7,3 +7,8 @@
 3. 新增冻结原R48 helper与完整MAC320边界整数+4606部分X/Z逐位case-equality；原样71760完整50位乘加整数oracle及原config0完整IIR；新增config2/order1/2/5/真实CSR/冻结R48(明确引用旧split helper)/独立整数oracle/各3000X-Z。先小模块PASS，失败拒绝，不开始整机。原旧测试均不改。
 4. 全旧14/25位PID/饱和/复位/CE/真实CSR/FastChain/Scope/阈值/AXI/CDC功能，再新生成/synth/place/route和readonly完整路径/实际DSP/CDC/DRC/覆盖；注册MAC helper不改，新增ADC/反馈/CSR周期0。不预言LUT级数或时序收益，只有实际route可判优劣。
 5. 原用户工程/R2b/R4a/R48冻结保护；新输入SHA/代码/结果/失败日志分别归档。PS7/PLL/器件/引脚/ADC/DAC/CSR/总线源码和时序约束不改，不加false/multicycle/clock-group，不降阶/精度/吞吐，不部署。
+
+
+## 冻结参考加载修正
+
+首次IIR预检在加载阶段因缺少gateware.logic.r48_iir_c48_mac私有模块注册而中止，功能比较NOT RUN，非数值失败。原命令/源码/诊断见experiments/r52_reference_setup_failure_20261111。修正为先从冻结文件显式加载该私有模块，再加载冻结IIR；不引用当前候选helper，也不改任何旧测试断言/生产代码，在新目录重跑。

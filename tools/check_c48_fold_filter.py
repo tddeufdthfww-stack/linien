@@ -20,6 +20,9 @@ def packed(values,widths):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     frozen=ROOT/'gateware/tests/timing/reference/r48_iir_c48_frame.py'
+    helper_path=ROOT/'gateware/tests/timing/reference/r48_iir_c48_mac.py'
+    helper_spec=importlib.util.spec_from_file_location('gateware.logic.r48_iir_c48_mac',helper_path)
+    helper=importlib.util.module_from_spec(helper_spec);sys.modules[helper_spec.name]=helper;helper_spec.loader.exec_module(helper)
     spec=importlib.util.spec_from_file_location('gateware.logic.r16_iir_frame_reference',frozen);old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
     results=[];tool=Path('D:/Xilinx/Vivado/2020.1/bin')
     for order in (1,2,5):
