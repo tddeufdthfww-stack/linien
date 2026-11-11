@@ -28,13 +28,18 @@ class DNA(Module, AutoCSR):
 
         do = Signal()
         cnt = Signal(max=2 * n + 1)
+        # Reachable-state invariant: read == (cnt < 2). Both reset to
+        # 1/0; the first odd counter state clears READ as cnt becomes 2.
+        # Keep the original DNA clock, sample edges, CSR and 64 shifts.
+        read = Signal(reset=1, name_override="r61_dna_read")
+        self.sync += If(cnt[0], read.eq(0))
 
         self.specials += Instance(
             "DNA_PORT",
             i_DIN=self.dna.status[-1],
             o_DOUT=do,
             i_CLK=cnt[0],
-            i_READ=cnt < 2,
+            i_READ=read,
             i_SHIFT=1,
         )
 

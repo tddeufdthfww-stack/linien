@@ -222,7 +222,7 @@ always @(posedge axi_clk_i) begin
       else if (wr_do && ack) begin
          axi_bvalid_o <= 1'b1;
          axi_bresp_o  <= {
-            (wr_error || ack_cnt[5]), 1'b0
+            (wr_error || sys_err_i || ack_cnt[5]), 1'b0
          };
       end
 
@@ -238,7 +238,7 @@ always @(posedge axi_clk_i) begin
          axi_rvalid_o <= 1'b1;
          axi_rlast_o  <= 1'b1;
          axi_rresp_o  <= {
-            (rd_error || ack_cnt[5]), 1'b0
+            (rd_error || sys_err_i || ack_cnt[5]), 1'b0
          };
          axi_rdata_o  <= sys_rdata_i;
       end

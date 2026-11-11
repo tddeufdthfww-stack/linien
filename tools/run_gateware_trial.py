@@ -194,6 +194,7 @@ def main():
             prefix = prefix.replace('create_project -force -name top -part',
                                     'create_project -force -name top -dir vivado_project -part', 1)
             script = prefix + '\nsynth_design -top top -part xc7z020clg400-1\n'
+            script += 'source {' + (ROOT / 'gateware/constraints/dna_clock.tcl').as_posix() + '}\n'
             script += 'report_timing_summary -file synth_timing.rpt\nreport_utilization -file synth_utilization.rpt\n'
             script += 'write_checkpoint -force synth.dcp\nputs SYNTHESIS_COMPLETE\n'
             tcl_run(script, out, 'synthesis', env, 'SYNTHESIS_COMPLETE', args.vivado)

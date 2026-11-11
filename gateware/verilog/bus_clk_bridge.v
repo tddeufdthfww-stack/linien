@@ -88,9 +88,34 @@ reg            dst_done  ;
 reg  [ 32-1: 0] dst_rdata_hold ;
 reg             dst_err_hold   ;
 
+// Either reset invalidates the complete toggle-handshake epoch. Keeping
+// one end's old parity can deadlock after source reset or replay an old
+// write after destination reset. Assert both local resets asynchronously,
+// release each through its own two-flop synchronizer.
+wire bridge_arstn = sys_rstn_i & rstn_i;
+(* ASYNC_REG = "TRUE", SHREG_EXTRACT = "NO" *)
+reg [1:0] src_ready = 2'b00;
+(* ASYNC_REG = "TRUE", SHREG_EXTRACT = "NO" *)
+reg [1:0] dst_ready = 2'b00;
+always @(posedge sys_clk_i or negedge bridge_arstn)
+   if (!bridge_arstn) src_ready <= 2'b00;
+   else src_ready <= {src_ready[0], 1'b1};
+always @(posedge clk_i or negedge bridge_arstn)
+   if (!bridge_arstn) dst_ready <= 2'b00;
+   else dst_ready <= {dst_ready[0], 1'b1};
+
+// SYS requests are pulses, so requests during reset recovery must not be
+// silently dropped. Return a source-clocked error response. A transaction
+// already in flight when the destination resets uses the upstream AXI
+// timeout/error contract; it is never replayed by a stale toggle.
+reg src_fault_ack = 1'b0;
+always @(posedge sys_clk_i)
+   if (!sys_rstn_i) src_fault_ack <= 1'b0;
+   else src_fault_ack <= !src_ready[1] && (sys_wen_i || sys_ren_i);
+
 
 always @(posedge sys_clk_i) begin
-   if (sys_rstn_i == 1'b0) begin
+   if (src_ready[1] == 1'b0) begin
       sys_rd   <= 1'b0 ;
       sys_wr   <= 1'b0 ;
       sys_do   <= 1'b0 ;
@@ -114,7 +139,7 @@ end
 
 
 always @(posedge clk_i) begin
-   if (rstn_i == 1'b0) begin
+   if (dst_ready[1] == 1'b0) begin
       dst_do    <= 1'b0 ;
       dst_sync  <= 2'h0 ;
       dst_done  <= 1'b0 ;
@@ -134,15 +159,16 @@ always @(posedge clk_i) begin
 end
 
 // No state or CDC stage added; caller mirrors the existing source reset guard.
-assign src_capture_o = (sys_do == sys_done) && (sys_wen_i || sys_ren_i);
+assign src_capture_o = src_ready[1] &&
+                       (sys_do == sys_done) && (sys_wen_i || sys_ren_i);
 
 assign ren_o = sys_rd && (dst_sync[1]^dst_do);
 assign wen_o = sys_wr && (dst_sync[1]^dst_do);
 
 
 assign sys_rdata_o = dst_rdata_hold        ;
-assign sys_err_o   = dst_err_hold          ;
-assign sys_ack_o   = sys_done ^ sys_sync[1] ;
+assign sys_err_o   = src_fault_ack | dst_err_hold;
+assign sys_ack_o   = (src_ready[1] && (sys_done ^ sys_sync[1])) | src_fault_ack;
 
 
 

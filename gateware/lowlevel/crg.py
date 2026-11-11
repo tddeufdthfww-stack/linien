@@ -16,6 +16,7 @@
 # along with Linien.  If not, see <http://www.gnu.org/licenses/>.
 
 from migen import ClockDomain, Instance, Module, Signal
+from migen.genlib.resetsync import AsyncResetSynchronizer
 
 
 class CRG(Module):
@@ -93,10 +94,6 @@ class CRG(Module):
             i_I=clk[4],#add
             o_O=self.cd_dac_2p.clk,#add
         )
-        self.specials += Instance(
-            "FD",
-            p_INIT=1,
-            i_D=~locked,
-            i_C=self.cd_sys.clk,
-            o_Q=self.cd_sys.rst
-         )
+        # Assert reset even if the PLL-derived clock stops. Release only
+        # after two valid sys edges; normal clock phases/frequencies stay.
+        self.specials += AsyncResetSynchronizer(self.cd_sys, rst | ~locked)
