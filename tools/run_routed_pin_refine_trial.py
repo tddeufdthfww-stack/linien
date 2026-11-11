@@ -13,7 +13,7 @@ def main():
  out=ROOT/'gateware/build/trials'/(datetime.now().strftime('%Y%m%d_%H%M%S')+'_'+a.label);out.mkdir(parents=True,exist_ok=False)
  files=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0')+subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z'],cwd=ROOT).decode().split('\0')
  hashes={n:sha(ROOT/n) for n in sorted(set(files)-{''}) if (ROOT/n).is_file()};dcp=previous/'routed.dcp';before=sha(dcp)
- m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r47_trial':str(previous),'input_dcp_sha256':before,'r47_code_and_test_hash_matches':same,'functional':'REUSED_R46_VIA_R47_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R46_VIA_R47_EXACT_DCP_NOT_RERUN','postopt':'NOT_RUN','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_ADC_CSR_feedback_cycles':0,'optimization':'Post-route placement/routing/rewire/critical-cell/critical-pin/tns_cleanup, then actual Explore/tns_cleanup route. No unroute-first selection, retime, clock_opt, DSP/BRAM register changes, new edge FFs or constraints.'}
+ m={'label':a.label,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_hashes':hashes,'input_r47_trial':str(previous),'input_dcp_sha256':before,'r47_code_and_test_hash_matches':same,'functional':'REUSED_R46_VIA_R47_EXACT_INPUTS_NOT_RERUN','synthesis':'REUSED_R46_VIA_R47_EXACT_DCP_NOT_RERUN','postopt':'NOT_RUN','route':'NOT_RUN','timing_signoff':'NOT_EVALUATED','new_serial_ADC_CSR_feedback_cycles':0,'optimization':'Post-route compatible placement/routing/rewire/critical-cell only, then actual Explore/tns_cleanup route. No phys tns_cleanup or critical_pin_opt; initial rejected options archived. No unroute-first selection, retime, clock_opt, DSP/BRAM register changes, new edge FFs or constraints.'}
  mp=out/'manifest.json';mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
  for n in ('top.v','top.xdc','csrmap.py','synth_timing.rpt','synth_utilization.rpt','synthesis.json'):
   if (previous/n).exists():shutil.copyfile(previous/n,out/n)
@@ -21,7 +21,7 @@ def main():
 set_param general.maxThreads 2
 open_checkpoint $input_dcp
 report_timing_summary -file "$out/input_routed_timing.rpt"
-phys_opt_design -placement_opt -routing_opt -rewire -critical_cell_opt -critical_pin_opt -tns_cleanup
+phys_opt_design -placement_opt -routing_opt -rewire -critical_cell_opt
 report_timing_summary -file "$out/postopt_timing.rpt"
 report_utilization -file "$out/postopt_utilization.rpt"
 write_checkpoint "$out/postopt.dcp"
@@ -43,10 +43,10 @@ puts ROUTED_PIN_TRIAL_COMPLETE
  script=out/'postroute.tcl';script.write_text('if {[catch {\n'+tcl+'\n} msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}\nexit 0\n',encoding='utf-8')
  cmd=['D:/Xilinx/Vivado/2020.1/bin/vivado.bat','-mode','batch','-source',str(script),'-log',str(out/'implementation.vivado.log'),'-journal',str(out/'implementation.jou')];print('RUN_DIRECTORY',out,flush=True)
  res=subprocess.run(cmd,cwd=out,capture_output=True);(out/'implementation.stdout.log').write_bytes(res.stdout);(out/'implementation.stderr.log').write_bytes(res.stderr)
- text=(res.stdout+b'\n'+res.stderr).decode(errors='replace');ok=res.returncode==0 and 'ROUTED_PIN_TRIAL_COMPLETE' in text and not re.search('(?m)^ERROR:',text)
+ text=(res.stdout+b'\n'+res.stderr).decode(errors='replace');ok=res.returncode==0 and bool(re.search(r'(?m)^ROUTED_PIN_TRIAL_COMPLETE\s*$',text)) and not re.search('(?m)^ERROR:',text)
  (out/'implementation.json').write_text(json.dumps({'command':cmd,'exit_code':res.returncode,'passed':bool(ok)},indent=2),encoding='utf-8')
  changed=[n for n,h in hashes.items() if not (ROOT/n).is_file() or sha(ROOT/n)!=h]
- m.update(postopt='COMPLETE' if 'ROUTED_PIN_PHYSOPT_COMPLETE' in text else 'FAIL',route='COMPLETE' if ok else 'FAIL',source_changes_during_run=changed,input_r47_dcp_unchanged=before==sha(dcp));mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
+ m.update(postopt='COMPLETE' if bool(re.search(r'(?m)^ROUTED_PIN_PHYSOPT_COMPLETE\s*$',text)) else 'FAIL',route='COMPLETE' if ok else 'FAIL',source_changes_during_run=changed,input_r47_dcp_unchanged=before==sha(dcp));mp.write_text(json.dumps(m,indent=2),encoding='utf-8')
  assert ok and not changed and m['input_r47_dcp_unchanged'],text[-7000:]
  print('ROUTED_PIN_SUITE_COMPLETE',flush=True)
 if __name__=='__main__':main()
