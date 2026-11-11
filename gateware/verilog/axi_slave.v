@@ -114,6 +114,7 @@ parameter           AXI_SW         = AXI_DW >> 3     // strobe width - 1 bit for
    output reg                sys_wen_o      ,  //!< system bus write enable.
    output reg                sys_ren_o      ,  //!< system bus read enable.
    input      [ AXI_DW-1: 0] sys_rdata_i    ,  //!< system bus read data.
+   output                    sys_abort_o    ,  // cancel the source bus epoch on AXI timeout
    input                     sys_err_i      ,  //!< system bus error indicator.
    input                     sys_ack_i         //!< system bus acknowledge signal.
 );
@@ -240,7 +241,9 @@ always @(posedge axi_clk_i) begin
          axi_rresp_o  <= {
             (rd_error || sys_err_i || ack_cnt[5]), 1'b0
          };
-         axi_rdata_o  <= sys_rdata_i;
+         // Timeout/invalid reads have no qualified destination payload.
+         // A normal downstream error still retains its valid held payload.
+         axi_rdata_o  <= (ack_cnt[5] || rd_error) ? {AXI_DW{1'b0}} : sys_rdata_i;
       end
 
    end
@@ -261,6 +264,12 @@ always @(posedge axi_clk_i) begin
          ack_cnt <= ack_cnt + 6'h1 ;
    end
 end
+
+// Local source-clock state asserts cancellation before the timeout response
+// is sampled. Reset only the downstream bus handshake epoch, not this AXI
+// response state: R/B must still complete and remain stable under backpressure.
+assign sys_abort_o = ack_cnt[5] && (rd_do || wr_do) &&
+                     !axi_rvalid_o && !axi_bvalid_o;
 
 assign ack = sys_ack_i || ack_cnt[5] || (rd_do && rd_errorw) || (wr_do && wr_errorw); // bus acknowledge or timeout or error
 

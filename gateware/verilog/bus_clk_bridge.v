@@ -85,8 +85,8 @@ reg  [ 2-1: 0] dst_sync  ;
 reg            dst_done  ;
 // Return data is captured with the destination ACK and held until
 // the next completed transaction (bundled-data CDC handshake).
-reg  [ 32-1: 0] dst_rdata_hold ;
-reg             dst_err_hold   ;
+reg  [ 32-1: 0] dst_rdata_hold = 32'h0 ;
+reg             dst_err_hold = 1'b0 ;
 
 // Either reset invalidates the complete toggle-handshake epoch. Keeping
 // one end's old parity can deadlock after source reset or replay an old
@@ -143,8 +143,9 @@ always @(posedge clk_i) begin
       dst_do    <= 1'b0 ;
       dst_sync  <= 2'h0 ;
       dst_done  <= 1'b0 ;
-      dst_rdata_hold <= 32'h0 ;
-      dst_err_hold   <= 1'b0  ;
+      // Invalidate the epoch through ready/control state. Preserve return
+      // payload so a cancelled/reset transaction cannot disturb a word
+      // that the source might already be consuming. INIT covers cold start.
    end
    else begin
       dst_sync <= {dst_sync[0], sys_do};
@@ -162,11 +163,12 @@ end
 assign src_capture_o = src_ready[1] &&
                        (sys_do == sys_done) && (sys_wen_i || sys_ren_i);
 
-assign ren_o = sys_rd && (dst_sync[1]^dst_do);
-assign wen_o = sys_wr && (dst_sync[1]^dst_do);
+assign ren_o = dst_ready[1] && sys_rd && (dst_sync[1]^dst_do);
+assign wen_o = dst_ready[1] && sys_wr && (dst_sync[1]^dst_do);
 
 
-assign sys_rdata_o = dst_rdata_hold        ;
+// Recovery fault ACK has no destination transfer: return only local zero.
+assign sys_rdata_o = src_fault_ack ? 32'h0 : dst_rdata_hold;
 assign sys_err_o   = src_fault_ack | dst_err_hold;
 assign sys_ack_o   = (src_ready[1] && (sys_done ^ sys_sync[1])) | src_fault_ack;
 

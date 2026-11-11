@@ -1,3 +1,9 @@
+> **R69输入冻结前：32例新增故障/重放/非法数据检查及actual Root取消连线PASS**。当前实际硬件是R66 DAC+R67 PS ASR+R69 timeout cancel，精确组件和SHA见R69_INPUT_COMPONENTS.md。新完整功能/综合/route待运行，整体未签核。
+
+> **R69组合选择更新**：R68实际route变差且hold FAIL，不采用其clock重编码；R69实际源码已恢复R66 DAC+R67 PS ASR，继续超时取消整改。R68失败现场独立保留。
+
+> **2026-11-12 R69候选：已复现停钟超时写重放，新增SYS epoch取消与无效读payload隔离，待验证**。正常反馈级/CSR地址不变；父R68物理仍运行，不假定其签核。
+
 > **2026-11-12 R68候选：同pad波形正边沿DAC时钟输出，待原生/实际PLL/物理实现**。父R67 PS reset修复原生PASS；R66 route -.343/-6.398ns仍FAIL。WRT/CLK通过实际PLL相位+ODDR极性重编码保留引脚边沿，新增数据级0，未降低采样率或改I/O预算。
 
 > **2026-11-12 R67候选：PS reset释放整改待验证**。独立分支，新增sys_ps标准ASR和AXI reset连线；只加复位释放2个FCLK等待，不加正常数据反馈级。继承R66待完成物理输入，未假定其STA通过。

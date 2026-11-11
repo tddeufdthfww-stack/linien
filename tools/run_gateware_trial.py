@@ -84,14 +84,16 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
-            execute([sys.executable, ROOT / 'tools/check_r68_actual_pll.py', '--out', out / 'r68_actual_pll_checks'],
-                    ROOT, out, 'r68_actual_pll', env, 'R68_ACTUAL_PLL_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r69_fault_contract.py', '--out', out / 'r69_fault_contract_checks'],
+                    ROOT, out, 'r69_fault_contract', env, 'FAULT_CONTRACT_EXPECTED_OUTCOMES_COMPLETE fixed')
+            execute([sys.executable, ROOT / 'tools/check_r69_cancel_wiring.py', '--out', out / 'r69_cancel_wiring_checks'],
+                    ROOT, out, 'r69_cancel_wiring', env, 'R69_ACTUAL_ROOT_CANCEL_WIRING_PASS')
             execute([sys.executable, ROOT / 'tools/check_r67_crg_reset.py', '--out', out / 'r67_crg_reset_checks'],
                     ROOT, out, 'r67_crg_reset', env, 'CRG_RESET_DIAGNOSTIC_FINISHED sync')
             execute([sys.executable, ROOT / 'tools/check_r67_ps_reset_wiring.py', '--out', out / 'r67_ps_reset_wiring_checks'],
                     ROOT, out, 'r67_ps_reset_wiring', env, 'R67_ACTUAL_ROOT_RESET_WIRING_PASS')
-            execute([sys.executable, ROOT / 'tools/check_r68_analog.py', '--out', out / 'r68_analog_checks'],
-                    ROOT, out, 'r68_analog', env, 'R68_ANALOG_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r66_analog.py', '--out', out / 'r66_analog_checks'],
+                    ROOT, out, 'r66_analog', env, 'R66_ANALOG_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_dna_read_control.py', '--out', out / 'dna_read_control_checks'],
                     ROOT, out, 'dna_read_control', env, 'DNA_READ_CONTROL_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r61_cdc_reset.py', '--out', out / 'r61_cdc_reset_checks'],

@@ -22,8 +22,7 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 class CRG(Module):
     def __init__(self, clk_adc, clk_ps, rst):
         self.clock_domains.cd_sys_double = ClockDomain(reset_less=True)
-        self.clock_domains.cd_dac_2p = ClockDomain(reset_less=True)
-        self.clock_domains.cd_dac_wrt = ClockDomain(reset_less=True)
+        self.clock_domains.cd_dac_2p = ClockDomain(reset_less=True)#add
         self.clock_domains.cd_sys = ClockDomain()
         self.clock_domains.cd_sys_slow = ClockDomain(reset_less=True)
         self.clock_domains.cd_sys_ps = ClockDomain()
@@ -75,10 +74,10 @@ class CRG(Module):
                 o_CLKOUT3=clk[3],
                 p_CLKOUT4_DIVIDE=4,
                 p_CLKOUT4_DUTY_CYCLE=0.5,
-                p_CLKOUT4_PHASE=135.0,
+                p_CLKOUT4_PHASE=-45.0,
                 o_CLKOUT4=clk[4],
                 p_CLKOUT5_DIVIDE=4,
-                p_CLKOUT5_PHASE=180.0,
+                p_CLKOUT5_PHASE=0.0,
                 p_CLKOUT5_DUTY_CYCLE=0.5,
                 o_CLKOUT5=clk[5],
                 o_LOCKED=locked,
@@ -98,10 +97,6 @@ class CRG(Module):
             i_I=clk[4],#add
             o_O=self.cd_dac_2p.clk,#add
         )
-        # Previously unused 250 MHz CLKOUT5 supplies WRT rising at +2 ns.
-        # CLKOUT4 rising at +1.5 ns replaces its former falling at +1.5 ns.
-        # ODDR constants are inverted in analog.py so pad waveforms stay.
-        self.specials += Instance("BUFG", i_I=clk[5], o_O=self.cd_dac_wrt.clk)
         # Assert reset even if the PLL-derived clock stops. Release only
         # after two valid sys edges; normal clock phases/frequencies stay.
         self.specials += AsyncResetSynchronizer(self.cd_sys, rst | ~locked)

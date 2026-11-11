@@ -179,7 +179,11 @@ class Axi2Sys(Module):
     def __init__(self):
         self.sys = Record(sys_layout)
         self.axi = Record(axi_layout)
-        self.comb += [self.sys.clk.eq(self.axi.aclk), self.sys.rstn.eq(self.axi.arstn)]
+        abort = Signal()
+        self.comb += [
+            self.sys.clk.eq(self.axi.aclk),
+            self.sys.rstn.eq(self.axi.arstn & ~abort),
+        ]
         self.specials += Instance(
             "axi_slave",
             p_AXI_DW=32,
@@ -231,6 +235,7 @@ class Axi2Sys(Module):
             i_sys_rdata_i=self.sys.rdata,
             i_sys_err_i=self.sys.err,
             i_sys_ack_i=self.sys.ack,
+            o_sys_abort_o=abort,
         )
 
 

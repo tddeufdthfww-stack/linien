@@ -96,9 +96,10 @@ class PitayaAnalog(Module):
         self.specials += [
             Instance(
                 "ODDR",
-                i_D1=1,
-                i_D2=0,
-                i_C=ClockSignal("dac_2p"),
+                i_D1=0,
+                i_D2=1,
+                #i_C=ClockSignal("sys_double"),
+                i_C=ClockSignal("dac_2p"),#add
                 o_Q=dac.clk,
                 i_CE=1,
                 i_R=0,
@@ -106,9 +107,9 @@ class PitayaAnalog(Module):
             ),
             Instance(
                 "ODDR",
-                i_D1=1,
-                i_D2=0,
-                i_C=ClockSignal("dac_wrt"),
+                i_D1=0,
+                i_D2=1,
+                i_C=ClockSignal("sys_double"),
                 o_Q=dac.wrt,
                 i_CE=1,
                 i_R=0,

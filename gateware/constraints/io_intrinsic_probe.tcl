@@ -1,5 +1,3 @@
-# R68 actual forwarded ODDR D1=1/D2=0: pad clock has SAME polarity as C.
-# PLL phases implement the original pad edges; never retain the old -invert.
 # R62 necessary silicon-only feasibility budget. ZERO PCB differential skew
 # is a diagnostic assumption, not a measured board property or final signoff.
 # LTC2145 CMOS data vs CLKOUT+ rising: tSKEW 0..0.6 ns.
@@ -14,7 +12,7 @@ proc r62_forwarded_clock {name port} {
     }
     if {[llength $found] != 1} {error "Cannot uniquely trace forwarded clock $port: $found"}
     set cp [get_pins -of_objects [lindex $found 0] -filter {REF_PIN_NAME == C}]
-    create_generated_clock -name $name -source $cp -divide_by 1 [get_ports $port]
+    create_generated_clock -name $name -source $cp -divide_by 1 -invert [get_ports $port]
 }
 r62_forwarded_clock dac_write dac_wrt
 r62_forwarded_clock dac_sample dac_clk
