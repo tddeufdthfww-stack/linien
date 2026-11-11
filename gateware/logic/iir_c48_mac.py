@@ -12,7 +12,7 @@ def split_c48_mac(module,z,x,c):
     zlo=Signal((48,True));ztop=Signal((2,True))
     low=Signal((48,True));high=Signal((48,True))
     low.attr.add(('use_dsp','yes'));high.attr.add(('use_dsp','yes'))
-    positive_overflow,negative_overflow=Signal(),Signal()
+    carry=Signal()
     correction=Signal((4,True));top=Signal(2)
     result=Signal((50,True))
     module.comb += [
@@ -20,9 +20,9 @@ def split_c48_mac(module,z,x,c):
         zlo.eq(z[:48]),ztop.eq(z[48:]),
         low.eq(c*xlo+zlo),
         high.eq(c*xhi+(low>>17)),
-        positive_overflow.eq(~zlo[-1] & ~c[-1] & low[-1]),
-        negative_overflow.eq(zlo[-1] & c[-1] & ~low[-1]),
-        correction.eq(ztop+zlo[-1]+positive_overflow-negative_overflow),
+        # Z + positive_overflow - negative_overflow is unsigned carry.
+        carry.eq((zlo[-1] & low[-1]) | (~c[-1] & (zlo[-1] | low[-1]))),
+        correction.eq(ztop+carry),
         top.eq(high[31:33]+correction),
         result.eq(Cat(low[:17],high[:31],top)),
     ]
