@@ -88,6 +88,8 @@ class Iir(Filter):
         y_over = y_next[skip:]
         y_pat = Signal.like(y_over, reset=2 ** (intermediate_width - skip) - 1)
         y = Signal.like(self.y)
+        # Preserve the existing feedback edge in fabric, not DSP input CE.
+        y.attr.add("keep")
         railed = Signal()
         self.comb += [
             railed.eq(~((y_over == y_pat) | (y_over == ~y_pat))),
