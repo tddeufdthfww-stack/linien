@@ -533,3 +533,8 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 422, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增398/移除412；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r41_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R43首次物理流程查询中止 / 2026-11-11
+
+失败代码1403c56：只计Scope局部层次net负载（最大43）而非整条网全部层次segment的leaf负载（真实4网154/169/99/121），因此没有选出>=96目标，主动ERROR并在复制前退出。属于流程查询错误，不是本轮物理优化WNS结果；本轮新route NOT RUN。输入R41 DCP SHA不变、源码运行中无修改，原FAIL日志/TCL/源码/manifest和只读全segment诊断归档experiments/r43_query_setup_failure_20261111。修正为get_nets -segments/get_pins -leaf后新建试验目录重跑，不覆盖初版。
