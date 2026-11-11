@@ -1,3 +1,5 @@
+> **2026-11-11 R50最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.931/-706.938ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R48最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.179/-4.904ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R47最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.282/-5.173ns，最终STA FAIL。详细归档见本文末尾。
@@ -618,3 +620,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 438, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增382/移除374；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r48_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R50 / 2026-11-11归档 / iir时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `ba8871438e4a321f99e74c1334ebed0299e70e02`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r50-iir-output-edge`；R4a/R2b/原用户工程保持原样。
+- 功能：原生UNISIM/真实CSR两拍联合帧14/25位44290/44292拍、512/512系数/独立CE/复位/模式/饱和/完整37位整数oracle PASS；14/25 IIR配置帧与冻结RTL/28与50位整数oracle PASS（从未延迟输入到b0/b5=8/13拍，滤波器latency CSR仍6）；完整旧功能回归PASS。R19指定Bare/快慢串接组件数字模型正负脉冲确认72.1/108.1ns，较R16追加16ns；后续版本继承同组件契约，未重跑该组件模型，IIR周期由完整滤波器测试独立验证；并行tap限幅14/25位原生RTL/旧LimitCSR/独立整数oracle、全部tap与符号/非法上下限/回绕/真实CSR/CE/reset PASS；完整FastChain pair 30000拍、CSR字节映射、I/Q/原寄存器前信号/独立CE PASS（精确周期与统计见trial/parallel_tap_checks/results.json和fastchain/results.json）；包含公共求和优先及反相比较并行的数学变换，额外覆盖N位最小负数回绕及邻值；FastChain pair比较旧split_c48+串行tap与生产registered_c48+新tap组合，显式UNISIM/glbl；原生时钟MAC71760组及IIR order1/2/5/CSR/hold/clear/复位再次PASS；R23/R24生产类型缺陷已明确修复：先测试专用cba82d1真实unsigned CSR复现第45拍FAIL，再生产759cba4显式同宽signed解释；同一夹具原样30000拍PASS（负偏置15053），完整common中间值14/25位30106/30134拍与原FF及整数oracle PASS，实际Root signed14声明/RHS核对PASS。新增robust谓词90800已知+8000未知、父模块50076（55未知）严格四态PASS；覆盖不等于完整PS7/板级Root或物理签核；实际Scope helper/冻结原case/整数oracle161872组、32有效因子、低16位穷举65536及3000 X/Z PASS；完整双Scope+真实桥sys100/ADC125功能异步、配置/四路数据/触发/BRAM/接口逐拍四态PASS，Scope新增周期0（本轮精确统计以trial/scope_average_checks日志为准）；本轮全新执行IIR输出边沿重定位：最后组合MAC+输出FF改为同沿registered50 MAC，平行保存旧output/feedback/clear/hold并重建原递推。旧原样config0与新config2真实CSR/冻结R44/独立双影子有限50位整数oracle order1/2/5各约18000已知与各3000X/Z再次PASS；14/25 native/iterative及split_c48共30组完整生成RTL逐字节同原参考。全部原生回归、本轮综合和实际route均重新执行。IIR输出/error变为MAC结果寄存器后组合选择，传播/毛刺/下游setup须以新报告核验；无新增采样周期不等于模拟路径不变，不是fullRoot SDF/形式/板端或物理CDC证明。；没有修改Migen evaluator。
+- 原8项pytest、CE/饱和/流水线/真实CSR、AXI/CDC/四相位既有回归PASS；CSR map与XDC保持R4a一致。延迟=相对R16快速/Bare及处理误差流新增2sys=16ns，快速相对R2b累计32ns；既有慢PID16ns保留，特定快→慢串接相对R4a额外32ns、相对R2b累计48ns；robust自身判定仍8ns；R20之后IIR/tap/common/阈值/Scope组合优化均新增周期0。
+- 综合来源=COMPLETE_THIS_ROUND，WNS/TNS=-0.528/-674.697ns。实际route COMPLETE，WNS/TNS=-0.931/-706.938ns，失败端点1663；WHS/WPWS=0.023/1.5ns，THS=0。
+- raw IIR内部最差=-0.348ns，入口=0.092ns；全局最差 `DSP48E1_27/CLK` → `DSP48E1_29/PCIN[0]`，逻辑/布线=['4.533', '2.787']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 12078, 'ff': 13731, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=449。
+- CDC={'CDC-1': 442, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增380/移除368；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r50_iir_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
