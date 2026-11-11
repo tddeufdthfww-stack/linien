@@ -1,3 +1,5 @@
+> **2026-11-11 R51最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.794/-679.44ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R50最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.931/-706.938ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R48最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.179/-4.904ns，最终STA FAIL。详细归档见本文末尾。
@@ -357,3 +359,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 ## R51 首次流程中止与兼容修正
 
 2cb44af 的 place_design 已成功，但后续误将 post-route routing_opt 用于 post-place，Vivado_Tcl4-254 在物理优化入口拒绝，实际route NOT RUN，无本轮WNS。原始源码、日志、manifest和纠正说明独立保留 experiments/r51_option_setup_failure_20261111。旧placement FAIL标的是包含postopt的组合阶段未完成，不能误称place_design失败；现在拆分独立精确执行行标记。仅删除post-place不支持的routing_opt，仍placement/rewire/critical-cell，另新目录重跑，物理列/RTL/时钟/延迟/约束目标不变。
+
+
+## R51 / 2026-11-11归档 / physical时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `b6054bb9f4641eebd6631c13a88f5111cc0b6986`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r51-iir-column-placement`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R50_EXACT_INPUTS_NOT_RERUN：原始87硬件测试SHA完全同R50 ba88714，完整14/25/28位与IIR cfg0/cfg2/order1/2/5/未知/真实CSR/Scope/AXI/CDC原生功能及综合明确继承R50，本轮未重跑。只读R50 routed DCP按真实DSP容量和原位置择三个互异列，再从R50 synth DCP新opt/place/显式placement-routing-rewire-critical-cell/实际route Explore TNS cleanup；只给DSP添加硬列pblock，无时序例外、时钟/retime/DSP或BRAM寄存器优化或流水线修改。全部94DSP属性及最终86个组成员真实列位置、两个输入DCP SHA和源冻结审计。本轮新增串行周期0。R50整体原失败保留，实际R51与直接R50和最佳R48分别比较；不是fullRoot SDF/形式等价或物理CDC/板端证明。；实际映射不变性审计FAIL：93个DSP属性相同，PID p_1_out 的PREG0→1，IIR86成员参数/列位置PASS；Explore布局器默认映射变化不等于本轮新插一拍，但本轮未完成postmap周期等价证明，不能声称全部DSP不变或映射周期已验证。原生PASS仅覆盖输入RTL；该候选拒绝，不用于后续基线。；没有修改Migen evaluator。
+- 完整功能和综合REUSED_R50_NOT_RERUN；本轮新做列放置、物理优化、真实route、STA/CDC/DRC及94DSP结构审计；CSR map与XDC保持R4a一致。延迟=RTL新增串行周期目标0；实际PID PREG变化，postmap周期等价NOT_PROVEN；原数字组件模型只继承，不能当作本轮实际映射测量。
+- 综合来源=REUSED_R50_EXACT_DCP_NOT_RERUN，WNS/TNS=-0.528/-674.697ns。实际route COMPLETE，WNS/TNS=-0.794/-679.44ns，失败端点1614；WHS/WPWS=0.023/1.5ns，THS=0。
+- raw IIR内部最差=-0.72ns，入口=0.046ns；全局最差 `linienmodule_fast_a_iir1_zr_correction_q2_reg[0]/C` → `DSP48E1_47/PCIN[0]`，逻辑/布线=['4.617', '2.769']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 12088, 'ff': 13701, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=447。
+- CDC={'CDC-1': 442, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增380/移除368；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r51_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
