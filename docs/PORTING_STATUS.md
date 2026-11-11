@@ -1,3 +1,5 @@
+> **2026-11-11 R48最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.179/-4.904ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R47最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.282/-5.173ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R46最新结果**：CANDIDATE / 未最终签核，不部署，route WNS/TNS=-0.539/-18.344ns，最终STA FAIL。详细归档见本文末尾。
@@ -603,3 +605,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 ## R48选项兼容性中止与阶段日志修正 / 2026-11-11
 
 代码1f0b1dc在phys_opt_design入口因Vivado_Tcl4-1061中止：该post-route场景下-tns_cleanup只能配合-slr_crossing_opt。新route NOT RUN，优化未开始，输入R47 DCP SHA不变、源码冻结未改变。初版postopt字段因匹配到Tcl源码回显的puts文本而误写COMPLETE，修正审计明确FAIL_BEFORE_OPTIMIZATION；原始manifest不覆盖，日志和修正说明保留。修复前置校验因此失败，一次未改命令重试重复相同错误，两套日志均归档experiments/r48_option_setup_failure_20261111。现在以精确整行标记判断阶段，采用已验证post-route placement/routing/rewire/critical-cell四项在新目录重跑；不增加无关SLR/clock/时序例外。critical_pin_opt也省略，不声称发生引脚交换。
+
+
+## R48 / 2026-11-11归档 / physical时序候选试验
+
+- **CANDIDATE / 未最终签核，不部署**。代码提交 `b0824e307ae5b0f1ce64a64f5aaef5820f9075ab`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r48-routed-pin-refine`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R46_VIA_R47_EXACT_INPUTS_NOT_RERUN：完整原生功能来自R46、R47同83个硬件测试SHA和18个CEB2 LUT函数/94DSP参数审计，本轮原始硬件测试再同R47（84个），功能与综合均未重跑。以R47 routed DCP作兼容post-route placement/routing/rewire/critical-cell四项，再实际route_design tns_cleanup；设计已fully routed时Vivado明确忽略Explore等其他route选项，仅执行TNS cleanup，不宣称新全局从零布线。postopt与final实际时序分别保存，94DSP寄存器与输入不变，新增串行边沿0。初版phys -tns_cleanup不兼容、以及回显puts误判阶段及未修改重试的全部原日志/manifest与修正审计保留；实际两次都在优化入口退出，新route NOT RUN，输入DCP未变。现以精确独立输出行判阶段；critical_pin_opt与phys tns_cleanup本兼容配方未执行，不冒称有引脚交换。不是fullRoot postroute/SDF等价或物理CDC签核。；没有修改Migen evaluator。
+- 功能/综合明确REUSED_R46_VIA_R47_NOT_RERUN；本轮新post-route物理及实际TNS route与STA/CDC/DRC审计；CSR map与XDC保持R4a一致。延迟=只兼容post-route布局/布线/重连/关键单元优化，未做pin/clock/retime/DSP或BRAM寄存器优化；新增ADC/反馈/CSR采样周期0，原始输入同R47，指定R28数字模型只继承。
+- 综合来源=REUSED_R46_VIA_R47_EXACT_DCP_NOT_RERUN，WNS/TNS=-1.376/-180.925ns。实际route COMPLETE，WNS/TNS=-0.179/-4.904ns，失败端点70；WHS/WPWS=0.015/1.5ns，THS=0。
+- raw IIR内部最差=-0.162ns，入口=0.259ns；全局最差 `linienmodule_fast_b_iir0_z_low0/CLK` → `linienmodule_fast_b_iir0_z_high0/CEB2`，逻辑/布线=['5.972', '1.597']ns。
+- 决策=CANDIDATE_NOT_SIGNED_OFF；最终STA FAIL，不能上板验收。资源={'lut': 11693, 'ff': 13504, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=405。
+- CDC={'CDC-1': 438, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增382/移除374；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r48_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
