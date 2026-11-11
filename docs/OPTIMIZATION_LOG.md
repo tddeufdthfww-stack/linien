@@ -510,3 +510,11 @@ R65候选：14个DAC data SAME_EDGE/D1=D2 ODDR→250MHz SDR FDRE/IOB TRUE，原�
 四组完整14位/样本负例PASS；生成结构46正/2负FDRE和无dataSAMEEDGE检查PASS，原件在
 experiments/r65_sdr_dac_native_20261112。新综合/route待执行；其他完整功能明确暂参考
 R64同源PASS不重跑，最终候选发布前完整回归。PLL/引脚/驱动/CSR未改，无新增例外。
+
+## 2026-11-12 R65 实际结果：REJECTED_NOT_MERGED
+
+输入代码82699d8960817ab2d08517eb8705aed0835c667f；新综合/实际route均COMPLETE，CSR映射PASS。原生analog新旧同波形/启动/复位/四包络/完整14位/样本负例PASS，本轮完整功能NOT RERUN，未改组件参考R64同源fresh全功能PASS，不能当成本轮全功能重跑。
+
+实际route WNS/TNS=-.683/-55.023ns，312 setup端点；WHS/THS=+.024/0、0 hold端点，WPWS=+1.500ns。SDR表达消除了R64负hold；最差FDRE_33/C负边沿到FDRE_40/D正边沿，2ns路径仍FAIL。DAC必要零PCB预算setup/hold=-.343/+.070ns；ADC全28端点+.429/+3.304ns、0/-8ns边沿关系逐条PASS。内部clk_2 WNS=-.345ns。no_clock=0、内部未约束=0，16输入/32输出尚须接口分类/真实约束。物理CDC25对50FF同SLICE且一级Q只到二级D，仍不足以宣布跨域整体安全；PS原始异步reset释放已被独立实际CRG仿真确认为待修复项。
+
+源码、完整阶段日志、DCP、物理诊断及SHA归档experiments/r65_rejected_control_20261112，DCP SHA256=5e7c3b93c8a3e02d91b25586981e483a11e70d17319175f3d22cfba97d335aee。失败候选不合并/不部署。R65相对R64新增数据串行级0，继承相对R2b主反馈+32ns；最终STA/板级I/O/CDC/DRC仍未签核，没有生成发布bit/bin。

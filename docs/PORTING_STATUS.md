@@ -1,3 +1,5 @@
+> **2026-11-12 R65实际：REJECTED**。新综合/route完成，WNS/TNS=-.683/-55.023ns、312端点；WHS/THS=+.024/0、无hold违例，最终STA FAIL。原生analog PASS，完整功能本轮NOT RERUN。ADC+.429/+3.304，DAC-.343/+.070ns（必要零PCB模型）。失败源码/DCP/日志/SHA保留，不部署。以下待运行条目是历史。
+
 > **2026-11-12 R65候选：物理实现待运行**。14个SAME_EDGE/D1=D2 data ODDR换为250MHz SDR IOB FDRE，原控制/数据FF保持，数学同波形、目标额外数据级0。完整原生新旧analog49位稳定边沿/启动/复位/四包络/样本负例PASS；新综合/route待结果。其他组件暂参考R64同源完整PASS，不写成本轮完整重跑。见R65_DAC_SDR_IOB.md；I/O/物理CDC/DRC未最终签核。
 
 > **2026-11-12 R64实际结果：REJECTED**。新完整功能PASS、CSR map PASS、新综合/route完成；WNS/TNS=-.748/-44.222ns、254端点，WHS/THS=-1.901/-26.110ns、14端点。2ns控制→ODDR路径FAIL；SAME_EDGE/D1=D2虽实际是SDR波形，STA仍有下降沿输出路径；下一候选用真实SDR IOB FF表达，不能cut路径。ADC仍+.429/+3.304ns。源/日志/DCP/SHA归档，不合并、不部署。以下为历史。
@@ -891,3 +893,11 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 同边沿相同D1/D2到SDR的逐时隙等价、范围和风险见R65_DAC_SDR_IOB.md。此轮先新
 综合/route，未重跑完整组件功能，明确参考R64同源完整回归；最终签发前必须完整重跑。
 外部DAC WRT setup/hold仅必要模型，图64的CLK/WRT/SEL与脉宽、真实PCB/SI及CDC/DRC仍待核验。
+
+## 2026-11-12 R65 实际结果：REJECTED_NOT_MERGED
+
+输入代码82699d8960817ab2d08517eb8705aed0835c667f；新综合/实际route均COMPLETE，CSR映射PASS。原生analog新旧同波形/启动/复位/四包络/完整14位/样本负例PASS，本轮完整功能NOT RERUN，未改组件参考R64同源fresh全功能PASS，不能当成本轮全功能重跑。
+
+实际route WNS/TNS=-.683/-55.023ns，312 setup端点；WHS/THS=+.024/0、0 hold端点，WPWS=+1.500ns。SDR表达消除了R64负hold；最差FDRE_33/C负边沿到FDRE_40/D正边沿，2ns路径仍FAIL。DAC必要零PCB预算setup/hold=-.343/+.070ns；ADC全28端点+.429/+3.304ns、0/-8ns边沿关系逐条PASS。内部clk_2 WNS=-.345ns。no_clock=0、内部未约束=0，16输入/32输出尚须接口分类/真实约束。物理CDC25对50FF同SLICE且一级Q只到二级D，仍不足以宣布跨域整体安全；PS原始异步reset释放已被独立实际CRG仿真确认为待修复项。
+
+源码、完整阶段日志、DCP、物理诊断及SHA归档experiments/r65_rejected_control_20261112，DCP SHA256=5e7c3b93c8a3e02d91b25586981e483a11e70d17319175f3d22cfba97d335aee。失败候选不合并/不部署。R65相对R64新增数据串行级0，继承相对R2b主反馈+32ns；最终STA/板级I/O/CDC/DRC仍未签核，没有生成发布bit/bin。
