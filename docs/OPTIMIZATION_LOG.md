@@ -469,3 +469,10 @@ gateware/hw_platform.py的DAC data到FAST/8mA。新增完整sys流水级0，ADC�
 run_gateware_trial纳入该原生测试及io_intrinsic_probe.tcl器件必要预算、maxThreads2。
 零PCB偏斜仅诊断假设；PLL/引脚/CSR保持，IQSEL/CLK-WRT/脉宽/物理CDC/DRC均不能借此
 宣称关闭。失败保留不合并。详细计划/原理/风险见docs/R62_PLAN.md与PORTING_STATUS文末。
+
+R62实际结果：输入cb81bdd，fresh完整功能PASS、新综合COMPLETE、新route COMPLETE，
+两个trial输入逐文件SHA同且构建期间变化=[]。route WNS/TNS=-1.261/-2245.782、3604端点，
+hold-.696/-23.517、42端点；最终STA FAIL，REJECTED不合并。ADC falling→CORDIC只有4ns
+预算而实际5.209ns，28输入FF实际IOB；DAC必要预算setup-.835/hold-.456。异常AXI+bridge
+4相位集成PASS，bitstream_checks无Error/Critical但406 Warning/Advisory，仍需处置。
+源码/manifest/全部阶段报告/DCP/功能和输入输出SHA见experiments/r62_failed_physical_20261112。

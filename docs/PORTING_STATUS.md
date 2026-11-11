@@ -1,4 +1,4 @@
-> **2026-11-12 R61b实际新结果 / R62候选计划**：R61b完整功能PASS，新综合COMPLETE、新route COMPLETE；route WNS/TNS=-.232/-2.317ns、25端点，hold .010/0、pulse1.5/0；无时钟0/内部未约束0。最终STA FAIL，I/O/物理CDC/DRC未签核。独立R62只改ADC下降沿捕获和DAC data FAST8驱动，原生采样契约测试PASS，全回归/实际route待执行。详见文末及R62_PLAN.md。以下条目为历史快照。
+> **2026-11-12 R62实际结果：REJECTED**。完整功能PASS，新综合及route完成；硅器件必要I/O预算下WNS/TNS=-1.261/-2245.782ns、3604端点；WHS/THS=-.696/-23.517ns、42端点，最终STA FAIL。下降沿导致ADC→CORDIC只有4ns预算，实际5.209ns。原源码/全部阶段日志/DCP/SHA均保留，不合并。原R61b/R60冻结。以下条目为历史快照。
 
 > **2026-11-11 R60历史结果**：受约束setup/hold/pulse均PASS，final WNS=+.003ns/TNS=0/0端点；最终STA仍FAIL（DNA/I/O覆盖、物理CDC和DRC未关闭）。候选不部署，完整功能/综合复用R52，见文末与R60_SIGNOFF_GAPS_20261111.md。
 
@@ -798,3 +798,21 @@ unconstrained_internal=0。最差phase/CORDIC路径fast_a_zi0__8/C→fast_b_cord
 必要I/O预算在综合后checkpoint前生效：ADC0..0.6ns、DACsetup2/hold1.5ns，明确零PCB偏斜
 诊断假设，非真实PCB签核。IQSEL/复位/CLK-WRT先后及3.5ns脉宽另核查，不隐去。
 来源/数学依据/采样行为/风险见R62_PLAN.md。候选不部署，原工程/R2b/R4a/R60/R61b不覆盖。
+
+### R62 实际完成与失败判定
+
+输入cb81bdd56e88872c729e37369785d25b08226277。功能trial 20261112_025604_r62_functional
+完整PASS；实现trial 20261112_025605_r62_intrinsic_io_implementation的输入SHA逐文件完全同，
+两者source_changes=[]。新综合WNS/TNS=-1.171/-105.689ns，route COMPLETE但STA FAIL：
+WNS/TNS=-1.261/-2245.782ns、3604端点，WHS/THS=-.696/-23.517ns、42端点，pulse1.5/0。
+最差FDRE_3/C（falling）→fast_a_cordic17[16]/D，4ns预算，logic2.617+route2.592=5.209ns，
+7级/6CARRY4+1LUT。28个ADC FF实际都进入ILOGIC，证据见extended/adc_registers.tsv。
+新约束下DAC setup-.835/hold-.456ns；相较之前零PCB诊断setup改善但两项仍FAIL，不能
+以改善掩盖失效。IOB捕获的实际时钟插入延迟必须与ADC字编号一起分析；默认边沿关系
+并不自动表达同一CLKOUT边沿之后数据word[n]的捕获，不通过随意放宽周期处理。
+新增4相位真实AXI+bridge异常集成：复位保持错误、在途读/写取消超时SLVERR、背压稳定、
+不重放和恢复正常事务均PASS；物理CDC仍非仅凭仿真证明。
+bitstream_checks规则集406项（334 Warning+72 Advisory，无Error/Critical），仍需逐项
+风险处置，默认FPGA pulse1.5不等于AD9767外部3.5ns脉宽已签核。全部真实源码、fresh
+综合/route/原生/集成/只读审计/DCP/输入输出SHA归档experiments/r62_failed_physical_20261112。
+决策REJECTED_NOT_MERGED；不生成可部署声明、不烧录，后续候选在新工作树实施。

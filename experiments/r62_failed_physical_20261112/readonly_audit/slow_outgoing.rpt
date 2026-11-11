@@ -1,0 +1,1772 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Thu Nov 12 03:10:13 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -from [filter [get_cells -hier -quiet -filter {NAME =~ *slow_chain_pid*}] {REF_NAME =~ FD* || REF_NAME == DSP48E1}] -max_paths 20 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r6_execution/r62_intrinsic_routed_audit/slow_outgoing.rpt
+| Design       : top
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.428ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[17]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.349ns  (logic 3.139ns (37.596%)  route 5.210ns (62.404%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.072ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.180 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[1]
+                         net (fo=2, routed)           0.724    11.905    linienmodule_limit_fast1_x_reg[15]_i_10_n_6
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.306    12.211 r  linienmodule_limit_fast1_x[11]_i_3/O
+                         net (fo=2, routed)           0.519    12.730    linienmodule_limit_fast1_x[11]_i_3_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.854 r  linienmodule_limit_fast1_x[11]_i_7/O
+                         net (fo=1, routed)           0.000    12.854    linienmodule_limit_fast1_x[11]_i_7_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.398    13.252 r  linienmodule_limit_fast1_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.252    linienmodule_limit_fast1_x_reg[11]_i_1_n_0
+    SLICE_X97Y119        CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    13.366 r  linienmodule_limit_fast1_x_reg[15]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.366    linienmodule_limit_fast1_x_reg[15]_i_1_n_0
+    SLICE_X97Y120        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.223    13.589 r  linienmodule_limit_fast1_x_reg[17]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.589    linienmodule[17]
+    SLICE_X97Y120        FDRE                                         r  linienmodule_limit_fast1_x_reg[17]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X97Y120        FDRE                                         r  linienmodule_limit_fast1_x_reg[17]/C
+                         clock pessimism              0.384    13.167    
+                         clock uncertainty           -0.069    13.098    
+    SLICE_X97Y120        FDRE (Setup_fdre_C_D)        0.062    13.160    linienmodule_limit_fast1_x_reg[17]
+  -------------------------------------------------------------------
+                         required time                         13.160    
+                         arrival time                         -13.589    
+  -------------------------------------------------------------------
+                         slack                                 -0.428    
+
+Slack (VIOLATED) :        -0.425ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.346ns  (logic 3.136ns (37.574%)  route 5.210ns (62.426%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.072ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.180 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[1]
+                         net (fo=2, routed)           0.724    11.905    linienmodule_limit_fast1_x_reg[15]_i_10_n_6
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.306    12.211 r  linienmodule_limit_fast1_x[11]_i_3/O
+                         net (fo=2, routed)           0.519    12.730    linienmodule_limit_fast1_x[11]_i_3_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.854 r  linienmodule_limit_fast1_x[11]_i_7/O
+                         net (fo=1, routed)           0.000    12.854    linienmodule_limit_fast1_x[11]_i_7_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.398    13.252 r  linienmodule_limit_fast1_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.252    linienmodule_limit_fast1_x_reg[11]_i_1_n_0
+    SLICE_X97Y119        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    13.586 r  linienmodule_limit_fast1_x_reg[15]_i_1/O[1]
+                         net (fo=1, routed)           0.000    13.586    linienmodule[13]
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[13]/C
+                         clock pessimism              0.384    13.167    
+                         clock uncertainty           -0.069    13.098    
+    SLICE_X97Y119        FDRE (Setup_fdre_C_D)        0.062    13.160    linienmodule_limit_fast1_x_reg[13]
+  -------------------------------------------------------------------
+                         required time                         13.160    
+                         arrival time                         -13.586    
+  -------------------------------------------------------------------
+                         slack                                 -0.425    
+
+Slack (VIOLATED) :        -0.404ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[15]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.325ns  (logic 3.115ns (37.416%)  route 5.210ns (62.584%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.072ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.180 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[1]
+                         net (fo=2, routed)           0.724    11.905    linienmodule_limit_fast1_x_reg[15]_i_10_n_6
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.306    12.211 r  linienmodule_limit_fast1_x[11]_i_3/O
+                         net (fo=2, routed)           0.519    12.730    linienmodule_limit_fast1_x[11]_i_3_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.854 r  linienmodule_limit_fast1_x[11]_i_7/O
+                         net (fo=1, routed)           0.000    12.854    linienmodule_limit_fast1_x[11]_i_7_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.398    13.252 r  linienmodule_limit_fast1_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.252    linienmodule_limit_fast1_x_reg[11]_i_1_n_0
+    SLICE_X97Y119        CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313    13.565 r  linienmodule_limit_fast1_x_reg[15]_i_1/O[3]
+                         net (fo=1, routed)           0.000    13.565    linienmodule[15]
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[15]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[15]/C
+                         clock pessimism              0.384    13.167    
+                         clock uncertainty           -0.069    13.098    
+    SLICE_X97Y119        FDRE (Setup_fdre_C_D)        0.062    13.160    linienmodule_limit_fast1_x_reg[15]
+  -------------------------------------------------------------------
+                         required time                         13.160    
+                         arrival time                         -13.565    
+  -------------------------------------------------------------------
+                         slack                                 -0.404    
+
+Slack (VIOLATED) :        -0.344ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[17]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.351ns  (logic 3.128ns (37.459%)  route 5.223ns (62.541%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.034ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313    11.328 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[3]
+                         net (fo=2, routed)           0.484    11.813    linienmodule_limit_fast2_x_reg[15]_i_10_n_4
+    SLICE_X101Y119       LUT6 (Prop_lut6_I0_O)        0.306    12.119 r  linienmodule_limit_fast2_x[15]_i_5/O
+                         net (fo=2, routed)           0.615    12.734    linienmodule_limit_fast2_x[15]_i_5_n_0
+    SLICE_X100Y119       LUT5 (Prop_lut5_I0_O)        0.124    12.858 r  linienmodule_limit_fast2_x[15]_i_9/O
+                         net (fo=1, routed)           0.000    12.858    linienmodule_limit_fast2_x[15]_i_9_n_0
+    SLICE_X100Y119       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    13.371 r  linienmodule_limit_fast2_x_reg[15]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.371    linienmodule_limit_fast2_x_reg[15]_i_1_n_0
+    SLICE_X100Y120       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.219    13.590 r  linienmodule_limit_fast2_x_reg[17]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.590    linienmodule_fast_outs[17]
+    SLICE_X100Y120       FDRE                                         r  linienmodule_limit_fast2_x_reg[17]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X100Y120       FDRE                                         r  linienmodule_limit_fast2_x_reg[17]/C
+                         clock pessimism              0.422    13.205    
+                         clock uncertainty           -0.069    13.136    
+    SLICE_X100Y120       FDRE (Setup_fdre_C_D)        0.109    13.245    linienmodule_limit_fast2_x_reg[17]
+  -------------------------------------------------------------------
+                         required time                         13.245    
+                         arrival time                         -13.590    
+  -------------------------------------------------------------------
+                         slack                                 -0.344    
+
+Slack (VIOLATED) :        -0.330ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.336ns  (logic 3.154ns (37.834%)  route 5.182ns (62.166%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.034ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    13.253 r  linienmodule_limit_fast2_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.253    linienmodule_limit_fast2_x_reg[11]_i_1_n_0
+    SLICE_X100Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    13.576 r  linienmodule_limit_fast2_x_reg[15]_i_1/O[1]
+                         net (fo=1, routed)           0.000    13.576    linienmodule_fast_outs[13]
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[13]/C
+                         clock pessimism              0.422    13.205    
+                         clock uncertainty           -0.069    13.136    
+    SLICE_X100Y119       FDRE (Setup_fdre_C_D)        0.109    13.245    linienmodule_limit_fast2_x_reg[13]
+  -------------------------------------------------------------------
+                         required time                         13.245    
+                         arrival time                         -13.576    
+  -------------------------------------------------------------------
+                         slack                                 -0.330    
+
+Slack (VIOLATED) :        -0.330ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[14]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.251ns  (logic 3.041ns (36.855%)  route 5.210ns (63.145%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.072ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.180 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[1]
+                         net (fo=2, routed)           0.724    11.905    linienmodule_limit_fast1_x_reg[15]_i_10_n_6
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.306    12.211 r  linienmodule_limit_fast1_x[11]_i_3/O
+                         net (fo=2, routed)           0.519    12.730    linienmodule_limit_fast1_x[11]_i_3_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.854 r  linienmodule_limit_fast1_x[11]_i_7/O
+                         net (fo=1, routed)           0.000    12.854    linienmodule_limit_fast1_x[11]_i_7_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.398    13.252 r  linienmodule_limit_fast1_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.252    linienmodule_limit_fast1_x_reg[11]_i_1_n_0
+    SLICE_X97Y119        CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.239    13.491 r  linienmodule_limit_fast1_x_reg[15]_i_1/O[2]
+                         net (fo=1, routed)           0.000    13.491    linienmodule[14]
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[14]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[14]/C
+                         clock pessimism              0.384    13.167    
+                         clock uncertainty           -0.069    13.098    
+    SLICE_X97Y119        FDRE (Setup_fdre_C_D)        0.062    13.160    linienmodule_limit_fast1_x_reg[14]
+  -------------------------------------------------------------------
+                         required time                         13.160    
+                         arrival time                         -13.491    
+  -------------------------------------------------------------------
+                         slack                                 -0.330    
+
+Slack (VIOLATED) :        -0.322ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[15]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.328ns  (logic 3.146ns (37.774%)  route 5.182ns (62.226%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.034ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    13.253 r  linienmodule_limit_fast2_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.253    linienmodule_limit_fast2_x_reg[11]_i_1_n_0
+    SLICE_X100Y119       CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.315    13.568 r  linienmodule_limit_fast2_x_reg[15]_i_1/O[3]
+                         net (fo=1, routed)           0.000    13.568    linienmodule_fast_outs[15]
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[15]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[15]/C
+                         clock pessimism              0.422    13.205    
+                         clock uncertainty           -0.069    13.136    
+    SLICE_X100Y119       FDRE (Setup_fdre_C_D)        0.109    13.245    linienmodule_limit_fast2_x_reg[15]
+  -------------------------------------------------------------------
+                         required time                         13.245    
+                         arrival time                         -13.568    
+  -------------------------------------------------------------------
+                         slack                                 -0.322    
+
+Slack (VIOLATED) :        -0.314ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[12]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.235ns  (logic 3.025ns (36.732%)  route 5.210ns (63.268%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.072ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.180 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[1]
+                         net (fo=2, routed)           0.724    11.905    linienmodule_limit_fast1_x_reg[15]_i_10_n_6
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.306    12.211 r  linienmodule_limit_fast1_x[11]_i_3/O
+                         net (fo=2, routed)           0.519    12.730    linienmodule_limit_fast1_x[11]_i_3_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.854 r  linienmodule_limit_fast1_x[11]_i_7/O
+                         net (fo=1, routed)           0.000    12.854    linienmodule_limit_fast1_x[11]_i_7_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.398    13.252 r  linienmodule_limit_fast1_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.252    linienmodule_limit_fast1_x_reg[11]_i_1_n_0
+    SLICE_X97Y119        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.223    13.475 r  linienmodule_limit_fast1_x_reg[15]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.475    linienmodule[12]
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[12]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X97Y119        FDRE                                         r  linienmodule_limit_fast1_x_reg[12]/C
+                         clock pessimism              0.384    13.167    
+                         clock uncertainty           -0.069    13.098    
+    SLICE_X97Y119        FDRE (Setup_fdre_C_D)        0.062    13.160    linienmodule_limit_fast1_x_reg[12]
+  -------------------------------------------------------------------
+                         required time                         13.160    
+                         arrival time                         -13.475    
+  -------------------------------------------------------------------
+                         slack                                 -0.314    
+
+Slack (VIOLATED) :        -0.246ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[14]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.252ns  (logic 3.070ns (37.201%)  route 5.182ns (62.799%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.034ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    13.253 r  linienmodule_limit_fast2_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.253    linienmodule_limit_fast2_x_reg[11]_i_1_n_0
+    SLICE_X100Y119       CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.239    13.492 r  linienmodule_limit_fast2_x_reg[15]_i_1/O[2]
+                         net (fo=1, routed)           0.000    13.492    linienmodule_fast_outs[14]
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[14]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[14]/C
+                         clock pessimism              0.422    13.205    
+                         clock uncertainty           -0.069    13.136    
+    SLICE_X100Y119       FDRE (Setup_fdre_C_D)        0.109    13.245    linienmodule_limit_fast2_x_reg[14]
+  -------------------------------------------------------------------
+                         required time                         13.245    
+                         arrival time                         -13.492    
+  -------------------------------------------------------------------
+                         slack                                 -0.246    
+
+Slack (VIOLATED) :        -0.226ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[12]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.232ns  (logic 3.050ns (37.048%)  route 5.182ns (62.952%))
+  Logic Levels:           12  (CARRY4=5 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.034ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.784ns = ( 12.784 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    13.253 r  linienmodule_limit_fast2_x_reg[11]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    13.253    linienmodule_limit_fast2_x_reg[11]_i_1_n_0
+    SLICE_X100Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.219    13.472 r  linienmodule_limit_fast2_x_reg[15]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.472    linienmodule_fast_outs[12]
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[12]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.774    12.784    sys_clk
+    SLICE_X100Y119       FDRE                                         r  linienmodule_limit_fast2_x_reg[12]/C
+                         clock pessimism              0.422    13.205    
+                         clock uncertainty           -0.069    13.136    
+    SLICE_X100Y119       FDRE (Setup_fdre_C_D)        0.109    13.245    linienmodule_limit_fast2_x_reg[12]
+  -------------------------------------------------------------------
+                         required time                         13.245    
+                         arrival time                         -13.472    
+  -------------------------------------------------------------------
+                         slack                                 -0.226    
+
+Slack (VIOLATED) :        -0.139ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[11]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.062ns  (logic 2.929ns (36.333%)  route 5.133ns (63.667%))
+  Logic Levels:           10  (CARRY4=3 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.071ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.219    11.076 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.534    11.611    linienmodule_limit_fast1_x_reg[15]_i_10_n_7
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.295    11.906 r  linienmodule_limit_fast1_x[11]_i_4/O
+                         net (fo=2, routed)           0.631    12.537    linienmodule_limit_fast1_x[11]_i_4_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.661 r  linienmodule_limit_fast1_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.661    linienmodule_limit_fast1_x[11]_i_8_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.640    13.301 r  linienmodule_limit_fast1_x_reg[11]_i_1/O[3]
+                         net (fo=1, routed)           0.000    13.301    linienmodule[11]
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[11]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[11]/C
+                         clock pessimism              0.384    13.168    
+                         clock uncertainty           -0.069    13.099    
+    SLICE_X97Y118        FDRE (Setup_fdre_C_D)        0.062    13.161    linienmodule_limit_fast1_x_reg[11]
+  -------------------------------------------------------------------
+                         required time                         13.161    
+                         arrival time                         -13.301    
+  -------------------------------------------------------------------
+                         slack                                 -0.139    
+
+Slack (VIOLATED) :        -0.135ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[9]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.057ns  (logic 2.842ns (35.274%)  route 5.215ns (64.726%))
+  Logic Levels:           10  (CARRY4=3 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.071ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_O[2])
+                                                      0.544    10.888 r  linienmodule_limit_fast1_x_reg[11]_i_10/O[2]
+                         net (fo=2, routed)           0.720    11.609    linienmodule_limit_fast1_x_reg[11]_i_10_n_5
+    SLICE_X96Y117        LUT6 (Prop_lut6_I0_O)        0.301    11.910 r  linienmodule_limit_fast1_x[7]_i_2/O
+                         net (fo=2, routed)           0.528    12.437    linienmodule_limit_fast1_x[7]_i_2_n_0
+    SLICE_X97Y117        LUT5 (Prop_lut5_I0_O)        0.124    12.561 r  linienmodule_limit_fast1_x[7]_i_6/O
+                         net (fo=1, routed)           0.000    12.561    linienmodule_limit_fast1_x[7]_i_6_n_0
+    SLICE_X97Y117        CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    12.962 r  linienmodule_limit_fast1_x_reg[7]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    12.962    linienmodule_limit_fast1_x_reg[7]_i_1_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    13.296 r  linienmodule_limit_fast1_x_reg[11]_i_1/O[1]
+                         net (fo=1, routed)           0.000    13.296    linienmodule[9]
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[9]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[9]/C
+                         clock pessimism              0.384    13.168    
+                         clock uncertainty           -0.069    13.099    
+    SLICE_X97Y118        FDRE (Setup_fdre_C_D)        0.062    13.161    linienmodule_limit_fast1_x_reg[9]
+  -------------------------------------------------------------------
+                         required time                         13.161    
+                         arrival time                         -13.296    
+  -------------------------------------------------------------------
+                         slack                                 -0.135    
+
+Slack (VIOLATED) :        -0.116ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[11]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.123ns  (logic 2.941ns (36.204%)  route 5.182ns (63.796%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.033ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.643    13.363 r  linienmodule_limit_fast2_x_reg[11]_i_1/O[3]
+                         net (fo=1, routed)           0.000    13.363    linienmodule_fast_outs[11]
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[11]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[11]/C
+                         clock pessimism              0.422    13.206    
+                         clock uncertainty           -0.069    13.137    
+    SLICE_X100Y118       FDRE (Setup_fdre_C_D)        0.109    13.246    linienmodule_limit_fast2_x_reg[11]
+  -------------------------------------------------------------------
+                         required time                         13.246    
+                         arrival time                         -13.363    
+  -------------------------------------------------------------------
+                         slack                                 -0.116    
+
+Slack (VIOLATED) :        -0.079ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[10]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.002ns  (logic 2.869ns (35.855%)  route 5.133ns (64.145%))
+  Logic Levels:           10  (CARRY4=3 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.071ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    10.857 r  linienmodule_limit_fast1_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.857    linienmodule_limit_fast1_x_reg[11]_i_10_n_0
+    SLICE_X104Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.219    11.076 r  linienmodule_limit_fast1_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.534    11.611    linienmodule_limit_fast1_x_reg[15]_i_10_n_7
+    SLICE_X96Y118        LUT6 (Prop_lut6_I0_O)        0.295    11.906 r  linienmodule_limit_fast1_x[11]_i_4/O
+                         net (fo=2, routed)           0.631    12.537    linienmodule_limit_fast1_x[11]_i_4_n_0
+    SLICE_X97Y118        LUT5 (Prop_lut5_I0_O)        0.124    12.661 r  linienmodule_limit_fast1_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.661    linienmodule_limit_fast1_x[11]_i_8_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_S[1]_O[2])
+                                                      0.580    13.241 r  linienmodule_limit_fast1_x_reg[11]_i_1/O[2]
+                         net (fo=1, routed)           0.000    13.241    linienmodule[10]
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[10]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[10]/C
+                         clock pessimism              0.384    13.168    
+                         clock uncertainty           -0.069    13.099    
+    SLICE_X97Y118        FDRE (Setup_fdre_C_D)        0.062    13.161    linienmodule_limit_fast1_x_reg[10]
+  -------------------------------------------------------------------
+                         required time                         13.161    
+                         arrival time                         -13.241    
+  -------------------------------------------------------------------
+                         slack                                 -0.079    
+
+Slack (VIOLATED) :        -0.051ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[10]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.058ns  (logic 2.876ns (35.689%)  route 5.182ns (64.311%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.033ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114    11.015 r  linienmodule_limit_fast2_x_reg[11]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    11.015    linienmodule_limit_fast2_x_reg[11]_i_10_n_0
+    SLICE_X105Y119       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.237 r  linienmodule_limit_fast2_x_reg[15]_i_10/O[0]
+                         net (fo=2, routed)           0.470    11.708    linienmodule_limit_fast2_x_reg[15]_i_10_n_7
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.299    12.007 r  linienmodule_limit_fast2_x[11]_i_4/O
+                         net (fo=2, routed)           0.589    12.596    linienmodule_limit_fast2_x[11]_i_4_n_0
+    SLICE_X100Y118       LUT5 (Prop_lut5_I0_O)        0.124    12.720 r  linienmodule_limit_fast2_x[11]_i_8/O
+                         net (fo=1, routed)           0.000    12.720    linienmodule_limit_fast2_x[11]_i_8_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_S[1]_O[2])
+                                                      0.578    13.298 r  linienmodule_limit_fast2_x_reg[11]_i_1/O[2]
+                         net (fo=1, routed)           0.000    13.298    linienmodule_fast_outs[10]
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[10]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[10]/C
+                         clock pessimism              0.422    13.206    
+                         clock uncertainty           -0.069    13.137    
+    SLICE_X100Y118       FDRE (Setup_fdre_C_D)        0.109    13.246    linienmodule_limit_fast2_x_reg[10]
+  -------------------------------------------------------------------
+                         required time                         13.246    
+                         arrival time                         -13.298    
+  -------------------------------------------------------------------
+                         slack                                 -0.051    
+
+Slack (VIOLATED) :        -0.050ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[9]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        8.057ns  (logic 3.003ns (37.271%)  route 5.054ns (62.729%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.033ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    11.235 r  linienmodule_limit_fast2_x_reg[11]_i_10/O[1]
+                         net (fo=2, routed)           0.469    11.704    linienmodule_limit_fast2_x_reg[11]_i_10_n_6
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.303    12.007 r  linienmodule_limit_fast2_x[7]_i_3/O
+                         net (fo=2, routed)           0.462    12.470    linienmodule_limit_fast2_x[7]_i_3_n_0
+    SLICE_X100Y117       LUT5 (Prop_lut5_I0_O)        0.124    12.594 r  linienmodule_limit_fast2_x[7]_i_7/O
+                         net (fo=1, routed)           0.000    12.594    linienmodule_limit_fast2_x[7]_i_7_n_0
+    SLICE_X100Y117       CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.380    12.974 r  linienmodule_limit_fast2_x_reg[7]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    12.974    linienmodule_limit_fast2_x_reg[7]_i_1_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    13.297 r  linienmodule_limit_fast2_x_reg[11]_i_1/O[1]
+                         net (fo=1, routed)           0.000    13.297    linienmodule_fast_outs[9]
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[9]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[9]/C
+                         clock pessimism              0.422    13.206    
+                         clock uncertainty           -0.069    13.137    
+    SLICE_X100Y118       FDRE (Setup_fdre_C_D)        0.109    13.246    linienmodule_limit_fast2_x_reg[9]
+  -------------------------------------------------------------------
+                         required time                         13.246    
+                         arrival time                         -13.297    
+  -------------------------------------------------------------------
+                         slack                                 -0.050    
+
+Slack (VIOLATED) :        -0.024ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast1_x_reg[8]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        7.946ns  (logic 2.731ns (34.370%)  route 5.215ns (65.630%))
+  Logic Levels:           10  (CARRY4=3 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.071ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.384ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          1.039     8.605    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X95Y112        LUT5 (Prop_lut5_I3_O)        0.124     8.729 r  linienmodule_limit_fast1_x[11]_i_26/O
+                         net (fo=2, routed)           0.782     9.511    linienmodule0[3]
+    SLICE_X102Y116       LUT6 (Prop_lut6_I3_O)        0.124     9.635 r  linienmodule_limit_fast1_x[11]_i_18/O
+                         net (fo=2, routed)           0.586    10.220    linienmodule_limit_fast1_x[11]_i_18_n_0
+    SLICE_X104Y118       LUT5 (Prop_lut5_I0_O)        0.124    10.344 r  linienmodule_limit_fast1_x[11]_i_22/O
+                         net (fo=1, routed)           0.000    10.344    linienmodule_limit_fast1_x[11]_i_22_n_0
+    SLICE_X104Y118       CARRY4 (Prop_carry4_S[0]_O[2])
+                                                      0.544    10.888 r  linienmodule_limit_fast1_x_reg[11]_i_10/O[2]
+                         net (fo=2, routed)           0.720    11.609    linienmodule_limit_fast1_x_reg[11]_i_10_n_5
+    SLICE_X96Y117        LUT6 (Prop_lut6_I0_O)        0.301    11.910 r  linienmodule_limit_fast1_x[7]_i_2/O
+                         net (fo=2, routed)           0.528    12.437    linienmodule_limit_fast1_x[7]_i_2_n_0
+    SLICE_X97Y117        LUT5 (Prop_lut5_I0_O)        0.124    12.561 r  linienmodule_limit_fast1_x[7]_i_6/O
+                         net (fo=1, routed)           0.000    12.561    linienmodule_limit_fast1_x[7]_i_6_n_0
+    SLICE_X97Y117        CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    12.962 r  linienmodule_limit_fast1_x_reg[7]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    12.962    linienmodule_limit_fast1_x_reg[7]_i_1_n_0
+    SLICE_X97Y118        CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.223    13.185 r  linienmodule_limit_fast1_x_reg[11]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.185    linienmodule[8]
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[8]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X97Y118        FDRE                                         r  linienmodule_limit_fast1_x_reg[8]/C
+                         clock pessimism              0.384    13.168    
+                         clock uncertainty           -0.069    13.099    
+    SLICE_X97Y118        FDRE (Setup_fdre_C_D)        0.062    13.161    linienmodule_limit_fast1_x_reg[8]
+  -------------------------------------------------------------------
+                         required time                         13.161    
+                         arrival time                         -13.185    
+  -------------------------------------------------------------------
+                         slack                                 -0.024    
+
+Slack (MET) :             0.054ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[8]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        7.953ns  (logic 2.899ns (36.451%)  route 5.054ns (63.549%))
+  Logic Levels:           11  (CARRY4=4 LUT5=3 LUT6=4)
+  Clock Path Skew:        -0.033ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.785ns = ( 12.785 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    11.235 r  linienmodule_limit_fast2_x_reg[11]_i_10/O[1]
+                         net (fo=2, routed)           0.469    11.704    linienmodule_limit_fast2_x_reg[11]_i_10_n_6
+    SLICE_X102Y117       LUT6 (Prop_lut6_I0_O)        0.303    12.007 r  linienmodule_limit_fast2_x[7]_i_3/O
+                         net (fo=2, routed)           0.462    12.470    linienmodule_limit_fast2_x[7]_i_3_n_0
+    SLICE_X100Y117       LUT5 (Prop_lut5_I0_O)        0.124    12.594 r  linienmodule_limit_fast2_x[7]_i_7/O
+                         net (fo=1, routed)           0.000    12.594    linienmodule_limit_fast2_x[7]_i_7_n_0
+    SLICE_X100Y117       CARRY4 (Prop_carry4_S[2]_CO[3])
+                                                      0.380    12.974 r  linienmodule_limit_fast2_x_reg[7]_i_1/CO[3]
+                         net (fo=1, routed)           0.000    12.974    linienmodule_limit_fast2_x_reg[7]_i_1_n_0
+    SLICE_X100Y118       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.219    13.193 r  linienmodule_limit_fast2_x_reg[11]_i_1/O[0]
+                         net (fo=1, routed)           0.000    13.193    linienmodule_fast_outs[8]
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[8]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.775    12.785    sys_clk
+    SLICE_X100Y118       FDRE                                         r  linienmodule_limit_fast2_x_reg[8]/C
+                         clock pessimism              0.422    13.206    
+                         clock uncertainty           -0.069    13.137    
+    SLICE_X100Y118       FDRE (Setup_fdre_C_D)        0.109    13.246    linienmodule_limit_fast2_x_reg[8]
+  -------------------------------------------------------------------
+                         required time                         13.246    
+                         arrival time                         -13.193    
+  -------------------------------------------------------------------
+                         slack                                  0.054    
+
+Slack (MET) :             0.249ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[7]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        7.760ns  (logic 2.670ns (34.408%)  route 5.090ns (65.592%))
+  Logic Levels:           9  (CARRY4=3 LUT5=2 LUT6=4)
+  Clock Path Skew:        -0.031ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.787ns = ( 12.787 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.123 r  linienmodule_limit_fast2_x_reg[11]_i_10/O[0]
+                         net (fo=2, routed)           0.472    11.596    linienmodule_limit_fast2_x_reg[11]_i_10_n_7
+    SLICE_X101Y118       LUT6 (Prop_lut6_I0_O)        0.299    11.895 r  linienmodule_limit_fast2_x[7]_i_4/O
+                         net (fo=2, routed)           0.494    12.389    linienmodule_limit_fast2_x[7]_i_4_n_0
+    SLICE_X100Y117       CARRY4 (Prop_carry4_DI[1]_O[3])
+                                                      0.610    12.999 r  linienmodule_limit_fast2_x_reg[7]_i_1/O[3]
+                         net (fo=1, routed)           0.000    12.999    linienmodule_fast_outs[7]
+    SLICE_X100Y117       FDRE                                         r  linienmodule_limit_fast2_x_reg[7]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.777    12.787    sys_clk
+    SLICE_X100Y117       FDRE                                         r  linienmodule_limit_fast2_x_reg[7]/C
+                         clock pessimism              0.422    13.208    
+                         clock uncertainty           -0.069    13.139    
+    SLICE_X100Y117       FDRE (Setup_fdre_C_D)        0.109    13.248    linienmodule_limit_fast2_x_reg[7]
+  -------------------------------------------------------------------
+                         required time                         13.248    
+                         arrival time                         -12.999    
+  -------------------------------------------------------------------
+                         slack                                  0.249    
+
+Slack (MET) :             0.312ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_limit_fast2_x_reg[6]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        7.697ns  (logic 2.607ns (33.871%)  route 5.090ns (66.129%))
+  Logic Levels:           9  (CARRY4=3 LUT5=2 LUT6=4)
+  Clock Path Skew:        -0.031ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.787ns = ( 12.787 - 8.000 ) 
+    Source Clock Delay      (SCD):    5.239ns
+    Clock Pessimism Removal (CPR):    0.422ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13392, routed)       1.978     5.239    sys_clk
+    SLICE_X98Y110        FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X98Y110        FDRE (Prop_fdre_C_Q)         0.518     5.757 r  linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg[20]/Q
+                         net (fo=2, routed)           1.129     6.886    linienmodule_slow_chain_pid_pipelinedpid_pid_sum_reg_n_0_[20]
+    SLICE_X95Y108        LUT6 (Prop_lut6_I2_O)        0.124     7.010 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51/O
+                         net (fo=1, routed)           0.431     7.441    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_51_n_0
+    SLICE_X99Y107        LUT6 (Prop_lut6_I2_O)        0.124     7.565 r  linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33/O
+                         net (fo=52, routed)          0.890     8.455    linienmodule_slow_chain_limit_alignedslowlimitcsr_y[13]_i_33_n_0
+    SLICE_X94Y108        LUT5 (Prop_lut5_I2_O)        0.124     8.579 r  linienmodule_limit_fast2_x[7]_i_22/O
+                         net (fo=2, routed)           0.885     9.465    linienmodule_fast_outs0[2]
+    SLICE_X101Y113       LUT6 (Prop_lut6_I3_O)        0.124     9.589 r  linienmodule_limit_fast2_x[7]_i_15/O
+                         net (fo=2, routed)           0.787    10.376    linienmodule_limit_fast2_x[7]_i_15_n_0
+    SLICE_X105Y117       LUT5 (Prop_lut5_I0_O)        0.124    10.500 r  linienmodule_limit_fast2_x[7]_i_18/O
+                         net (fo=1, routed)           0.000    10.500    linienmodule_limit_fast2_x[7]_i_18_n_0
+    SLICE_X105Y117       CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.401    10.901 r  linienmodule_limit_fast2_x_reg[7]_i_10/CO[3]
+                         net (fo=1, routed)           0.000    10.901    linienmodule_limit_fast2_x_reg[7]_i_10_n_0
+    SLICE_X105Y118       CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.222    11.123 r  linienmodule_limit_fast2_x_reg[11]_i_10/O[0]
+                         net (fo=2, routed)           0.472    11.596    linienmodule_limit_fast2_x_reg[11]_i_10_n_7
+    SLICE_X101Y118       LUT6 (Prop_lut6_I0_O)        0.299    11.895 r  linienmodule_limit_fast2_x[7]_i_4/O
+                         net (fo=2, routed)           0.494    12.389    linienmodule_limit_fast2_x[7]_i_4_n_0
+    SLICE_X100Y117       CARRY4 (Prop_carry4_DI[1]_O[2])
+                                                      0.547    12.936 r  linienmodule_limit_fast2_x_reg[7]_i_1/O[2]
+                         net (fo=1, routed)           0.000    12.936    linienmodule_fast_outs[6]
+    SLICE_X100Y117       FDRE                                         r  linienmodule_limit_fast2_x_reg[6]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13392, routed)       1.777    12.787    sys_clk
+    SLICE_X100Y117       FDRE                                         r  linienmodule_limit_fast2_x_reg[6]/C
+                         clock pessimism              0.422    13.208    
+                         clock uncertainty           -0.069    13.139    
+    SLICE_X100Y117       FDRE (Setup_fdre_C_D)        0.109    13.248    linienmodule_limit_fast2_x_reg[6]
+  -------------------------------------------------------------------
+                         required time                         13.248    
+                         arrival time                         -12.936    
+  -------------------------------------------------------------------
+                         slack                                  0.312    
+
+
+
+
