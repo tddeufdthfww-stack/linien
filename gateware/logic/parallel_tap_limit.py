@@ -29,11 +29,11 @@ class ParallelTapLimitCSR(Filter):
             self.comb += total.eq(tap+common_sum)
             limiter = Limit(width+guard)
             self.submodules += limiter
-            limiter.y.attr.add('keep');limiter.railed.attr.add('keep')
+            limiter.railed.attr.add('keep')
             self.comb += [limiter.x.eq(total),limiter.min.eq(self.bound_min),limiter.max.eq(self.bound_max)]
             positive.append(limiter.y);pos_rail.append(limiter.railed)
             neg_value = Signal((width+guard, True));neg_rail_value=Signal()
-            neg_value.attr.add('keep');neg_rail_value.attr.add('keep')
+            neg_rail_value.attr.add('keep')
             self.comb += If(total == -(1 << (width+guard-1)),
                 neg_value.eq(self.bound_min),neg_rail_value.eq(1)
             ).Elif(total <= self.neg_bound_max,
