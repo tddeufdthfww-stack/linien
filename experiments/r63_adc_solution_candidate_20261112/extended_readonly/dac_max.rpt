@@ -1,0 +1,1976 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Thu Nov 12 03:39:29 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -to [get_ports {dac_data[*]}] -delay_type max -max_paths 60 -nworst 2 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r63_extended/dac_max.rpt
+| Design       : top
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.835ns  (required time - arrival time)
+  Source:                 ODDR_4/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[1]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.726ns  (logic 3.725ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y135        ODDR                                         r  ODDR_4/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y135        ODDR (Prop_oddr_C_Q)         0.472     5.810 r  ODDR_4/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[1]
+    M20                  OBUF (Prop_obuf_I_O)         3.253     9.064 r  dac_data_OBUF[1]_inst/O
+                         net (fo=0)                   0.000     9.064    dac_data[1]
+    M20                                                               r  dac_data[1] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.064    
+  -------------------------------------------------------------------
+                         slack                                 -0.835    
+
+Slack (VIOLATED) :        -0.835ns  (required time - arrival time)
+  Source:                 ODDR_4/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[1]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.726ns  (logic 3.725ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y135        ODDR                                         r  ODDR_4/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y135        ODDR (Prop_oddr_C_Q)         0.472     5.810 f  ODDR_4/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[1]
+    M20                  OBUF (Prop_obuf_I_O)         3.253     9.064 f  dac_data_OBUF[1]_inst/O
+                         net (fo=0)                   0.000     9.064    dac_data[1]
+    M20                                                               f  dac_data[1] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.064    
+  -------------------------------------------------------------------
+                         slack                                 -0.835    
+
+Slack (VIOLATED) :        -0.825ns  (required time - arrival time)
+  Source:                 ODDR_3/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[0]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.716ns  (logic 3.715ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y136        ODDR                                         r  ODDR_3/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y136        ODDR (Prop_oddr_C_Q)         0.472     5.810 r  ODDR_3/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[0]
+    M19                  OBUF (Prop_obuf_I_O)         3.243     9.054 r  dac_data_OBUF[0]_inst/O
+                         net (fo=0)                   0.000     9.054    dac_data[0]
+    M19                                                               r  dac_data[0] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.054    
+  -------------------------------------------------------------------
+                         slack                                 -0.825    
+
+Slack (VIOLATED) :        -0.825ns  (required time - arrival time)
+  Source:                 ODDR_3/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[0]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.716ns  (logic 3.715ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y136        ODDR                                         r  ODDR_3/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y136        ODDR (Prop_oddr_C_Q)         0.472     5.810 f  ODDR_3/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[0]
+    M19                  OBUF (Prop_obuf_I_O)         3.243     9.054 f  dac_data_OBUF[0]_inst/O
+                         net (fo=0)                   0.000     9.054    dac_data[0]
+    M19                                                               f  dac_data[0] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.054    
+  -------------------------------------------------------------------
+                         slack                                 -0.825    
+
+Slack (VIOLATED) :        -0.802ns  (required time - arrival time)
+  Source:                 ODDR_6/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[3]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.697ns  (logic 3.696ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.084ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.334ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.072     5.334    sys_clk
+    OLOGIC_X1Y131        ODDR                                         r  ODDR_6/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y131        ODDR (Prop_oddr_C_Q)         0.472     5.806 r  ODDR_6/Q
+                         net (fo=1, routed)           0.001     5.807    dac_data_OBUF[3]
+    L20                  OBUF (Prop_obuf_I_O)         3.224     9.031 r  dac_data_OBUF[3]_inst/O
+                         net (fo=0)                   0.000     9.031    dac_data[3]
+    L20                                                               r  dac_data[3] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.031    
+  -------------------------------------------------------------------
+                         slack                                 -0.802    
+
+Slack (VIOLATED) :        -0.802ns  (required time - arrival time)
+  Source:                 ODDR_6/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[3]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.697ns  (logic 3.696ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.084ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.334ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.072     5.334    sys_clk
+    OLOGIC_X1Y131        ODDR                                         r  ODDR_6/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y131        ODDR (Prop_oddr_C_Q)         0.472     5.806 f  ODDR_6/Q
+                         net (fo=1, routed)           0.001     5.807    dac_data_OBUF[3]
+    L20                  OBUF (Prop_obuf_I_O)         3.224     9.031 f  dac_data_OBUF[3]_inst/O
+                         net (fo=0)                   0.000     9.031    dac_data[3]
+    L20                                                               f  dac_data[3] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.031    
+  -------------------------------------------------------------------
+                         slack                                 -0.802    
+
+Slack (VIOLATED) :        -0.796ns  (required time - arrival time)
+  Source:                 ODDR_5/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[2]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.691ns  (logic 3.690ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.084ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.334ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.072     5.334    sys_clk
+    OLOGIC_X1Y132        ODDR                                         r  ODDR_5/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y132        ODDR (Prop_oddr_C_Q)         0.472     5.806 r  ODDR_5/Q
+                         net (fo=1, routed)           0.001     5.807    dac_data_OBUF[2]
+    L19                  OBUF (Prop_obuf_I_O)         3.218     9.025 r  dac_data_OBUF[2]_inst/O
+                         net (fo=0)                   0.000     9.025    dac_data[2]
+    L19                                                               r  dac_data[2] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.025    
+  -------------------------------------------------------------------
+                         slack                                 -0.796    
+
+Slack (VIOLATED) :        -0.796ns  (required time - arrival time)
+  Source:                 ODDR_5/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[2]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.691ns  (logic 3.690ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.084ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.334ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.072     5.334    sys_clk
+    OLOGIC_X1Y132        ODDR                                         r  ODDR_5/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y132        ODDR (Prop_oddr_C_Q)         0.472     5.806 f  ODDR_5/Q
+                         net (fo=1, routed)           0.001     5.807    dac_data_OBUF[2]
+    L19                  OBUF (Prop_obuf_I_O)         3.218     9.025 f  dac_data_OBUF[2]_inst/O
+                         net (fo=0)                   0.000     9.025    dac_data[2]
+    L19                                                               f  dac_data[2] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -9.025    
+  -------------------------------------------------------------------
+                         slack                                 -0.796    
+
+Slack (VIOLATED) :        -0.795ns  (required time - arrival time)
+  Source:                 ODDR_7/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[4]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.694ns  (logic 3.693ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y130        ODDR                                         f  ODDR_7/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y130        ODDR (Prop_oddr_C_Q)         0.472     9.802 r  ODDR_7/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[4]
+    K19                  OBUF (Prop_obuf_I_O)         3.221    13.024 r  dac_data_OBUF[4]_inst/O
+                         net (fo=0)                   0.000    13.024    dac_data[4]
+    K19                                                               r  dac_data[4] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -13.024    
+  -------------------------------------------------------------------
+                         slack                                 -0.795    
+
+Slack (VIOLATED) :        -0.795ns  (required time - arrival time)
+  Source:                 ODDR_7/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[4]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.694ns  (logic 3.693ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y130        ODDR                                         f  ODDR_7/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y130        ODDR (Prop_oddr_C_Q)         0.472     9.802 f  ODDR_7/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[4]
+    K19                  OBUF (Prop_obuf_I_O)         3.221    13.024 f  dac_data_OBUF[4]_inst/O
+                         net (fo=0)                   0.000    13.024    dac_data[4]
+    K19                                                               f  dac_data[4] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -13.024    
+  -------------------------------------------------------------------
+                         slack                                 -0.795    
+
+Slack (VIOLATED) :        -0.794ns  (required time - arrival time)
+  Source:                 ODDR_8/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[5]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.693ns  (logic 3.692ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y129        ODDR                                         f  ODDR_8/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y129        ODDR (Prop_oddr_C_Q)         0.472     9.802 r  ODDR_8/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[5]
+    J19                  OBUF (Prop_obuf_I_O)         3.220    13.023 r  dac_data_OBUF[5]_inst/O
+                         net (fo=0)                   0.000    13.023    dac_data[5]
+    J19                                                               r  dac_data[5] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -13.023    
+  -------------------------------------------------------------------
+                         slack                                 -0.794    
+
+Slack (VIOLATED) :        -0.794ns  (required time - arrival time)
+  Source:                 ODDR_8/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[5]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.693ns  (logic 3.692ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y129        ODDR                                         f  ODDR_8/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y129        ODDR (Prop_oddr_C_Q)         0.472     9.802 f  ODDR_8/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[5]
+    J19                  OBUF (Prop_obuf_I_O)         3.220    13.023 f  dac_data_OBUF[5]_inst/O
+                         net (fo=0)                   0.000    13.023    dac_data[5]
+    J19                                                               f  dac_data[5] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -13.023    
+  -------------------------------------------------------------------
+                         slack                                 -0.794    
+
+Slack (VIOLATED) :        -0.764ns  (required time - arrival time)
+  Source:                 ODDR_9/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[6]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.656ns  (logic 3.655ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.081ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.337ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.075     5.337    sys_clk
+    OLOGIC_X1Y116        ODDR                                         r  ODDR_9/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y116        ODDR (Prop_oddr_C_Q)         0.472     5.809 r  ODDR_9/Q
+                         net (fo=1, routed)           0.001     5.810    dac_data_OBUF[6]
+    J20                  OBUF (Prop_obuf_I_O)         3.183     8.992 r  dac_data_OBUF[6]_inst/O
+                         net (fo=0)                   0.000     8.992    dac_data[6]
+    J20                                                               r  dac_data[6] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.992    
+  -------------------------------------------------------------------
+                         slack                                 -0.764    
+
+Slack (VIOLATED) :        -0.764ns  (required time - arrival time)
+  Source:                 ODDR_9/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[6]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.656ns  (logic 3.655ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.081ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.337ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.075     5.337    sys_clk
+    OLOGIC_X1Y116        ODDR                                         r  ODDR_9/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y116        ODDR (Prop_oddr_C_Q)         0.472     5.809 f  ODDR_9/Q
+                         net (fo=1, routed)           0.001     5.810    dac_data_OBUF[6]
+    J20                  OBUF (Prop_obuf_I_O)         3.183     8.992 f  dac_data_OBUF[6]_inst/O
+                         net (fo=0)                   0.000     8.992    dac_data[6]
+    J20                                                               f  dac_data[6] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.992    
+  -------------------------------------------------------------------
+                         slack                                 -0.764    
+
+Slack (VIOLATED) :        -0.761ns  (required time - arrival time)
+  Source:                 ODDR_10/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[7]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.653ns  (logic 3.652ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.081ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.337ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.075     5.337    sys_clk
+    OLOGIC_X1Y115        ODDR                                         r  ODDR_10/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y115        ODDR (Prop_oddr_C_Q)         0.472     5.809 r  ODDR_10/Q
+                         net (fo=1, routed)           0.001     5.810    dac_data_OBUF[7]
+    H20                  OBUF (Prop_obuf_I_O)         3.180     8.990 r  dac_data_OBUF[7]_inst/O
+                         net (fo=0)                   0.000     8.990    dac_data[7]
+    H20                                                               r  dac_data[7] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.990    
+  -------------------------------------------------------------------
+                         slack                                 -0.761    
+
+Slack (VIOLATED) :        -0.761ns  (required time - arrival time)
+  Source:                 ODDR_10/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[7]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.653ns  (logic 3.652ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.081ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.337ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.075     5.337    sys_clk
+    OLOGIC_X1Y115        ODDR                                         r  ODDR_10/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y115        ODDR (Prop_oddr_C_Q)         0.472     5.809 f  ODDR_10/Q
+                         net (fo=1, routed)           0.001     5.810    dac_data_OBUF[7]
+    H20                  OBUF (Prop_obuf_I_O)         3.180     8.990 f  dac_data_OBUF[7]_inst/O
+                         net (fo=0)                   0.000     8.990    dac_data[7]
+    H20                                                               f  dac_data[7] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.990    
+  -------------------------------------------------------------------
+                         slack                                 -0.761    
+
+Slack (VIOLATED) :        -0.761ns  (required time - arrival time)
+  Source:                 ODDR_15/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[12]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.648ns  (logic 3.647ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.076ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.342ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.080     5.342    sys_clk
+    OLOGIC_X1Y141        ODDR                                         r  ODDR_15/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y141        ODDR (Prop_oddr_C_Q)         0.472     5.814 r  ODDR_15/Q
+                         net (fo=1, routed)           0.001     5.815    dac_data_OBUF[12]
+    D20                  OBUF (Prop_obuf_I_O)         3.175     8.989 r  dac_data_OBUF[12]_inst/O
+                         net (fo=0)                   0.000     8.989    dac_data[12]
+    D20                                                               r  dac_data[12] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.989    
+  -------------------------------------------------------------------
+                         slack                                 -0.761    
+
+Slack (VIOLATED) :        -0.761ns  (required time - arrival time)
+  Source:                 ODDR_15/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[12]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.648ns  (logic 3.647ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.076ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.342ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.080     5.342    sys_clk
+    OLOGIC_X1Y141        ODDR                                         r  ODDR_15/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y141        ODDR (Prop_oddr_C_Q)         0.472     5.814 f  ODDR_15/Q
+                         net (fo=1, routed)           0.001     5.815    dac_data_OBUF[12]
+    D20                  OBUF (Prop_obuf_I_O)         3.175     8.989 f  dac_data_OBUF[12]_inst/O
+                         net (fo=0)                   0.000     8.989    dac_data[12]
+    D20                                                               f  dac_data[12] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.989    
+  -------------------------------------------------------------------
+                         slack                                 -0.761    
+
+Slack (VIOLATED) :        -0.760ns  (required time - arrival time)
+  Source:                 ODDR_16/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[13]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.647ns  (logic 3.646ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.076ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.342ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.080     5.342    sys_clk
+    OLOGIC_X1Y142        ODDR                                         r  ODDR_16/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y142        ODDR (Prop_oddr_C_Q)         0.472     5.814 r  ODDR_16/Q
+                         net (fo=1, routed)           0.001     5.815    dac_data_OBUF[13]
+    D19                  OBUF (Prop_obuf_I_O)         3.174     8.989 r  dac_data_OBUF[13]_inst/O
+                         net (fo=0)                   0.000     8.989    dac_data[13]
+    D19                                                               r  dac_data[13] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.989    
+  -------------------------------------------------------------------
+                         slack                                 -0.760    
+
+Slack (VIOLATED) :        -0.760ns  (required time - arrival time)
+  Source:                 ODDR_16/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[13]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.647ns  (logic 3.646ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.076ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.342ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.080     5.342    sys_clk
+    OLOGIC_X1Y142        ODDR                                         r  ODDR_16/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y142        ODDR (Prop_oddr_C_Q)         0.472     5.814 f  ODDR_16/Q
+                         net (fo=1, routed)           0.001     5.815    dac_data_OBUF[13]
+    D19                  OBUF (Prop_obuf_I_O)         3.174     8.989 f  dac_data_OBUF[13]_inst/O
+                         net (fo=0)                   0.000     8.989    dac_data[13]
+    D19                                                               f  dac_data[13] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.989    
+  -------------------------------------------------------------------
+                         slack                                 -0.760    
+
+Slack (VIOLATED) :        -0.745ns  (required time - arrival time)
+  Source:                 ODDR_12/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[9]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y113        ODDR                                         r  ODDR_12/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y113        ODDR (Prop_oddr_C_Q)         0.472     5.810 r  ODDR_12/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[9]
+    G20                  OBUF (Prop_obuf_I_O)         3.163     8.974 r  dac_data_OBUF[9]_inst/O
+                         net (fo=0)                   0.000     8.974    dac_data[9]
+    G20                                                               r  dac_data[9] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.974    
+  -------------------------------------------------------------------
+                         slack                                 -0.745    
+
+Slack (VIOLATED) :        -0.745ns  (required time - arrival time)
+  Source:                 ODDR_12/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[9]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y113        ODDR                                         r  ODDR_12/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y113        ODDR (Prop_oddr_C_Q)         0.472     5.810 f  ODDR_12/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[9]
+    G20                  OBUF (Prop_obuf_I_O)         3.163     8.974 f  dac_data_OBUF[9]_inst/O
+                         net (fo=0)                   0.000     8.974    dac_data[9]
+    G20                                                               f  dac_data[9] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.974    
+  -------------------------------------------------------------------
+                         slack                                 -0.745    
+
+Slack (VIOLATED) :        -0.745ns  (required time - arrival time)
+  Source:                 ODDR_11/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[8]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y114        ODDR                                         r  ODDR_11/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y114        ODDR (Prop_oddr_C_Q)         0.472     5.810 r  ODDR_11/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[8]
+    G19                  OBUF (Prop_obuf_I_O)         3.163     8.973 r  dac_data_OBUF[8]_inst/O
+                         net (fo=0)                   0.000     8.973    dac_data[8]
+    G19                                                               r  dac_data[8] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.973    
+  -------------------------------------------------------------------
+                         slack                                 -0.745    
+
+Slack (VIOLATED) :        -0.745ns  (required time - arrival time)
+  Source:                 ODDR_11/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[8]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.338ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.076     5.338    sys_clk
+    OLOGIC_X1Y114        ODDR                                         r  ODDR_11/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y114        ODDR (Prop_oddr_C_Q)         0.472     5.810 f  ODDR_11/Q
+                         net (fo=1, routed)           0.001     5.811    dac_data_OBUF[8]
+    G19                  OBUF (Prop_obuf_I_O)         3.163     8.973 f  dac_data_OBUF[8]_inst/O
+                         net (fo=0)                   0.000     8.973    dac_data[8]
+    G19                                                               f  dac_data[8] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.973    
+  -------------------------------------------------------------------
+                         slack                                 -0.745    
+
+Slack (VIOLATED) :        -0.743ns  (required time - arrival time)
+  Source:                 ODDR_14/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[11]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.642ns  (logic 3.641ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y119        ODDR                                         f  ODDR_14/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y119        ODDR (Prop_oddr_C_Q)         0.472     9.802 r  ODDR_14/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[11]
+    F20                  OBUF (Prop_obuf_I_O)         3.169    12.972 r  dac_data_OBUF[11]_inst/O
+                         net (fo=0)                   0.000    12.972    dac_data[11]
+    F20                                                               r  dac_data[11] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -12.972    
+  -------------------------------------------------------------------
+                         slack                                 -0.743    
+
+Slack (VIOLATED) :        -0.743ns  (required time - arrival time)
+  Source:                 ODDR_14/C
+                            (falling edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[11]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@6.000ns - clk_2 fall@4.000ns)
+  Data Path Delay:        3.642ns  (logic 3.641ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 14.339 - 6.000 ) 
+    Source Clock Delay      (SCD):    5.330ns = ( 9.330 - 4.000 ) 
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 fall edge)      4.000     4.000 f  
+    U18                                               0.000     4.000 f  clk125_p (IN)
+                         net (fo=0)                   0.000     4.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.951 f  IBUFGDS/O
+                         net (fo=1, routed)           2.205     7.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.258 f  BUFG/O
+                         net (fo=1, routed)           1.831     9.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     5.277 f  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     7.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.261 f  BUFG_3/O
+                         net (fo=13310, routed)       2.068     9.330    sys_clk
+    OLOGIC_X1Y119        ODDR                                         f  ODDR_14/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y119        ODDR (Prop_oddr_C_Q)         0.472     9.802 f  ODDR_14/Q
+                         net (fo=1, routed)           0.001     9.803    dac_data_OBUF[11]
+    F20                  OBUF (Prop_obuf_I_O)         3.169    12.972 f  dac_data_OBUF[11]_inst/O
+                         net (fo=0)                   0.000    12.972    dac_data[11]
+    F20                                                               f  dac_data[11] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      6.000     6.000 r  
+    U18                                               0.000     6.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     6.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     8.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     9.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    10.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     7.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     8.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     9.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834    10.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    11.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001    11.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    14.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    14.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    14.418    
+                         clock uncertainty           -0.189    14.229    
+                         output delay                -2.000    12.229    
+  -------------------------------------------------------------------
+                         required time                         12.229    
+                         arrival time                         -12.972    
+  -------------------------------------------------------------------
+                         slack                                 -0.743    
+
+Slack (VIOLATED) :        -0.738ns  (required time - arrival time)
+  Source:                 ODDR_13/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[10]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.637ns  (logic 3.636ns (99.972%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.330ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.068     5.330    sys_clk
+    OLOGIC_X1Y120        ODDR                                         r  ODDR_13/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y120        ODDR (Prop_oddr_C_Q)         0.472     5.802 r  ODDR_13/Q
+                         net (fo=1, routed)           0.001     5.803    dac_data_OBUF[10]
+    F19                  OBUF (Prop_obuf_I_O)         3.164     8.967 r  dac_data_OBUF[10]_inst/O
+                         net (fo=0)                   0.000     8.967    dac_data[10]
+    F19                                                               r  dac_data[10] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.967    
+  -------------------------------------------------------------------
+                         slack                                 -0.738    
+
+Slack (VIOLATED) :        -0.738ns  (required time - arrival time)
+  Source:                 ODDR_13/C
+                            (rising edge-triggered cell ODDR clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            dac_data[10]
+                            (output port clocked by dac_write  {rise@2.000ns fall@4.000ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_write rise@2.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        3.637ns  (logic 3.636ns (99.972%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.088ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    8.339ns = ( 10.339 - 2.000 ) 
+    Source Clock Delay      (SCD):    5.330ns
+    Clock Pessimism Removal (CPR):    0.079ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13310, routed)       2.068     5.330    sys_clk
+    OLOGIC_X1Y120        ODDR                                         r  ODDR_13/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y120        ODDR (Prop_oddr_C_Q)         0.472     5.802 f  ODDR_13/Q
+                         net (fo=1, routed)           0.001     5.803    dac_data_OBUF[10]
+    F19                  OBUF (Prop_obuf_I_O)         3.164     8.967 f  dac_data_OBUF[10]_inst/O
+                         net (fo=0)                   0.000     8.967    dac_data[10]
+    F19                                                               f  dac_data[10] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_write rise edge)
+                                                      2.000     2.000 r  
+    U18                                               0.000     2.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     2.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006     4.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     5.007 r  BUFG/O
+                         net (fo=1, routed)           1.634     6.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT1)
+                                                     -3.442     3.199 r  PLLE2_BASE/CLKOUT1
+                         net (fo=1, routed)           1.720     4.919    clk_1
+    BUFGCTRL_X0Y1        BUFG (Prop_bufg_I_O)         0.091     5.010 r  BUFG_2/O
+                         net (fo=64, routed)          1.834     6.844    sys_double_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     7.255 r  ODDR_1/Q
+                         net (fo=1, routed)           0.001     7.256    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    10.339 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    10.339    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.079    10.418    
+                         clock uncertainty           -0.189    10.229    
+                         output delay                -2.000     8.229    
+  -------------------------------------------------------------------
+                         required time                          8.229    
+                         arrival time                          -8.967    
+  -------------------------------------------------------------------
+                         slack                                 -0.738    
+
+
+
+

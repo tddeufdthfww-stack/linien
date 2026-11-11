@@ -1,4 +1,4 @@
-> **2026-11-12 R63候选：物理实现待运行**。恢复原rising ADC FF并要求IOB，原生完整新旧analog settled对照/四组数据时钟包络PASS，独立样本号负向用例按预期失败。对28个确切ADC→IOB D使用同字0-cycle setup（收紧8ns）和下一字hold模型，依据/公式/例外边界见R63_ADC_CAPTURE_PROTOCOL.md。DAC/CDC/DRC仍未签核，不能部署。以下为历史。
+> **2026-11-12 R63实际结果：ADC_COMPONENT_CANDIDATE**。28个ADC必要预算setup+.429/hold+3.304ns，真实0-cycle setup/-8ns hold边沿逐条核验PASS；新综合和route完成。整机WNS/TNS=-.835/-14.041、32端点，hold-.456/-5.876、14端点；DAC仍FAIL，内部18端点WNS-.389。最终未签核，不部署。完整功能本轮NOT RERUN，原生analog本轮PASS，其他组件参考R62同SHA完整回归。以下为历史。
 
 > **2026-11-12 R62实际结果：REJECTED**。完整功能PASS，新综合及route完成；硅器件必要I/O预算下WNS/TNS=-1.261/-2245.782ns、3604端点；WHS/THS=-.696/-23.517ns、42端点，最终STA FAIL。下降沿导致ADC→CORDIC只有4ns预算，实际5.209ns。原源码/全部阶段日志/DCP/SHA均保留，不合并。原R61b/R60冻结。以下条目为历史快照。
 
@@ -832,3 +832,17 @@ PASS，0插入延迟负控制按预期捕获ADC_WORD_INDEX_FAIL。两处testbenc
 日志另存，未删断言，最终native03证据归档experiments/r63_analog_native_20261112。
 本轮选择先新综合/route验证ADC约束/实现是否有效；完整组件功能参考R62同源回归，
 不写成本轮又重跑完整功能。最终合并/发布前仍须对最终冻结输入跑完整流程。
+
+### R63 实际实现与约束边沿核验
+
+输入7ef3cf5dc3a216c32b706dd462d976a453501f3d，新综合/route COMPLETE，构建期间SHA变化=[]。
+全部28个输入→28个IOB/D实际setup Requirement0ns、hold Requirement-8ns逐条验证；
+setup最差+.429ns，hold最差+3.304ns，物理FF为rising ILOGIC IFF。该结果是零PCB偏斜
+硅器件必要预算PASS，不能冒称实物板级签核；采样逻辑与冻结R61b原生严格对照PASS，新增
+反馈整数周期0。DAC仍setup-.835/hold-.456ns；整机route WNS/TNS=-.835/-14.041、32端点，
+WHS/THS=-.456/-5.876、14端点，内部clk_2 WNS=-.389/18端点，pulse1.5/0。
+无时钟0/内部未约束0；完整功能本轮NOT_RERUN，R63新analog原生PASS，其他共同硬件/
+工具/测试原始SHA同R62完整PASS输入（例外清单及逐文件核验见functional_scope.json）。
+原manifest功能NOT RUN保持原样，不改写成重跑PASS。完整真实DCP/报告/参数/输入输出SHA
+见experiments/r63_adc_solution_candidate_20261112。保留ADC组件候选供下一轮，不合并正式
+版本、不签发bitstream、不操作板卡或激光。

@@ -483,3 +483,10 @@ ADC pad→IOB D的setup8ns到0-cycle，并验证下一word hold；不是计算�
 四组完整14位/复位/位间偏差/新旧R61b完整analog settled输出/消费者样本号原生PASS，
 独立负向控制按预期失败，证明oracle可检测旧字；两处测试器入口错误原样另存。
 新综合和route待执行，DAC必要预算/脉宽、物理CDC/DRC仍OPEN，不部署不合并。
+
+R63实际route：整机-.835/-14.041、32 setup端点，hold-.456/-5.876、14端点，仍FAIL。
+ADC组件取得零PCB必要预算setup+.429/hold+3.304，28个源/目的、0/-8ns关系逐条核验PASS；
+保留ADC_COMPONENT_CANDIDATE，不当作整板完成。DAC-.835/-.456、内部clk_2-.389/18端点
+继续；本轮未重跑完整组件功能，明确继承R62共同输入RAW SHA相同的完整回归，analog本轮
+新原生PASS。输入7ef3cf5，源码变化=[]，全部DCP/日志/输入输出SHA与范围说明归档
+experiments/r63_adc_solution_candidate_20261112。不烧录，不把元件级通过当作最终签核。
