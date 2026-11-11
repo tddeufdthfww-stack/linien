@@ -469,4 +469,3 @@ gateware/hw_platform.py的DAC data到FAST/8mA。新增完整sys流水级0，ADC�
 run_gateware_trial纳入该原生测试及io_intrinsic_probe.tcl器件必要预算、maxThreads2。
 零PCB偏斜仅诊断假设；PLL/引脚/CSR保持，IQSEL/CLK-WRT/脉宽/物理CDC/DRC均不能借此
 宣称关闭。失败保留不合并。详细计划/原理/风险见docs/R62_PLAN.md与PORTING_STATUS文末。
-
