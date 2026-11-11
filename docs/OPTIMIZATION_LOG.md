@@ -1,3 +1,5 @@
+> **2026-11-11 R39最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.655/-133.656ns，最终STA FAIL。详细归档见本文末尾。
+
 > **2026-11-11 R38最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.619/-83.023ns，最终STA FAIL。详细归档见本文末尾。
 
 > **2026-11-11 R36最新结果**：REJECTED / 不合并R4a，route WNS/TNS=-0.656/-59.314ns，最终STA FAIL。详细归档见本文末尾。
@@ -237,3 +239,16 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 374}，严格名称差集新增368/移除372；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r38_autolock_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R39 / 2026-11-11归档 / physical时序候选试验
+
+- **REJECTED / 不合并R4a**。代码提交 `de00c4493a4a12d5622a4aa3b86f7388b7dbfd3f`，独立工作树 `D:\RP_Dev\linien_trials\20261111-r39-scope-enable-remap`；R4a/R2b/原用户工程保持原样。
+- 功能：REUSED_R38_EXACT_INPUTS_NOT_RERUN：78个硬件/测试原始SHA完全一致，复用291fbec完整原生14/25/28预取/PID/慢链/IIR/Scope/AXI/CDC/真实CSR/四态证据；本轮没有重跑整机RTL或综合。新做原生post-opt14/25位FDRE/FDSE叶子43031拍PASS，40000有效控制/3000X/Z数据、reset0/1优先与CE保持/写入、原始UNISIM FF严格四态对照；FF78→78且全部CE常1。未知或亚稳态控制未由该叶子证明。初版空驱动日志查询错误、属性版opt完成但CE未移动的结构FAIL全部保留；显式LUT3 INIT8hAC（I2=CE/I1=Q/I0=D）实现后才通过，未将无效属性设置当成功。完整工程新做Scope366个非恒定使能配置FF网表D/CE重接、保持C/R/S/INIT、原FF边界DONT_TOUCH，opt/place/phys/route；目标名称/类型/INIT和CE常1均实查，源码/CSR/XDC字节不变，数据周期0新增。不是fullRoot/postroute/SDF形式等价或CDC物理安全证明；没有修改Migen evaluator。
+- 完整RTL/PID/IIR/AXI/CDC回归明确REUSED_R38_NOT_RERUN；新增post-opt叶子与整机366FF结构审计PASS；opt/布局/实际route为本轮新执行，综合复用R38；CSR map与XDC保持R4a一致。延迟=本轮只把Scope配置FF的CE保持条件显式移到D，0新增ADC/robust/GPIO/CSR周期；原FF C/R/S/INIT与状态沿保留，78个原始硬件测试输入SHA一致。R28指定组件Bare72.1ns/快慢108.1ns仅继承，非本轮重新测量或完整板端。
+- 综合来源=REUSED_R38_EXACT_DCP_NOT_RERUN，WNS/TNS=-1.908/-263.098ns。实际route COMPLETE，WNS/TNS=-0.655/-133.656ns，失败端点587；WHS/WPWS=0.026/1.5ns，THS=0。
+- raw IIR内部最差=-0.235ns，入口=-0.261ns；全局最差 `linienmodule_csr_dat_w_reg[4]/C` → `linienmodule_fast_b_iir0_storage_full0_reg[20]/D`，逻辑/布线=['0.456', '8.054']ns。
+- 决策=REJECTED_NOT_MERGED；最终STA FAIL，不能上板验收。资源={'lut': 12530, 'ff': 13540, 'dsp': 94, 'bram': 35, 'bufg': 6}；覆盖={'no_clock': 1, 'unconstrained_internal_endpoints': 2, 'no_input_delay': 44, 'no_output_delay': 46}；DRC总数=405。
+- CDC={'CDC-1': 432, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 64}，严格名称差集新增386/移除700；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
+- 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
+- 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r39_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
