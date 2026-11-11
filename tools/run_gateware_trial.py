@@ -84,6 +84,12 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            execute([sys.executable, ROOT / 'tools/check_dna_read_control.py', '--out', out / 'dna_read_control_checks'],
+                    ROOT, out, 'dna_read_control', env, 'DNA_READ_CONTROL_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r61_cdc_reset.py', '--out', out / 'r61_cdc_reset_checks'],
+                    ROOT, out, 'r61_cdc_reset', env, 'R61_CDC_RESET_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r61_axi_error.py', '--out', out / 'r61_axi_error_checks'],
+                    ROOT, out, 'r61_axi_error', env, 'R61_AXI_ERROR_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_c48_carry_fold.py', '--out', out / 'c48_carry_fold_checks'],
                     ROOT, out, 'c48_carry_fold', env, 'C48_CARRY_FOLD_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_c48_fold_filter.py', '--out', out / 'c48_fold_filter_checks'],
