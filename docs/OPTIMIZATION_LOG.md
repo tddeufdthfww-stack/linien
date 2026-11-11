@@ -317,3 +317,8 @@ R27 Root CSA代码cffb1f2/记录e9c9fd5已失败归档、未携入R28。R2b/R4a/
 - CDC={'CDC-1': 438, 'CDC-2': 14, 'CDC-3': 4, 'CDC-4': 1, 'CDC-10': 1, 'CDC-13': 1, 'CDC-15': 380}，严格名称差集新增382/移除374；数量变化不是物理安全证明。DNA/外部I/O覆盖和DRC未签核，未新增掩盖问题的例外或放宽时钟。
 - 构建期间source_changes_during_run=[]；记录前输入哈希差异=[]。构建manifest采样HEAD与代码提交可能不同，具体源码以manifest逐文件SHA为准，原生日志保留。
 - 全部报告、输入SHA、源码副本及XSim向量见 `experiments/r47_physical_20261111/`。无bitstream生成/部署，无板上/激光操作。按用户授权自动继续下一项有依据的独立候选。
+
+
+## R48选项兼容性中止与阶段日志修正 / 2026-11-11
+
+代码1f0b1dc在phys_opt_design入口因Vivado_Tcl4-1061中止：该post-route场景下-tns_cleanup只能配合-slr_crossing_opt。新route NOT RUN，优化未开始，输入R47 DCP SHA不变、源码冻结未改变。初版postopt字段因匹配到Tcl源码回显的puts文本而误写COMPLETE，修正审计明确FAIL_BEFORE_OPTIMIZATION；原始manifest不覆盖，日志和修正说明保留。修复前置校验因此失败，一次未改命令重试重复相同错误，两套日志均归档experiments/r48_option_setup_failure_20261111。现在以精确整行标记判断阶段，采用已验证post-route placement/routing/rewire/critical-cell四项在新目录重跑；不增加无关SLR/clock/时序例外。critical_pin_opt也省略，不声称发生引脚交换。
