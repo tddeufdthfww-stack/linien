@@ -1,3 +1,5 @@
+> **2026-11-12 R73：fresh完整功能PASS；NOT RUN: generation KeyError DONT_TOUCH，最终未签核。候选不部署，后继R74独立验证。**
+
 > **R72候选：core关键LUT物理pin交换待实际结果**。R69b fresh完整有效响应回归PASS，原strict idle差分FAIL保留；R71实际-.343/-5.363ns、24端点、core-.234。R72不改源码/周期/约束/反馈级，综合复用R69，功能复用R69b，逻辑和实际STA各自验收。
 
 > **R71候选：内部clk_2 placement/routing TNS cleanup待结果**。R70实际-.343/-5.900ns、core-.205、hold+.027；逻辑仅新增3物理标记的等价已独立证明，原严格比较FAIL保留。R71无源码/反馈级/时钟/约束更改，综合复用R69，仍全局计时签核。
@@ -965,3 +967,9 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 ## R73已执行定向回归
 
 14/25位一/二/五阶共107706拍，新旧逐拍+独立有限位整数模型PASS（完整CSR/复位/hold/clear/饱和/脉冲延迟）；完整FastChain32000拍PASS，31976已知周期/21317写/24000 CE保持周期。厂商DSP48E1/FDRE原生模型。原件/SHA在experiments/r73_targeted_native_20261112。新完整功能/综合/实际route尚待，不得以此认定时序收敛或上板。
+
+## R73 fresh完整功能PASS，物理状态独立 / 2026-11-12
+
+输入9fbcc83a66d5b0c3878a99d4d2cfe822b76e2819，trial 20261112_123136_r73_fabric_feedback_full：所有既有功能阶段及新增14/25位IIR107706拍、FastChain32000拍PASS，source_changes=[]，采用已明示R69b有效响应契约，旧strict空闲数据FAIL保留。完整命令/fixture/RTL/日志及SHA在experiments/r73_fresh_full_functional_20261112。
+
+物理状态：NOT RUN: generation KeyError DONT_TOUCH。功能PASS不代表时序/IO/CDC/DRC通过；该候选未采用，正常新增反馈周期0（继承R2b+32ns），无签核bit/bin或板卡操作。独立R74改在原输出边沿捕获最终MAC、重构饱和状态，尚待实际时序；不覆盖本失败候选。
