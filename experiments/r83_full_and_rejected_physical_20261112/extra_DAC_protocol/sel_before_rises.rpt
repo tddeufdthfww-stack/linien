@@ -1,0 +1,976 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Thu Nov 12 20:14:40 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -to [get_ports dac_sel] -delay_type max -max_paths 30 -nworst 10 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r83_dac_extra_protocol/sel_before_rises.rpt
+| Design       : top
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.359ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (rising edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Slow Process Corner
+  Requirement:            0.375ns  (dac_sample rise@0.500ns - linienmodule_analog_dacregionalclock3 rise@0.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.157ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.934ns = ( 11.434 - 0.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 8.369 - 0.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 rise edge)
+                                                                    0.125     0.125 r  
+                  U18                                               0.000     0.125 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.125    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     1.076 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     3.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.383 r  BUFG/O
+                                       net (fo=1, routed)           1.831     5.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     1.402 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     3.285    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.386 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     5.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     5.457 r  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961     6.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        r  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609     8.027 r  BUFIO_3/O
+                                       net (fo=1, routed)           0.341     8.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         r  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472     8.841 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     8.842    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    12.070 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    12.070    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    0.500     0.500 r  
+                  U18                                               0.000     0.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     1.409 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     3.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     3.507 r  BUFG/O
+                                       net (fo=1, routed)           1.634     5.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     1.699 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     3.419    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     3.510 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.773     5.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.083     5.366 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.871     6.237    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431     7.668 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.284     7.952    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.411     8.363 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     8.364    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         3.070    11.434 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000    11.434    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.467    11.901    
+                                       clock uncertainty           -0.189    11.712    
+                                       output delay                -0.000    11.712    
+  ---------------------------------------------------------------------------------
+                                       required time                         11.712    
+                                       arrival time                         -12.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.359    
+
+Slack (VIOLATED) :        -0.359ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (rising edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Slow Process Corner
+  Requirement:            0.375ns  (dac_sample rise@0.500ns - linienmodule_analog_dacregionalclock3 rise@0.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.157ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.934ns = ( 11.434 - 0.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 8.369 - 0.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 rise edge)
+                                                                    0.125     0.125 r  
+                  U18                                               0.000     0.125 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.125    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     1.076 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     3.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.383 r  BUFG/O
+                                       net (fo=1, routed)           1.831     5.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     1.402 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     3.285    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.386 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     5.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     5.457 r  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961     6.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        r  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609     8.027 r  BUFIO_3/O
+                                       net (fo=1, routed)           0.341     8.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         r  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472     8.841 f  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     8.842    dac_sel_OBUF
+    Routing       N16                                                               f  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    12.070 f  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    12.070    dac_sel
+                  N16                                                               f  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    0.500     0.500 r  
+                  U18                                               0.000     0.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     1.409 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     3.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     3.507 r  BUFG/O
+                                       net (fo=1, routed)           1.634     5.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     1.699 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     3.419    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     3.510 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.773     5.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.083     5.366 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.871     6.237    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431     7.668 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.284     7.952    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.411     8.363 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     8.364    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         3.070    11.434 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000    11.434    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.467    11.901    
+                                       clock uncertainty           -0.189    11.712    
+                                       output delay                -0.000    11.712    
+  ---------------------------------------------------------------------------------
+                                       required time                         11.712    
+                                       arrival time                         -12.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.359    
+
+Slack (VIOLATED) :        -0.359ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (falling edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Slow Process Corner
+  Requirement:            0.375ns  (dac_sample rise@4.500ns - linienmodule_analog_dacregionalclock3 fall@4.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.157ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.934ns = ( 15.434 - 4.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 12.369 - 4.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 fall edge)
+                                                                    4.125     4.125 f  
+                  U18                                               0.000     4.125 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.125    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     5.076 f  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     7.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.383 f  BUFG/O
+                                       net (fo=1, routed)           1.831     9.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     5.402 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     7.285    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.386 f  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     9.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     9.457 f  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961    10.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        f  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609    12.027 f  BUFIO_3/O
+                                       net (fo=1, routed)           0.341    12.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         f  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472    12.841 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001    12.842    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    16.070 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    16.070    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    4.500     4.500 r  
+                  U18                                               0.000     4.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     5.409 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     7.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     7.507 r  BUFG/O
+                                       net (fo=1, routed)           1.634     9.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     5.699 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     7.419    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     7.510 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.773     9.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.083     9.366 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.871    10.237    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    11.668 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.284    11.952    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.411    12.363 r  ODDR/Q
+                                       net (fo=1, routed)           0.001    12.364    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         3.070    15.434 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000    15.434    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.467    15.901    
+                                       clock uncertainty           -0.189    15.712    
+                                       output delay                -0.000    15.712    
+  ---------------------------------------------------------------------------------
+                                       required time                         15.712    
+                                       arrival time                         -16.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.359    
+
+Slack (VIOLATED) :        -0.359ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (falling edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Slow Process Corner
+  Requirement:            0.375ns  (dac_sample rise@4.500ns - linienmodule_analog_dacregionalclock3 fall@4.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.157ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.934ns = ( 15.434 - 4.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 12.369 - 4.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 fall edge)
+                                                                    4.125     4.125 f  
+                  U18                                               0.000     4.125 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.125    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     5.076 f  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     7.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.383 f  BUFG/O
+                                       net (fo=1, routed)           1.831     9.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     5.402 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     7.285    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.386 f  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     9.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     9.457 f  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961    10.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        f  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609    12.027 f  BUFIO_3/O
+                                       net (fo=1, routed)           0.341    12.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         f  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472    12.841 f  ODDR_2/Q
+                                       net (fo=1, routed)           0.001    12.842    dac_sel_OBUF
+    Routing       N16                                                               f  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    16.070 f  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    16.070    dac_sel
+                  N16                                                               f  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    4.500     4.500 r  
+                  U18                                               0.000     4.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     5.409 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     7.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     7.507 r  BUFG/O
+                                       net (fo=1, routed)           1.634     9.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     5.699 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     7.419    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     7.510 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.773     9.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.083     9.366 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.871    10.237    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    11.668 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.284    11.952    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.411    12.363 r  ODDR/Q
+                                       net (fo=1, routed)           0.001    12.364    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         3.070    15.434 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000    15.434    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.467    15.901    
+                                       clock uncertainty           -0.189    15.712    
+                                       output delay                -0.000    15.712    
+  ---------------------------------------------------------------------------------
+                                       required time                         15.712    
+                                       arrival time                         -16.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.359    
+
+Slack (VIOLATED) :        -0.121ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (rising edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Fast Process Corner
+  Requirement:            0.375ns  (dac_sample rise@0.500ns - linienmodule_analog_dacregionalclock3 rise@0.125ns)
+  Data Path Delay:        1.816ns  (logic 1.815ns (99.945%)  route 0.001ns (0.055%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        1.509ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.303ns = ( 4.803 - 0.500 ) 
+    Source Clock Delay      (SCD):    3.161ns = ( 3.286 - 0.125 ) 
+    Clock Pessimism Removal (CPR):    0.367ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 rise edge)
+                                                                    0.125     0.125 r  
+                  U18                                               0.000     0.125 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.125    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.401     0.526 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.731     1.257    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.030     1.287 r  BUFG/O
+                                       net (fo=1, routed)           0.869     2.156    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.488     0.668 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.592     1.260    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     1.289 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.947     2.236    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.053     2.289 r  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.371     2.660    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        r  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       0.516     3.176 r  BUFIO_3/O
+                                       net (fo=1, routed)           0.110     3.286    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         r  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.204     3.490 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     3.491    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         1.611     5.102 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000     5.102    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    0.500     0.500 r  
+                  U18                                               0.000     0.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.370     0.870 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.674     1.544    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.027     1.571 r  BUFG/O
+                                       net (fo=1, routed)           0.602     2.173    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.169     1.003 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.544     1.547    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.026     1.573 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.674     2.247    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.050     2.297 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.336     2.633    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       0.483     3.116 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.091     3.207    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.177     3.384 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     3.385    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         1.418     4.803 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000     4.803    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.367     5.170    
+                                       clock uncertainty           -0.189     4.981    
+                                       output delay                -0.000     4.981    
+  ---------------------------------------------------------------------------------
+                                       required time                          4.981    
+                                       arrival time                          -5.102    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.121    
+
+Slack (VIOLATED) :        -0.121ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (falling edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Fast Process Corner
+  Requirement:            0.375ns  (dac_sample rise@4.500ns - linienmodule_analog_dacregionalclock3 fall@4.125ns)
+  Data Path Delay:        1.816ns  (logic 1.815ns (99.945%)  route 0.001ns (0.055%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        1.509ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.303ns = ( 8.803 - 4.500 ) 
+    Source Clock Delay      (SCD):    3.161ns = ( 7.286 - 4.125 ) 
+    Clock Pessimism Removal (CPR):    0.367ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 fall edge)
+                                                                    4.125     4.125 f  
+                  U18                                               0.000     4.125 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.125    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.401     4.526 f  IBUFGDS/O
+                                       net (fo=1, routed)           0.731     5.257    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.030     5.287 f  BUFG/O
+                                       net (fo=1, routed)           0.869     6.156    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.488     4.668 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.592     5.260    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     5.289 f  BUFG_3/O
+                                       net (fo=13463, routed)       0.947     6.236    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.053     6.289 f  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.371     6.660    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        f  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       0.516     7.176 f  BUFIO_3/O
+                                       net (fo=1, routed)           0.110     7.286    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         f  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.204     7.490 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     7.491    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         1.611     9.102 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000     9.102    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    4.500     4.500 r  
+                  U18                                               0.000     4.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.370     4.870 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.674     5.544    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.027     5.571 r  BUFG/O
+                                       net (fo=1, routed)           0.602     6.173    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.169     5.003 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.544     5.547    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.026     5.573 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.674     6.247    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.050     6.297 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.336     6.633    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       0.483     7.116 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.091     7.207    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.177     7.384 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     7.385    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         1.418     8.803 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000     8.803    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.367     9.170    
+                                       clock uncertainty           -0.189     8.981    
+                                       output delay                -0.000     8.981    
+  ---------------------------------------------------------------------------------
+                                       required time                          8.981    
+                                       arrival time                          -9.102    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.121    
+
+Slack (VIOLATED) :        -0.121ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (rising edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Fast Process Corner
+  Requirement:            0.375ns  (dac_sample rise@0.500ns - linienmodule_analog_dacregionalclock3 rise@0.125ns)
+  Data Path Delay:        1.816ns  (logic 1.815ns (99.945%)  route 0.001ns (0.055%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        1.509ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.303ns = ( 4.803 - 0.500 ) 
+    Source Clock Delay      (SCD):    3.161ns = ( 3.286 - 0.125 ) 
+    Clock Pessimism Removal (CPR):    0.367ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 rise edge)
+                                                                    0.125     0.125 r  
+                  U18                                               0.000     0.125 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.125    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.401     0.526 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.731     1.257    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.030     1.287 r  BUFG/O
+                                       net (fo=1, routed)           0.869     2.156    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.488     0.668 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.592     1.260    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     1.289 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.947     2.236    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.053     2.289 r  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.371     2.660    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        r  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       0.516     3.176 r  BUFIO_3/O
+                                       net (fo=1, routed)           0.110     3.286    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         r  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.204     3.490 f  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     3.491    dac_sel_OBUF
+    Routing       N16                                                               f  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         1.611     5.102 f  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000     5.102    dac_sel
+                  N16                                                               f  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    0.500     0.500 r  
+                  U18                                               0.000     0.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.370     0.870 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.674     1.544    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.027     1.571 r  BUFG/O
+                                       net (fo=1, routed)           0.602     2.173    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.169     1.003 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.544     1.547    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.026     1.573 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.674     2.247    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.050     2.297 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.336     2.633    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       0.483     3.116 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.091     3.207    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.177     3.384 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     3.385    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         1.418     4.803 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000     4.803    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.367     5.170    
+                                       clock uncertainty           -0.189     4.981    
+                                       output delay                -0.000     4.981    
+  ---------------------------------------------------------------------------------
+                                       required time                          4.981    
+                                       arrival time                          -5.102    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.121    
+
+Slack (VIOLATED) :        -0.121ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (falling edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_sample  {rise@0.500ns fall@2.500ns period=4.000ns})
+  Path Group:             dac_sample
+  Path Type:              Max at Fast Process Corner
+  Requirement:            0.375ns  (dac_sample rise@4.500ns - linienmodule_analog_dacregionalclock3 fall@4.125ns)
+  Data Path Delay:        1.816ns  (logic 1.815ns (99.945%)  route 0.001ns (0.055%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        1.509ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.303ns = ( 8.803 - 4.500 ) 
+    Source Clock Delay      (SCD):    3.161ns = ( 7.286 - 4.125 ) 
+    Clock Pessimism Removal (CPR):    0.367ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 fall edge)
+                                                                    4.125     4.125 f  
+                  U18                                               0.000     4.125 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.125    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.401     4.526 f  IBUFGDS/O
+                                       net (fo=1, routed)           0.731     5.257    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.030     5.287 f  BUFG/O
+                                       net (fo=1, routed)           0.869     6.156    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.488     4.668 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.592     5.260    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.029     5.289 f  BUFG_3/O
+                                       net (fo=13463, routed)       0.947     6.236    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.053     6.289 f  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.371     6.660    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        f  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       0.516     7.176 f  BUFIO_3/O
+                                       net (fo=1, routed)           0.110     7.286    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         f  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.204     7.490 f  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     7.491    dac_sel_OBUF
+    Routing       N16                                                               f  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         1.611     9.102 f  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000     9.102    dac_sel
+                  N16                                                               f  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_sample rise edge)
+                                                                    4.500     4.500 r  
+                  U18                                               0.000     4.500 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.500    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.370     4.870 r  IBUFGDS/O
+                                       net (fo=1, routed)           0.674     5.544    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.027     5.571 r  BUFG/O
+                                       net (fo=1, routed)           0.602     6.173    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -1.169     5.003 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.544     5.547    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.026     5.573 r  BUFG_3/O
+                                       net (fo=13463, routed)       0.674     6.247    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT2)
+                                                                    0.050     6.297 r  MMCME2_BASE/CLKOUT2
+                                       net (fo=1, routed)           0.336     6.633    linienmodule_analog_dacregionalclock2
+                  BUFIO_X1Y8                                                        r  BUFIO_2/I
+                  BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       0.483     7.116 r  BUFIO_2/O
+                                       net (fo=1, routed)           0.091     7.207    dac_sample_io_clk
+                  OLOGIC_X1Y133                                                     r  ODDR/C
+                  OLOGIC_X1Y133        ODDR (Prop_oddr_C_Q)         0.177     7.384 r  ODDR/Q
+                                       net (fo=1, routed)           0.001     7.385    dac_clk_OBUF
+                  M18                                                               r  dac_clk_OBUF_inst/I
+                  M18                  OBUF (Prop_obuf_I_O)         1.418     8.803 r  dac_clk_OBUF_inst/O
+                                       net (fo=0)                   0.000     8.803    dac_clk
+                  M18                                                               r  dac_clk (OUT)
+                                       clock pessimism              0.367     9.170    
+                                       clock uncertainty           -0.189     8.981    
+                                       output delay                -0.000     8.981    
+  ---------------------------------------------------------------------------------
+                                       required time                          8.981    
+                                       arrival time                          -9.102    
+  ---------------------------------------------------------------------------------
+                                       slack                                 -0.121    
+
+Slack (MET) :             0.654ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (rising edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_write  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            1.375ns  (dac_write rise@1.500ns - linienmodule_analog_dacregionalclock3 rise@0.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.170ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.947ns = ( 12.447 - 1.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 8.369 - 0.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 rise edge)
+                                                                    0.125     0.125 r  
+                  U18                                               0.000     0.125 r  clk125_p (IN)
+                                       net (fo=0)                   0.000     0.125    clk125_p
+                  U18                                                               r  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     1.076 r  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     3.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    r  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.383 r  BUFG/O
+                                       net (fo=1, routed)           1.831     5.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    r  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     1.402 r  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     3.285    clk_2
+                  BUFGCTRL_X0Y0                                                     r  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.386 r  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     5.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   r  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     5.457 r  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961     6.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        r  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609     8.027 r  BUFIO_3/O
+                                       net (fo=1, routed)           0.341     8.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         r  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472     8.841 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001     8.842    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    12.070 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    12.070    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_write rise edge)
+                                                                    1.500     1.500 f  
+                  U18                                               0.000     1.500 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     1.500    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     2.409 f  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     4.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     4.507 f  BUFG/O
+                                       net (fo=1, routed)           1.634     6.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     2.699 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     4.419    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     4.510 f  BUFG_3/O
+                                       net (fo=13463, routed)       1.773     6.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                                    0.083     6.366 f  MMCME2_BASE/CLKOUT0
+                                       net (fo=1, routed)           0.871     7.237    linienmodule_analog_dacregionalclock0
+                  BUFIO_X1Y11                                                       f  BUFIO/I
+                  BUFIO_X1Y11          BUFIO (Prop_bufio_I_O)       1.431     8.668 f  BUFIO/O
+                                       net (fo=15, routed)          0.284     8.952    dac_io_clk
+                  OLOGIC_X1Y134                                                     f  ODDR_1/C
+                  OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411     9.363 r  ODDR_1/Q
+                                       net (fo=1, routed)           0.001     9.364    dac_wrt_OBUF
+                  M17                                                               r  dac_wrt_OBUF_inst/I
+                  M17                  OBUF (Prop_obuf_I_O)         3.083    12.447 r  dac_wrt_OBUF_inst/O
+                                       net (fo=0)                   0.000    12.447    dac_wrt
+                  M17                                                               r  dac_wrt (OUT)
+                                       clock pessimism              0.467    12.914    
+                                       clock uncertainty           -0.189    12.725    
+                                       output delay                -0.000    12.725    
+  ---------------------------------------------------------------------------------
+                                       required time                         12.725    
+                                       arrival time                         -12.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                  0.654    
+
+Slack (MET) :             0.654ns  (required time - arrival time)
+  Source:                 ODDR_2/C
+                            (falling edge-triggered cell ODDR clocked by linienmodule_analog_dacregionalclock3  {rise@0.125ns fall@4.125ns period=8.000ns})
+  Destination:            dac_sel
+                            (output port clocked by dac_write  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_write
+  Path Type:              Max at Slow Process Corner
+  Requirement:            1.375ns  (dac_write rise@5.500ns - linienmodule_analog_dacregionalclock3 fall@4.125ns)
+  Data Path Delay:        3.701ns  (logic 3.700ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        3.170ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.947ns = ( 16.447 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.244ns = ( 12.369 - 4.125 ) 
+    Clock Pessimism Removal (CPR):    0.467ns
+  Clock Uncertainty:      0.189ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.120ns
+
+    Pin Reuse     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  ---------------------------------------------------------------------------------    -------------------
+                                       (clock linienmodule_analog_dacregionalclock3 fall edge)
+                                                                    4.125     4.125 f  
+                  U18                                               0.000     4.125 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     4.125    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.951     5.076 f  IBUFGDS/O
+                                       net (fo=1, routed)           2.205     7.281    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     7.383 f  BUFG/O
+                                       net (fo=1, routed)           1.831     9.214    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.812     5.402 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.883     7.285    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     7.386 f  BUFG_3/O
+                                       net (fo=13463, routed)       1.983     9.369    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT3)
+                                                                    0.088     9.457 f  MMCME2_BASE/CLKOUT3
+                                       net (fo=1, routed)           0.961    10.418    linienmodule_analog_dacregionalclock3
+                  BUFIO_X1Y9                                                        f  BUFIO_3/I
+                  BUFIO_X1Y9           BUFIO (Prop_bufio_I_O)       1.609    12.027 f  BUFIO_3/O
+                                       net (fo=1, routed)           0.341    12.369    dac_select_io_clk
+                  OLOGIC_X1Y107        ODDR                                         f  ODDR_2/C
+  ---------------------------------------------------------------------------------    -------------------
+    Routing       OLOGIC_X1Y107        ODDR (Prop_oddr_C_Q)         0.472    12.841 r  ODDR_2/Q
+                                       net (fo=1, routed)           0.001    12.842    dac_sel_OBUF
+    Routing       N16                                                               r  dac_sel_OBUF_inst/I
+    Routing       N16                  OBUF (Prop_obuf_I_O)         3.228    16.070 r  dac_sel_OBUF_inst/O
+                                       net (fo=0)                   0.000    16.070    dac_sel
+                  N16                                                               r  dac_sel (OUT)
+  ---------------------------------------------------------------------------------    -------------------
+
+                                       (clock dac_write rise edge)
+                                                                    5.500     5.500 f  
+                  U18                                               0.000     5.500 f  clk125_p (IN)
+                                       net (fo=0)                   0.000     5.500    clk125_p
+                  U18                                                               f  IBUFGDS/I
+                  U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  IBUFGDS/O
+                                       net (fo=1, routed)           2.006     8.415    clk_adci
+                  BUFGCTRL_X0Y17                                                    f  BUFG/I
+                  BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092     8.507 f  BUFG/O
+                                       net (fo=1, routed)           1.634    10.141    clk_adcb
+                  PLLE2_ADV_X1Y0                                                    f  PLLE2_BASE/CLKIN1
+                  PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                                   -3.442     6.699 f  PLLE2_BASE/CLKOUT2
+                                       net (fo=1, routed)           1.720     8.419    clk_2
+                  BUFGCTRL_X0Y0                                                     f  BUFG_3/I
+                  BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091     8.510 f  BUFG_3/O
+                                       net (fo=13463, routed)       1.773    10.283    sys_clk
+                  MMCME2_ADV_X1Y2                                                   f  MMCME2_BASE/CLKIN1
+                  MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                                    0.083    10.366 f  MMCME2_BASE/CLKOUT0
+                                       net (fo=1, routed)           0.871    11.237    linienmodule_analog_dacregionalclock0
+                  BUFIO_X1Y11                                                       f  BUFIO/I
+                  BUFIO_X1Y11          BUFIO (Prop_bufio_I_O)       1.431    12.668 f  BUFIO/O
+                                       net (fo=15, routed)          0.284    12.952    dac_io_clk
+                  OLOGIC_X1Y134                                                     f  ODDR_1/C
+                  OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.363 r  ODDR_1/Q
+                                       net (fo=1, routed)           0.001    13.364    dac_wrt_OBUF
+                  M17                                                               r  dac_wrt_OBUF_inst/I
+                  M17                  OBUF (Prop_obuf_I_O)         3.083    16.447 r  dac_wrt_OBUF_inst/O
+                                       net (fo=0)                   0.000    16.447    dac_wrt
+                  M17                                                               r  dac_wrt (OUT)
+                                       clock pessimism              0.467    16.914    
+                                       clock uncertainty           -0.189    16.725    
+                                       output delay                -0.000    16.725    
+  ---------------------------------------------------------------------------------
+                                       required time                         16.725    
+                                       arrival time                         -16.070    
+  ---------------------------------------------------------------------------------
+                                       slack                                  0.654    
+
+
+
+

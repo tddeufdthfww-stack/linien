@@ -1,0 +1,88 @@
+
+****** Vivado v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r83_legal_dac_scan\scan.tcl}
+# if {[catch {
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r83_legal_dac_scan}
+# set_param general.maxThreads 2
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r83-dac-shared-bufio/gateware/build/trials/20261112_195916_r83_shared_bufio_implementation/routed.dcp}
+# 
+# set ports [get_ports {dac_data[*]}];set wrt [get_ports dac_wrt]
+# if {[llength $ports]!=14 || [llength $wrt]!=1} {error "DAC port count"}
+# set original {};foreach port [concat $ports $wrt] {dict set original [get_property NAME $port] [list [get_property DRIVE $port] [get_property SLEW $port]]}
+# set f [open "$out/per_pin.tsv" w];puts $f "data_drive	wrt_drive	pin	setup_ns	hold_ns"
+# set scan_code [catch {
+#  foreach wc {4 8 12 16} {
+#   foreach dd {4 8 12 16} {
+#    set_property DRIVE $wc $wrt;set_property SLEW FAST $wrt
+#    set_property DRIVE $dd $ports;set_property SLEW FAST $ports
+#    set su {};set ho {}
+#    foreach path [get_timing_paths -to $ports -delay_type max -max_paths 100 -nworst 1] {dict set su [get_property ENDPOINT_PIN $path] [get_property SLACK $path]}
+#    foreach path [get_timing_paths -to $ports -delay_type min -max_paths 100 -nworst 1] {dict set ho [get_property ENDPOINT_PIN $path] [get_property SLACK $path]}
+#    if {[dict size $su]!=14 || [dict size $ho]!=14} {error "Missing per-pin coverage"}
+#    dict for {pin ss} $su {puts $f [join [list $dd $wc $pin $ss [dict get $ho $pin]] "	"]}
+#    flush $f
+#   }
+#  }
+# } scan_error scan_options]
+# close $f
+# # Also restore on diagnostic failure, never save a modified checkpoint.
+# dict for {name properties} $original {set_property DRIVE [lindex $properties 0] [get_ports $name];set_property SLEW [lindex $properties 1] [get_ports $name]}
+# if {$scan_code} {return -options $scan_options $scan_error}
+# report_timing -to $ports -max_paths 14 -file "$out/restored_setup.rpt"
+# report_timing -delay_type min -to $ports -max_paths 14 -file "$out/restored_hold.rpt"
+# puts DAC_PER_PIN_LEGAL_CHARACTERIZATION_COMPLETE_NOT_SIGNOFF
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r83-dac-shared-bufio/gateware/build/trials/20261112_195916_r83_shared_bufio_implementation/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.036 . Memory (MB): peak = 1075.922 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.319 . Memory (MB): peak = 1075.922 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2861 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading placer database...
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.137 ; gain = 19.508
+Finished XDEF File Restore: Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1561.137 ; gain = 19.508
+INFO: [Project 1-837] Checkpoint contains data reused from an Incremental Compile. Run report_incremental_reuse for further information about reused data.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 1575.398 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:29 . Memory (MB): peak = 1575.398 ; gain = 499.477
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 1632.809 ; gain = 57.410
+get_timing_paths: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1636.406 ; gain = 3.598
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1638.547 ; gain = 2.141
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1640.203 ; gain = 1.656
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:07 . Memory (MB): peak = 1640.766 ; gain = 0.562
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1641.883 ; gain = 1.117
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1641.887 ; gain = 0.004
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1642.621 ; gain = 0.734
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1642.633 ; gain = 0.012
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1643.422 ; gain = 0.789
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1643.422 ; gain = 0.000
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1644.152 ; gain = 0.730
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1644.152 ; gain = 0.000
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1644.184 ; gain = 0.031
+get_timing_paths: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1644.184 ; gain = 0.000
+get_timing_paths: Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 1644.941 ; gain = 0.758
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 14 -nworst 1 -delay_type max -sort_by slack.
+report_timing: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1645.418 ; gain = 0.477
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 14 -nworst 1 -delay_type min -sort_by slack.
+DAC_PER_PIN_LEGAL_CHARACTERIZATION_COMPLETE_NOT_SIGNOFF
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 20:12:25 2026...
