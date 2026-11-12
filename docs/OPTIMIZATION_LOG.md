@@ -649,3 +649,9 @@ R69原始严格full在Scope复位79926ns FAIL：reset0/0、ACK0/0、ERR0/0，数
 这一步并非提前宣布有效响应PASS。先运行新Scope suite，通过后才完整回归；任何有效ACK/数值/状态失败必须修源码，不可继续放宽断言。该branch不做新的时序例外、不改clock/反馈延迟/CSR接口。run_gateware_trial功能阶段新增RUNNING/FAIL状态，修复异常中断时manifest残留NOT RUN的记录问题；旧manifest原件不改。
 
 R69b目标factor-cache回归四相位全部PASS：161872 scalar固定点及3000 X/Z案例、四整Scope原生数值/状态/内存/CSR/cohort/无条件ACK/有资格payload检查。无ACK周期差分计数保留。初版wrapper变量遮蔽了simulate的字符串marker，工具TypeError导致未完成；原fixture/日志/source归档并修正变量名，未改任何DUT或仿真断言。56个实际gateware/hardware/common文件逐RAW与冻结R69一致，物理结果仅REUSED_R69。完整契约回归尚待运行，原严格空闲payload差分FAIL保持。
+
+## R69b实际完整回归（明确的有效响应契约）PASS
+
+输入20a397d68f23c445d5b30709916b6c68cfcbc72e，fresh functional全阶段PASS、TRIAL_FLOW_COMPLETE，运行中源码变化0。32新增故障/取消/重放场景PASS；9整Scope测试共225588 ADC cycles、15404 bus transactions、1890 known memory reads。14/25位算术、饱和/复位/CE/CSR/AXI背压/CDC/Scope等现有阶段均PASS；原始strict无ACK数据全周期相等检查FAIL仍保留，不冒称恢复该语义。所有原件/命令/源输入SHA和stage标记在experiments/r69b_fresh_full_qualified_contract_20261112。
+
+硬件56源文件RAW与R69一致，综合/route仅REUSED_R69（-.411/-30.808ns，STA FAIL），不写成新综合/route或可烧录；后续R70/R71物理候选以这份已通过的功能硬件为依据，但实际各自物理报告及网表等价须另审。正常反馈新增级0，继承R2b+32ns，真实板端总延迟/闭环带宽未验证。

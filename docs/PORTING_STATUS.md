@@ -1,3 +1,5 @@
+> **R69b实际：有效响应契约下fresh完整功能PASS；原strict无ACK数据差分FAIL保留**。32故障例及所有现有回归通过，56硬件源RAW等于R69；综合/route只REUSED_R69，STA仍FAIL。不能将功能PASS等同上板签核。
+
 > **R69b候选：测试响应契约待运行，硬件逐RAW不改**。原R69 strict full FAIL保留。新检查ACK始终四态严格比较，有资格响应数据/ERR严格比较，数值/CSR/内存/状态断言不动；物理数据只复用R69 STA FAIL。
 
 > **2026-11-12 R69实际：严格旧全回归FAIL、最终STA FAIL**。32新增故障例PASS；Scope在无ACK复位周期RDATA0/1差分FAIL，后续项未运行。route -.411/-30.808ns、242端点，WHS+.027/THS0。独立R69b将核对有效响应契约，硬件暂不改；原始FAIL完整保留，不能宣称完整通过或可上板。
@@ -927,3 +929,9 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 全部原始strict失败源/日志、生成文件、新物理DCP/SHA、实际总线值诊断及clock geometry在experiments/r69_strict_failure_and_physical_20261112。DCP SHA256=63e1f2a98a3d335dff9880408e35ac0cbf36573d6859663e6bdb6dbd14c2be40。R66只读FAST合法16电气组合、逐14位224行扫描无同时setup/hold可行解，含整体相移假设也未找到交集，仅诊断未选入源码。
 
 下一R69b仅明确测试契约，硬件源码逐RAW保持本输入：ACK始终严格比较，payload/ERR仅在任一ACK非确知0时四态比较，保留所有数值/状态/内存/CSR/cohort断言和原始strict FAIL。必须独立跑过才能写更新契约PASS，不能将旧FAIL删掉；不预判是否存在有效响应或Scope数值问题。最终未签核、不部署，正常反馈新增级0（继承+32ns相对R2b）。
+
+## R69b实际完整回归（明确的有效响应契约）PASS
+
+输入20a397d68f23c445d5b30709916b6c68cfcbc72e，fresh functional全阶段PASS、TRIAL_FLOW_COMPLETE，运行中源码变化0。32新增故障/取消/重放场景PASS；9整Scope测试共225588 ADC cycles、15404 bus transactions、1890 known memory reads。14/25位算术、饱和/复位/CE/CSR/AXI背压/CDC/Scope等现有阶段均PASS；原始strict无ACK数据全周期相等检查FAIL仍保留，不冒称恢复该语义。所有原件/命令/源输入SHA和stage标记在experiments/r69b_fresh_full_qualified_contract_20261112。
+
+硬件56源文件RAW与R69一致，综合/route仅REUSED_R69（-.411/-30.808ns，STA FAIL），不写成新综合/route或可烧录；后续R70/R71物理候选以这份已通过的功能硬件为依据，但实际各自物理报告及网表等价须另审。正常反馈新增级0，继承R2b+32ns，真实板端总延迟/闭环带宽未验证。
