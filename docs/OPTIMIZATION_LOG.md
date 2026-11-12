@@ -660,3 +660,16 @@ R69b目标factor-cache回归四相位全部PASS：161872 scalar固定点及3000 
 新物理DCP写唯一目录，原DCP只读并核验前后SHA。新综合NOT RUN，综合数据REUSED_R69；actual postroute结果单独报告，不把父综合复制件叫新综合。完整funcsim导出before/after，仅去注释和LOC/BEL物理位置属性后严格字符比较所有逻辑参数/连接/初始化；若不相等则不接受逻辑等价，保留差异诊断。仍须新实际setup/hold/pulse/ADC/DAC/DNA/CDC/DRC报告；相等不代表已经签核。
 
 当前DAC必要零PCBsetup-.343/hold+.070，合法FAST16组合/逐位扫描无可行解，单纯核心布线优化不自动解决外部数据/SEL/CLK/pulse/PCB。ADC28+.429/+3.304、DNAsetup+.009很小，任何新的hold或DNA违例均不能忽略。物理试验按结果保留/拒绝，不部署。
+
+
+# R71 core-targeted placement/routing TNS cleanup
+
+2026-11-12独立opt/r71-core-physical-cleanup-20261112。硬件源码仍逐raw等于R69；R69b有效响应fresh full运行中，不能提前填PASS；原R69严格idle数据等价FAIL保持。
+
+R70实际postroute WNS/TNS=-.343/-5.900ns、70端点，hold+.027/0、WPWS1.5；核心最差-.205ns，为fast_a_iir0_z_low0/CLK→fast_a_iir0_z_high0/CEB2，DSP+LUT2级、7.603ns(logic5.848/route1.755)，不可仅看phase路径名称。新综合NOT RUN，综合REUSED_R69。
+
+R70脚本原严格文本比较FAIL，因为只忽略LOC/BEL，输出增加3处PHYS_OPT_MODIFIED=PLACEMENT_OPT标注。独立证据确认完整diff仅3新增行，额外去掉该精确物理标签后全部原语/参数/INIT/连接逐token相等；原manifest的false与脚本退出1不改，追加placement_annotation_identity_proof.json提供正确限定的逻辑等价证据，不能把原严格比较器说成PASS。
+
+本轮输入为R70实际routed DCP db5c8f6e20818363d39d884136a855d488db484c725c611cd6fb61fce7df8c4b，验证追加identity proof对应SHA后，在独立输出目录执行phys_opt_design -placement_opt -routing_opt -tns_cleanup -path_groups clk_2，再实际route Explore。path_groups只限制优化器工作范围，所有时钟和路径仍完整计时、报告，不增加任何时序例外。不开retime/FF插入/复制/寄存器优化/rewire/clock_opt，无新增反馈级；不改Migen/CSR/ADC/DAC/PLL/电气参数/时钟周期。
+
+逻辑before/after完整funcsim严格比较，只忽略注释、LOC/BEL及精确PLACEMENT_OPT物理标签；输入canonical hash还须等于R70独立证明的canonical hash。原DCP前后SHA保持。若发生实际逻辑变化，不接受等价。全局DAC仍-.343ns必要预算，DNA旧+.009ns裕量很小，必须继续核查所有setup/hold/pulse/CDC/I/O/DRC，不能仅拿core过线宣称可上板。

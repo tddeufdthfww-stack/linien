@@ -1,3 +1,5 @@
+> **R71候选：内部clk_2 placement/routing TNS cleanup待结果**。R70实际-.343/-5.900ns、core-.205、hold+.027；逻辑仅新增3物理标记的等价已独立证明，原严格比较FAIL保留。R71无源码/反馈级/时钟/约束更改，综合复用R69，仍全局计时签核。
+
 > **R70候选：仅placement/routing物理优化待运行**。硬件源逐RAW继承R69，综合REUSED_R69，不改寄存器/算术/时钟/约束，新增数据级0；新物理与完整逻辑网表严格等价检查结果待出。R69b fresh有效响应全回归仍在运行，原strict FAIL保留。
 
 > **R69b候选：测试响应契约待运行，硬件逐RAW不改**。原R69 strict full FAIL保留。新检查ACK始终四态严格比较，有资格响应数据/ERR严格比较，数值/CSR/内存/状态断言不动；物理数据只复用R69 STA FAIL。
