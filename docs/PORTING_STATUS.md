@@ -1,3 +1,5 @@
+> **R69b候选：测试响应契约待运行，硬件逐RAW不改**。原R69 strict full FAIL保留。新检查ACK始终四态严格比较，有资格响应数据/ERR严格比较，数值/CSR/内存/状态断言不动；物理数据只复用R69 STA FAIL。
+
 > **2026-11-12 R69实际：严格旧全回归FAIL、最终STA FAIL**。32新增故障例PASS；Scope在无ACK复位周期RDATA0/1差分FAIL，后续项未运行。route -.411/-30.808ns、242端点，WHS+.027/THS0。独立R69b将核对有效响应契约，硬件暂不改；原始FAIL完整保留，不能宣称完整通过或可上板。
 
 > **R69输入冻结前：32例新增故障/重放/非法数据检查及actual Root取消连线PASS**。当前实际硬件是R66 DAC+R67 PS ASR+R69 timeout cancel，精确组件和SHA见R69_INPUT_COMPONENTS.md。新完整功能/综合/route待运行，整体未签核。

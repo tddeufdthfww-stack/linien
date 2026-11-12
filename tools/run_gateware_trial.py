@@ -84,6 +84,7 @@ def main():
                 ROOT, out, 'versions', env)
         stages = args.stages.split(',')
         if 'functional' in stages:
+            manifest['functional'] = 'RUNNING'; save()
             execute([sys.executable, ROOT / 'tools/check_r69_fault_contract.py', '--out', out / 'r69_fault_contract_checks'],
                     ROOT, out, 'r69_fault_contract', env, 'FAULT_CONTRACT_EXPECTED_OUTCOMES_COMPLETE fixed')
             execute([sys.executable, ROOT / 'tools/check_r69_cancel_wiring.py', '--out', out / 'r69_cancel_wiring_checks'],
@@ -104,9 +105,9 @@ def main():
                     ROOT, out, 'c48_carry_fold', env, 'C48_CARRY_FOLD_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_c48_fold_filter.py', '--out', out / 'c48_fold_filter_checks'],
                     ROOT, out, 'c48_fold_filter', env, 'C48_FOLD_FILTER_CONFIG2_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'factor-cache', '--out', out / 'scope_factor_cache_checks'],
+            execute([sys.executable, ROOT / 'tools/check_r69b_scope_bus_contract.py', '--suite', 'factor-cache', '--out', out / 'scope_factor_cache_checks'],
                     ROOT, out, 'scope_factor_cache', env, 'SCOPE_FACTOR_CACHE_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'predecode', '--out', out / 'scope_predecode_checks'],
+            execute([sys.executable, ROOT / 'tools/check_r69b_scope_bus_contract.py', '--suite', 'predecode', '--out', out / 'scope_predecode_checks'],
                     ROOT, out, 'scope_predecode', env, 'SCOPE_SOURCE_PREDECODE_SUITE_PASS')
             if (ROOT / 'tools/check_instruction_prefetch.py').exists():
                 execute([sys.executable, ROOT / 'tools/check_instruction_prefetch.py', '--out', out / 'instruction_prefetch_checks'],
@@ -161,7 +162,7 @@ def main():
                 execute([sys.executable, ROOT / 'tools/check_pid_output_limit.py', '--out', out / 'pid_output_checks'],
                         ROOT, out, 'pid_output_limit', env, 'PID_OUTPUT_LIMIT_SUITE_PASS')
             if (ROOT / 'tools/check_scope_average.py').exists():
-                execute([sys.executable, ROOT / 'tools/check_r61_scope_reset_contract.py', '--suite', 'average', '--out', out / 'scope_average_checks'],
+                execute([sys.executable, ROOT / 'tools/check_r69b_scope_bus_contract.py', '--suite', 'average', '--out', out / 'scope_average_checks'],
                         ROOT, out, 'scope_average', env, 'SCOPE_AVERAGE_SUITE_PASS')
             sim = out / 'xsim'
             sim.mkdir()
@@ -231,6 +232,7 @@ def main():
             manifest['timing_signoff'] = 'INCOMPLETE: requires Setup/Hold/Pulse/CDC/I/O/DRC review'
             save()
     except Exception as exc:
+        if manifest['functional'] == 'RUNNING': manifest['functional'] = 'FAIL'
         manifest['failure'] = str(exc); save(); raise
     finally:
         changed = [n for n, digest in hashes.items() if not (ROOT / n).is_file()
