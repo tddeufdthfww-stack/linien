@@ -805,3 +805,15 @@ R82只将新增MMCM参考从原250改为原SYS125（period8、mult8，仍VCO1000
 原先拒绝R81的Bare PID组件通路、同样手工SYS/2x初相位现已PASS：正负123脉冲R80数据72.100ns/R82 71.600ns，R80对应WRT74.100ns/R82 73.850ns，样本/幅值/CSR一致。data早.500ns、WRT早.250ns是有意接口相位差，不是省掉8ns整拍；数据整数新增级0。先前R28/R80两帧+两级快PID累计相对R2b+4个125MHz周期/+32ns；R82此配置功能模型将数据边沿提前.5ns（相对早期R2b模型40.1ns，差31.5ns），完整ADC转换、DAC内部更新/模拟建立、滤波/MTS选择及全Root/SDF/板测延迟仍未测，不能套用到真实锁频带宽。
 
 新完整回归已加入R82实际原语和Bare延迟测试；新生成/综合/route待执行，不能用这些功能PASS预报时序收益。增量参考仍是R80精确SHA，R81只保留失败诊断，不以其物理DCP作参考。本轮未改原CRG/PLL/ADC/PS/CSR/控制算法或时钟周期/例外，接口脉宽/PCB/物理CDC/DRC仍未签核。
+
+## R82 实际失败与独立后继 / 2026-11-12
+
+输入56f8772b8ec2482dad7924193d4adbbf95809d23，新生成CSR语义PASS、新综合COMPLETE（WNS/TNS=-0.773/-79.121ns）；actual route COMPLETE，WNS/TNS=-0.484/-6.2ns、16 setup端点，WHS/THS=-0.562/-7.362ns、14 hold端点，WPWS=1.5ns。source_changes=[]。最终STA FAIL，REJECTED_NOT_MERGED，不能作为可上板正式版。
+
+实际原CRG原语定向PASS及R81失败的Bare模型正负脉冲PASS：数据R80 72.1/R82 71.6ns、对应WRT74.1/73.85ns，新增数据级0，仅子周期相位提前。fresh整套功能NOT RUN，不能以R78旧整套PASS冒称R82重跑。
+
+ADC全部28条setup+.429/hold+3.304ns、同字0/-8逐条PASS。54ASYNC/27同SLICE配对、一级Q仅到二级D；GPIO16级间setup7.193/hold.122ns。旧v4/v5分类器对新最差decoded字段FAIL保留；v6逐项核实真实wen守卫、地址、字段位宽和同一src_capture保持，当前导出未分类0。只是协议/布线inventory，不是整体物理CDC/MTBF/故障签核。
+
+当前不同MMCM输出驱动数据与WRT。.183ns clock uncertainty中包含.120ns跨MMCM输出PhaseError；实际min最差在Slow角，不能只用Fast角典型值或调小uncertainty“修复”。后继R83在独立分支把WRT真正接到DATA同一CLKOUT0/BUFIO，由工具重新计算共享路径与相位误差，保持data提前.5ns防止同边沿采样歧义。不改变原CRG/PLL/SYS/ADC/PS/算法/CSR、时钟周期、IO2/-1.5预算或时序例外。
+
+原件见experiments/r82_rejected_physical_20261112；DCP SHA256=1b9557b5162e4f4b4cc5b2df8782d2f41e3ba4c5770e8e324e2c29b8e65f94cd。保留R80最佳内部已闭合候选60ba54e9；新增反馈整数级0。R82相位提前.5ns不是少8ns，端到端硬件/ADC转换/DAC模拟建立/激光环路未测。DAC外部3.5ns脉宽、CLK/WRT/SEL完整协议、真实PCB/SI、物理CDC/DRC仍未签核，不生成bit/bin、不刷写、不驱动激光/PZT。
