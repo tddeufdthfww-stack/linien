@@ -1,3 +1,5 @@
+> **R72候选：core关键LUT物理pin交换待实际结果**。R69b fresh完整有效响应回归PASS，原strict idle差分FAIL保留；R71实际-.343/-5.363ns、24端点、core-.234。R72不改源码/周期/约束/反馈级，综合复用R69，功能复用R69b，逻辑和实际STA各自验收。
+
 > **R71候选：内部clk_2 placement/routing TNS cleanup待结果**。R70实际-.343/-5.900ns、core-.205、hold+.027；逻辑仅新增3物理标记的等价已独立证明，原严格比较FAIL保留。R71无源码/反馈级/时钟/约束更改，综合复用R69，仍全局计时签核。
 
 > **R70候选：仅placement/routing物理优化待运行**。硬件源逐RAW继承R69，综合REUSED_R69，不改寄存器/算术/时钟/约束，新增数据级0；新物理与完整逻辑网表严格等价检查结果待出。R69b fresh有效响应全回归仍在运行，原strict FAIL保留。
