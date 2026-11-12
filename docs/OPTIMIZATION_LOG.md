@@ -660,3 +660,11 @@ R69b目标factor-cache回归四相位全部PASS：161872 scalar固定点及3000 
 新物理DCP写唯一目录，原DCP只读并核验前后SHA。新综合NOT RUN，综合数据REUSED_R69；actual postroute结果单独报告，不把父综合复制件叫新综合。完整funcsim导出before/after，仅去注释和LOC/BEL物理位置属性后严格字符比较所有逻辑参数/连接/初始化；若不相等则不接受逻辑等价，保留差异诊断。仍须新实际setup/hold/pulse/ADC/DAC/DNA/CDC/DRC报告；相等不代表已经签核。
 
 当前DAC必要零PCBsetup-.343/hold+.070，合法FAST16组合/逐位扫描无可行解，单纯核心布线优化不自动解决外部数据/SEL/CLK/pulse/PCB。ADC28+.429/+3.304、DNAsetup+.009很小，任何新的hold或DNA违例均不能忽略。物理试验按结果保留/拒绝，不部署。
+
+## R70 actual物理候选 / 2026-11-12
+
+输入444ea6a9f029093bfdd2c9fc42d1049d9fb56f00。综合REUSED_R69，不是新综合；route COMPLETE，WNS/TNS=-0.343/-5.9ns，70 setup端点，WHS/THS=0.027/0.0ns，WPWS=1.5ns。最终STA FAIL。功能引用同RAW硬件R69b完整有效响应契约PASS（4c4f965），原无ACK数据严格差分FAIL保留。
+
+逻辑比较：Original strict export comparator FAIL: exactly three physical placement annotations. Independent exact logical proof PASS; original exit1 retained.
+
+全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r70_actual_physical_20261112，DCP SHA256=db5c8f6e20818363d39d884136a855d488db484c725c611cd6fb61fce7df8c4b。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
