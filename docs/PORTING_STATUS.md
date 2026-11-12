@@ -1109,3 +1109,11 @@ R83实际原语73474次逐字WRT、37205次ADC、36731对DAC锁存、双通道�
 两个DCP SHA详见experiments/r84_standalone_serdes_20261112/manifest.json。实际OSERDES转发clock的非单调时序弧须继续核对边沿sense，当前负slack不可改名为PASS；SEL/CLK/WRT低窗、3.3V适用脉宽、PCB/SI、整机CDC/DRC全部仍OPEN。
 
 用户追加授权由工程师自行定义官方未公开PCB/时钟信息的验收口径。将建立明确的设计假设/裕量与证据级别，不伪造PCB实测，不删除负STA。官方板卡页明确LTC2145-14/AD9767；V2r0 RevA只公开开发原理图，不公开完整硬件布线。ADI官方答复确认交织每路125MS/s并澄清tH不等同tH*，但未给替代3.5ns脉宽的数值。来源：https://redpitaya.readthedocs.io/en/latest/developerGuide/hardware/GEN2/125-14_Gen2_Z7020_Pro/top.html 和 https://ez.analog.com/data_converters/high-speed_dacs/f/q-a/164567/ad9763-ad9765-ad9767-interleaved-mode-with-125-msps-update-rate-possible/380408 。后续R85优先独立比较SDR2输出WRT的同类原语映射，保持双125MS/s/14位/同样本/零新增整数反馈级，不放宽时钟和2/-1.5ns预算。
+
+# R85 同类SDR2写时钟候选拒绝 / 2026-11-12
+
+父R84 75e4225c，原整机R80保持。本轮仅独立probe，不改Root/PS/算法/CSR。数据SDR2 250/125不变；WRT SDR2 CLK500/DIV250，D1=1/D2=0，一CLK2ns输出正沿SYS1.5/5.5，保持原波形、旧A/新B、14位全码/双125MS/s、零新增整数数据级。native01实际原语/独立oracle/全码/逐125ps波形/复位/停钟后显式复位恢复PASS，整机回归NOT RUN。
+
+新综合COMPLETE、新route COMPLETE；最终STA FAIL，global WNS/TNS=-3.981/-16.872ns，16setup，WHS/THS=-.312/-3.862ns、14hold，WPWS+.333ns。14DAC setup最差-.696（CQ.472+OBUF3.253+net.001=3.726ns，Slow角），hold-.312；WRT和data不同MMCM输出，uncertainty.183含PhaseError.120，CPR.467。最差另外两条为WRTDIV250→SYS复位同步器PRE的recovery，最差-3.981，不能豁免或声称复位安全。输入源码SHA837700a92d19e62e384e9b4d6a200d1d3c7e767e880af1f994faef6edee8d7b8，DCPc6c30591665d88a050cd4b08dd890d3173d8094539b6771abb705773c379e628。
+
+拒绝、不接整机、不生成bitstream。原功能与物理日志均保留。独立probe无PS7所以ZPS7-1预期但未作为板级DRC合格；BUFR/BUFIO混合REQP-1577还须核对实际相位/物理合法性。后续R86试同一500MHz BUFIO、相同SDR4模式数据AABB和WRT0101，同CLKDIV125；数据重复只定义真实有效边沿，先保留默认严格STA，不立即加例外。若分析工具把不可能改变值的重复位边沿当成有效数据变化，必须先证明协议并单独审查正确的路径关系，不得直接放宽周期。
