@@ -1,0 +1,60 @@
+
+****** Vivado v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r86b_qualified_eye_scan01\scan.tcl}
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r86-dac-common-sdr4/gateware/build/r86_serdes02/routed.dcp}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r86-dac-common-sdr4/gateware/build/r86_serdes02/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.034 . Memory (MB): peak = 1076.332 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1076.332 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.104 . Memory (MB): peak = 1446.703 ; gain = 8.695
+Restored from archive | CPU: 0.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.105 . Memory (MB): peak = 1446.703 ; gain = 8.695
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1446.703 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:11 ; elapsed = 00:00:18 . Memory (MB): peak = 1446.703 ; gain = 370.371
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r86b_qualified_eye_scan01}
+# set_param general.maxThreads 2
+# set data [get_ports {dac_data[*]}];
+# set wrt [get_ports dac_wrt]
+# set saved {};
+# foreach port [concat $data $wrt] {dict set saved [get_property NAME $port] [list [get_property DRIVE $port] [get_property SLEW $port]]}
+# set f [open "$out/raw.tsv" w];
+# puts $f "data_drive\twrt_drive\tdata_slew\twrt_slew\tpin\tsetup_ns\traw_hold_ns"
+# set code [catch {
+#  foreach ws {FAST SLOW} {foreach wc {4 8 12 16} {foreach ds {FAST SLOW} {foreach dd {4 8 12 16} {
+#   set_property SLEW $ws $wrt;set_property DRIVE $wc $wrt
+#   set_property SLEW $ds $data;set_property DRIVE $dd $data
+#   set su {};set ho {}
+#   foreach q [get_timing_paths -to $data -delay_type max -max_paths 100 -nworst 1] {dict set su [get_property ENDPOINT_PIN $q] [get_property SLACK $q]}
+#   foreach q [get_timing_paths -to $data -delay_type min -max_paths 100 -nworst 1] {dict set ho [get_property ENDPOINT_PIN $q] [get_property SLACK $q]}
+#   if {[dict size $su]!=14 || [dict size $ho]!=14} {error "Missing bit coverage"}
+#   dict for {pin ss} $su {puts $f [join [list $dd $wc $ds $ws $pin $ss [dict get $ho $pin]] "\t"]};flush $f
+#  }}}}
+# } msg opts]
+# close $f
+# dict for {name values} $saved {set_property DRIVE [lindex $values 0] [get_ports $name];set_property SLEW [lindex $values 1] [get_ports $name]}
+# if {$code} {return -options $opts $msg}
+# puts R86_QUALIFIED_EYE_DIAGNOSTIC_COMPLETE_NOT_SIGNOFF
+R86_QUALIFIED_EYE_DIAGNOSTIC_COMPLETE_NOT_SIGNOFF
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 23:26:35 2026...
