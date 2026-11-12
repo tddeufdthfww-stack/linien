@@ -722,3 +722,9 @@ actual route/STA/CDC/DRC/IO待独立结果，不能先写PASS。R72基线不覆�
 14位完整Demod93226拍、25位27701拍，均真实独立CSRBank、16/16倍频、delay部分热写/边界/相位绕回/27复位拍/IQ及phase全输出每拍严格PASS；延迟分别原15/26拍不变。第一步独立数学65536组14位与40020组25位边界随机PASS。原R75冻结Demod源作为reference。全FastChain32000拍PASS（31976已知/21317写/24000 CE保持）。所有原件/SHA在experiments/r77_native_equivalence_20261112。新生成/综合/route与fresh全功能待验证，不预报最终收益。
 
 R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.343/-6.077ns、33端点、前后逻辑一致PASS，最终STA仍FAIL。R77不加任何寄存器级，不改变原IIR/limiter状态边界；所有延迟结论仍不等于端到端或闭环带宽实测。完整DAC协议/PCB/CDC/DRC尚未签核。
+
+## R78已执行新功能验证PASS
+
+实施前14/10位与25/14位阈值CSA数学各200500例PASS。实际14/25位限幅各36000拍，真实独立CSRBank+signed64 oracle在每个边沿前后核对所有阈值/pre_y/rail/y/error/bound/CSR/common，PASS。两例各10303次CE0写、30909保持拍，反置边界17545/16266拍、相等539/535拍、边界1795/1796例；全FastChain32000拍PASS。没有延迟容忍。原件/SHA在experiments/r78_native_equivalence_20261112。新生成/综合/route和fresh全功能尚待。
+
+R77最新物理失败/相位改善归档99dc108e0ba799bfa4dee40118b8150ba45f5f56；全部102负路径无phase/CORY。R78仅优化限幅控制比较，未更改原IIR/PID/PLL/PS7/ADC/DAC/AXI/CDC和输出接受边沿。新增辅助阈值FF不是新增反馈数据级，累计R2b+32ns非全链路实测。最终DAC/PCB/CDC/DRC签核未完成，不上板。

@@ -21,6 +21,7 @@ from misoc.interconnect.csr import CSR, AutoCSR, CSRStatus, CSRStorage
 from .iir import Iir
 from .limit import LimitCSR
 from .parallel_tap_limit import ParallelTapLimitCSR
+from .early_common_tap_limit import EarlyCommonTapLimitCSR
 from .same_edge_common import same_edge_common
 from .modulate import Demodulate
 from .pid import PID
@@ -30,8 +31,9 @@ class FastChain(Module, AutoCSR):
     def __init__(
         self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
         iir_mac_impl="native", parallel_output=False, pre_offset_signal=None,
-        iir_swap_final_operands=False, speculative_demod=False
+        iir_swap_final_operands=False, speculative_demod=False, early_common_limits=False
     ):
+        assert not early_common_limits or (parallel_output and pre_offset_signal is not None)
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
         self.out_i = Signal((signal_width, True))
@@ -73,7 +75,8 @@ class FastChain(Module, AutoCSR):
         common_registered = None
         if pre_offset_signal is not None:
             assert parallel_output and len(pre_offset_signal) == width
-            common_registered = same_edge_common(self,dy,pre_offset_signal,width,s)
+            if not early_common_limits:
+                common_registered = same_edge_common(self,dy,pre_offset_signal,width,s)
 
         ###
 
@@ -102,7 +105,9 @@ class FastChain(Module, AutoCSR):
                 swap_final_operands=iir_swap_final_operands,
             )
             setattr(self.submodules, f"iir_d_{sub_channel_idx+1}", iir_d)
-            y_limit = (ParallelTapLimitCSR if parallel_output else LimitCSR)(width=signal_width, guard=3)
+            y_limit = (EarlyCommonTapLimitCSR(width=signal_width, guard=3, input_width=width)
+                       if early_common_limits else
+                       (ParallelTapLimitCSR if parallel_output else LimitCSR)(width=signal_width, guard=3))
             if sub_channel_idx == 0:
                 self.comb += [self.pre_out_i.eq(y_limit.pre_y if parallel_output else y_limit.limit.y),
                               self.out_i_update_en.eq(y_limit.update_en)]
@@ -122,10 +127,15 @@ class FastChain(Module, AutoCSR):
 
             output_signal_this_channel = (self.out_i, self.out_q)[sub_channel_idx]
             if parallel_output:
-                common_a = ya << s if common_registered is None else common_registered << s
-                common_b = offset_signal << s if common_registered is None else 0
-                self.comb += [y_limit.common_a.eq(common_a),y_limit.common_b.eq(common_b),
-                              y_limit.tap_select.eq(self.y_tap.storage),y_limit.invert.eq(self.invert.storage)]
+                if early_common_limits:
+                    self.comb += [y_limit.common_x.eq(dy >> s),
+                                  y_limit.common_offset.eq(pre_offset_signal)]
+                else:
+                    common_a = ya << s if common_registered is None else common_registered << s
+                    common_b = offset_signal << s if common_registered is None else 0
+                    self.comb += [y_limit.common_a.eq(common_a), y_limit.common_b.eq(common_b)]
+                self.comb += [y_limit.tap_select.eq(self.y_tap.storage),
+                              y_limit.invert.eq(self.invert.storage)]
                 self.comb += [target.eq(source) for target,source in zip(y_limit.taps,ys)]
             else:
                 self.comb += y_limit.x.eq(

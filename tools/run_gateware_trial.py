@@ -193,6 +193,10 @@ def main():
                     ROOT, out, 'r77_demod', env, 'R77_DEMOD_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r77_fastchain.py', '--out', out / 'r77_fastchain_checks'],
                     ROOT, out, 'r77_fastchain', env, 'R77_FASTCHAIN_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r78_early_limit.py', '--out', out / 'r78_early_limit_checks'],
+                    ROOT, out, 'r78_early_limit', env, 'R78_EARLY_LIMIT_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r78_fastchain.py', '--out', out / 'r78_fastchain_checks'],
+                    ROOT, out, 'r78_fastchain', env, 'R78_FASTCHAIN_SUITE_PASS')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'
