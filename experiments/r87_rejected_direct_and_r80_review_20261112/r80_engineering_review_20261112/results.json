@@ -1,0 +1,134 @@
+{
+  "subject": "R80 unchanged routed physical implementation",
+  "routed_dcp_sha256": "82adfcf0187ddf27c15c5cc54f8cfcbf9a9279faa3fe3443886e752b65f13273",
+  "normal_CDC_engineering_review": {
+    "status": "PASS_FOR_REVIEWED_NORMAL_PROTOCOL_AND_EXPORTED_INVENTORY",
+    "unclassified_exported_endpoints": 0,
+    "reviewed_endpoint_count": 844,
+    "source_sha256": {
+      "gateware/verilog/bus_clk_bridge.v": "3030d286eaa1c12871f61b969398e51088489d9e3f80f88007e3a2d4a6675624",
+      "gateware/verilog/red_pitaya_scope.v": "cda086fa614c82068a807371755af83d22f018a0a8d6a5b0468ec0aab27cf448"
+    },
+    "Sys2CSR_source_sha256": "e6032cdeb92bff655140646f56c3a5fa08d9887b88131ebe553789cf4e8ec7e5",
+    "minimum_nominal_two_destination_periods_ns": 16,
+    "engineer_selected_setup_jitter_and_path_inventory_guard_ns": 1.0,
+    "worst_normal_inventory_path_ns": 8.025,
+    "minimum_inventory_guarded_margin_ns": 6.975,
+    "synchronizer_pairs": 26,
+    "same_SLICE_pairs": 26,
+    "first_Q_only_second_D": true,
+    "pair_worst_setup_ns": 6.542,
+    "pair_worst_hold_ns": 0.122,
+    "groups": [
+      {
+        "file": "cdc_clk_2_to_clk_fpga_0_max.tsv",
+        "group": "returned_response_bundle",
+        "endpoints": 32,
+        "worst_data_ns": 2.418,
+        "source": "red_pitaya_scope/i_bridge/dst_rdata_hold_reg[1]/C",
+        "end": "axi_slave/axi_rdata_o_reg[1]/D",
+        "normal_min_two_receiving_periods_ns": 16,
+        "provisional_margin_before_setup_jitter_hold_fault_review_ns": 13.582,
+        "engineer_selected_combined_guard_ns": 1.0,
+        "normal_receiving_window_after_guard_ns": 15.0,
+        "normal_inventory_path_margin_ns": 12.582
+      },
+      {
+        "file": "cdc_clk_fpga_0_to_clk_2_max.tsv",
+        "group": "forward_request_bundle",
+        "endpoints": 803,
+        "worst_data_ns": 8.025,
+        "source": "red_pitaya_scope/i_bridge/addr_o_reg[4]/C",
+        "end": "red_pitaya_scope/i_bridge/dst_rdata_hold_reg[11]/D",
+        "normal_min_two_receiving_periods_ns": 16,
+        "provisional_margin_before_setup_jitter_hold_fault_review_ns": 7.975,
+        "engineer_selected_combined_guard_ns": 1.0,
+        "normal_receiving_window_after_guard_ns": 15.0,
+        "normal_inventory_path_margin_ns": 6.975
+      },
+      {
+        "file": "cdc_clk_fpga_0_to_clk_2_max.tsv",
+        "group": "scope_address0_arm_same_request_cohort",
+        "endpoints": 2,
+        "worst_data_ns": 4.927,
+        "source": "red_pitaya_scope/scope_addr_match_reg[0]/C",
+        "end": "red_pitaya_scope/adc_arm_do_reg_rep/D",
+        "normal_min_two_receiving_periods_ns": 16,
+        "provisional_margin_before_setup_jitter_hold_fault_review_ns": 11.073,
+        "engineer_selected_combined_guard_ns": 1.0,
+        "normal_receiving_window_after_guard_ns": 15.0,
+        "normal_inventory_path_margin_ns": 10.073
+      },
+      {
+        "file": "cdc_clk_fpga_0_to_clk_2_max.tsv",
+        "group": "scope_address28_average_same_request_cohort",
+        "endpoints": 1,
+        "worst_data_ns": 4.432,
+        "source": "red_pitaya_scope/scope_addr_match_reg[8]/C",
+        "end": "red_pitaya_scope/set_avg_en_reg/D",
+        "normal_min_two_receiving_periods_ns": 16,
+        "provisional_margin_before_setup_jitter_hold_fault_review_ns": 11.568,
+        "engineer_selected_combined_guard_ns": 1.0,
+        "normal_receiving_window_after_guard_ns": 15.0,
+        "normal_inventory_path_margin_ns": 10.568
+      },
+      {
+        "file": "cdc_clk_fpga_0_to_clk_2_max.tsv",
+        "group": "scope_dec_metadata_same_request_cohort",
+        "endpoints": 6,
+        "worst_data_ns": 3.989,
+        "source": "red_pitaya_scope/scope_dec_shift_source_reg[0]/C",
+        "end": "red_pitaya_scope/set_dec_shift_reg[0]/D",
+        "normal_min_two_receiving_periods_ns": 16,
+        "provisional_margin_before_setup_jitter_hold_fault_review_ns": 12.011,
+        "engineer_selected_combined_guard_ns": 1.0,
+        "normal_receiving_window_after_guard_ns": 15.0,
+        "normal_inventory_path_margin_ns": 11.011
+      }
+    ],
+    "proof": "Request address/data and toggle publish together and are held while outstanding. Two receiver control stages produce wen, Sys2CSR captures adr/dat_w/we together at the next edge and the CSR consumer acts at a subsequent edge. Scope writes use the exact reviewed wen guards. Response payload and completion publish together; AXI captures after two control stages and next receiving edge. Reset does not rewrite held payload. Review covers the exported normal transaction inventory, not arbitrary sink names.",
+    "limitations": [
+      "1ns is an explicitly selected engineering guard, not a measured maximum-jitter certificate.",
+      "Endpoint inventory consists of routed timing exports, not a formal all-path symbolic proof.",
+      "Reset/timeout/cancellation functional regressions are separate evidence; no universal analog metastability or numeric MTBF certification.",
+      "Asynchronous first-stage D timing is not claimed synchronously safe from incidental STA slack. GPIO remains independent asynchronous levels, not a coherent multibit transfer."
+    ]
+  },
+  "DRC_engineering_review": {
+    "status": "NONFATAL_WARNINGS_REVIEWED_AND_RETAINED",
+    "error_or_critical_rules": 0,
+    "no_load_nets": 84,
+    "no_load_nets_have_actual_receivers": false,
+    "routable_nets": 26182,
+    "fully_routed_nets": 26182,
+    "routing_errors": 0,
+    "rule_counts": {
+      "DPIP-1": 184,
+      "DPOP-1": 56,
+      "DPOP-2": 91,
+      "DPREG-4": 1,
+      "RTSTAT-10": 1,
+      "AVAL-4": 70,
+      "REQP-20": 2
+    },
+    "dynamic_OPMODE": {
+      "stable_bits": "{0,q,q,0,1,0,1}",
+      "q_driver": "linienmodule_mixeralignedpid_error_s1_reg[0]/Q",
+      "PREG": 0,
+      "legal_stable_values": [
+        "0000101",
+        "0110101"
+      ],
+      "stable_Z_sources": [
+        "0",
+        "C"
+      ],
+      "stable_P_feedback_selected": false,
+      "status": "EXACT_SAME_REGISTERED_CONTROL_AND_STABLE_BINARY_MODES_REVIEWED",
+      "limits": "Not an analog pin-skew/glitch characterization, no blanket rule disable or waiver. A future mapping/control change invalidates this review."
+    },
+    "performance_power_advisories": "403 entries; retaining them avoids adding control-loop latency merely to remove advisories. R80 internal125MHz timing must remain independently PASS."
+  },
+  "final_physical_CDC_and_DRC_release": "NOT_A_COMPLETE_RELEASE_CERTIFICATE; acceptance remains explicitly bounded above",
+  "global_FPGA_release": "BLOCKED_BY_KNOWN_DAC_TIMING_AND_OPEN_EXTERNAL_PROTOCOL; no bitstream or board operation"
+}

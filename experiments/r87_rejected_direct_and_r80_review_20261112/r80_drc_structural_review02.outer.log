@@ -1,0 +1,101 @@
+{'export_complete': False, 'unchanged': True, 'dcp_sha256': '82adfcf0187ddf27c15c5cc54f8cfcbf9a9279faa3fe3443886e752b65f13273', 'command': ['D:/Xilinx/Vivado/2020.1/bin/vivado.bat', '-mode', 'batch', '-source', 'C:\\Users\\admin\\Documents\\Codex\\2026-11-05\\ba\\work\\r61_signoff\\r80_drc_structural_review02_20261112\\review.tcl', '-log', 'C:\\Users\\admin\\Documents\\Codex\\2026-11-05\\ba\\work\\r61_signoff\\r80_drc_structural_review02_20261112\\vivado.log', '-journal', 'C:\\Users\\admin\\Documents\\Codex\\2026-11-05\\ba\\work\\r61_signoff\\r80_drc_structural_review02_20261112\\vivado.jou'], 'no_load_nets_expected': 84, 'scope': 'Exact no-load pins and dynamic OPMODE source connections. Not a waiver, analog glitch proof or whole design release.'}
+omplete.
+
+INFO: [Project 1-856] Restoring constraints from binary archive.
+
+INFO: [Project 1-853] Binary constraint restore complete.
+
+Reading XDEF placement.
+
+Reading placer database...
+
+Reading XDEF routing.
+
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1560.898 ; gain = 19.660
+
+Restored from archive | CPU: 2.000000 secs | Memory: 0.000000 MB |
+
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1560.898 ; gain = 19.660
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 1560.898 ; gain = 0.000
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+
+  A total of 16 instances were transformed.
+
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:23 . Memory (MB): peak = 1560.898 ; gain = 484.734
+
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_drc_structural_review02_20261112}
+
+# report_drc -checks [get_drc_checks RTSTAT-10] -file "$out/no_load_drc.rpt"
+
+Command: report_drc -checks RTSTAT-10 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_drc_structural_review02_20261112/no_load_drc.rpt
+
+INFO: [DRC 23-27] Running DRC with 2 threads
+
+INFO: [Coretcl 2-168] The results of DRC are in file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_drc_structural_review02_20261112/no_load_drc.rpt.
+
+report_drc completed successfully
+
+# set violations [get_drc_violations -filter {NAME =~ RTSTAT-10*}]
+
+# set names [get_nets -of_objects $violations]
+
+# if {[llength $names]!=84} {error "Expected exact84 no-load nets, got [llength $names]"}
+
+# set f [open "$out/no_loads.tsv" w];
+
+# puts $f "net\tleaf_input_pins\toutput_ports\tloads"
+
+# foreach name $names {
+
+#  set net [get_nets -quiet $name]
+
+#  if {[llength $net]!=1} {error "No-load exact net missing $name"}
+
+#  set segments [get_nets -segments -of_objects $net]
+
+#  set loads [get_pins -leaf -of_objects $segments -filter {DIRECTION == IN}]
+
+#  set ports [get_ports -of_objects $segments -filter {DIRECTION == OUT}]
+
+#  puts $f [join [list $name [llength $loads] [llength $ports] $loads] "\t"]
+
+# }
+
+WARNING: [Vivado 12-1023] No nets matched for command 'get_nets -segments -of_objects [get_nets -quiet linienmodule_fast_a_earlycommontaplimitcsr013]'.
+
+ERROR: [Common 17-39] 'get_nets' failed due to earlier errors.
+
+
+
+    while executing
+
+"get_nets -segments -of_objects $net"
+
+    ("foreach" body line 4)
+
+    invoked from within
+
+"foreach name $names {
+
+ set net [get_nets -quiet $name]
+
+ if {[llength $net]!=1} {error "No-load exact net missing $name"}
+
+ set segments [get_nets -segm..."
+
+    (file "C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_drc_structural_review02_20261112\review.tcl" line 10)
+
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 23:40:24 2026...
+
+
+ERROR: [Common 17-679] Invalid object type, 'net', used with '-of_objects' switch. Supported types are: 'cell, clock, pin, timing path, port, drc violation'.
+
+
