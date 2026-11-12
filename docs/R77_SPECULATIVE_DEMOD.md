@@ -58,3 +58,11 @@ delay/multiplier存储严格比较；16种倍频、相位绕回、32位delay边�
 14位完整Demod93226拍、25位27701拍，均真实独立CSRBank、16/16倍频、delay部分热写/边界/相位绕回/27复位拍/IQ及phase全输出每拍严格PASS；延迟分别原15/26拍不变。第一步独立数学65536组14位与40020组25位边界随机PASS。原R75冻结Demod源作为reference。全FastChain32000拍PASS（31976已知/21317写/24000 CE保持）。所有原件/SHA在experiments/r77_native_equivalence_20261112。新生成/综合/route与fresh全功能待验证，不预报最终收益。
 
 R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.343/-6.077ns、33端点、前后逻辑一致PASS，最终STA仍FAIL。R77不加任何寄存器级，不改变原IIR/limiter状态边界；所有延迟结论仍不等于端到端或闭环带宽实测。完整DAC协议/PCB/CDC/DRC尚未签核。
+
+## R77实际：相位违规消除，整机STA仍FAIL
+
+输入557745122e3041fc9a0bc7e9074ff71f05d4ee9c。新生成CSR语义PASS；新综合COMPLETE -.786/-81.445ns、297端点；actual route COMPLETE -.437/-9.451ns、102端点，WHS/THS+.006/0、WPWS1.500。全部102负路径无CORY/phase端点，但最差IIR y0/C→parallel limit y[23]/D，8.029ns（logic3.273/route4.756，5CARRY4+LUT4+2LUT5+MUXF7）；另有49 IIR微小违规最差-.019和3GPIO最差-.113ns。整体未优于R72/R76，不合并正式设计。
+
+14/25位完整Demod120927拍及FastChain32000拍新定向PASS，fresh全功能NOT RERUN。source_changes=[]。ADC28条+.429/+3.304及0/-8关系PASS、52ASYNC/26同SLICE双级结构PASS；CDC元数据地址9在部分实际端点成为最差源，旧v3分类器FAIL保留，不称物理CDC通过。全部原件/DCP/输入SHA/只读审计见experiments/r77_actual_demod_20261112，DCP SHA=ca1a1541ee72c65073ead943c37eedafb21cceced6165c88de671e85cdb65fcc。
+
+后继R78在原公共量/边界更新边沿预算限幅阈值B-C，末级比较T无需等待T+C，使用有限位carry-save而非两条串行进位。新增控制辅助FF但正常反馈整数周期0；所有CE/CSR/复位/cohort须逐拍验证。DAC协议/外部脉宽/PCB/物理CDC/DRC未签核，不发布可上板声明。
