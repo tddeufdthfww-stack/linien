@@ -1,0 +1,831 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Thu Nov 12 12:07:25 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -to [get_pins -quiet -of_objects [get_cells -hier -quiet -filter {NAME =~ *slow_chain_pid*}] -filter {REF_PIN_NAME == D}] -max_paths 10 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r6_execution/r71_core_routed_audit/slow_D.rpt
+| Design       : top
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             1.289ns  (required time - arrival time)
+  Source:                 linienmodule_csr_dat_w_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_kd_storage_full_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        6.431ns  (logic 0.518ns (8.055%)  route 5.913ns (91.945%))
+  Logic Levels:           0  
+  Clock Path Skew:        -0.144ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.536ns = ( 12.536 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.946ns
+    Clock Pessimism Removal (CPR):    0.266ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.685     4.946    sys_clk
+    SLICE_X30Y77         FDRE                                         r  linienmodule_csr_dat_w_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X30Y77         FDRE (Prop_fdre_C_Q)         0.518     5.464 r  linienmodule_csr_dat_w_reg[1]/Q
+                         net (fo=522, routed)         5.913    11.377    linienmodule_csr_dat_w[1]
+    SLICE_X67Y74         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_kd_storage_full_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.527    12.536    sys_clk
+    SLICE_X67Y74         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_kd_storage_full_reg[1]/C
+                         clock pessimism              0.266    12.802    
+                         clock uncertainty           -0.069    12.733    
+    SLICE_X67Y74         FDRE (Setup_fdre_C_D)       -0.067    12.666    linienmodule_slow_chain_pid_pipelinedpid_kd_storage_full_reg[1]
+  -------------------------------------------------------------------
+                         required time                         12.666    
+                         arrival time                         -11.377    
+  -------------------------------------------------------------------
+                         slack                                  1.289    
+
+Slack (MET) :             2.043ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[26]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.825ns  (logic 2.112ns (36.258%)  route 3.713ns (63.742%))
+  Logic Levels:           6  (CARRY4=2 LUT2=1 LUT4=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.477ns = ( 12.477 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[4])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[4]
+                         net (fo=2, routed)           0.913     6.335    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[0]
+    SLICE_X43Y71         LUT2 (Prop_lut2_I0_O)        0.124     6.459 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6/O
+                         net (fo=1, routed)           0.000     6.459    linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6_n_0
+    SLICE_X43Y71         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     6.991 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     6.991    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.239     7.230 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/O[2]
+                         net (fo=3, routed)           0.848     8.078    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_5
+    SLICE_X44Y73         LUT4 (Prop_lut4_I1_O)        0.332     8.410 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24/O
+                         net (fo=1, routed)           0.856     9.266    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24_n_0
+    SLICE_X42Y74         LUT6 (Prop_lut6_I4_O)        0.327     9.593 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9/O
+                         net (fo=14, routed)          1.096    10.689    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9_n_0
+    SLICE_X42Y77         LUT5 (Prop_lut5_I1_O)        0.124    10.813 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[26]_i_1/O
+                         net (fo=1, routed)           0.000    10.813    linienmodule_slow_chain_pid_pipelinedpid_int_reg[26]_i_1_n_0
+    SLICE_X42Y77         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[26]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.468    12.477    sys_clk
+    SLICE_X42Y77         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[26]/C
+                         clock pessimism              0.366    12.843    
+                         clock uncertainty           -0.069    12.774    
+    SLICE_X42Y77         FDRE (Setup_fdre_C_D)        0.081    12.855    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[26]
+  -------------------------------------------------------------------
+                         required time                         12.855    
+                         arrival time                         -10.813    
+  -------------------------------------------------------------------
+                         slack                                  2.043    
+
+Slack (MET) :             2.077ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[28]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.789ns  (logic 2.112ns (36.484%)  route 3.677ns (63.516%))
+  Logic Levels:           6  (CARRY4=2 LUT2=1 LUT4=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.479ns = ( 12.479 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[4])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[4]
+                         net (fo=2, routed)           0.913     6.335    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[0]
+    SLICE_X43Y71         LUT2 (Prop_lut2_I0_O)        0.124     6.459 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6/O
+                         net (fo=1, routed)           0.000     6.459    linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6_n_0
+    SLICE_X43Y71         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     6.991 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     6.991    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.239     7.230 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/O[2]
+                         net (fo=3, routed)           0.848     8.078    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_5
+    SLICE_X44Y73         LUT4 (Prop_lut4_I1_O)        0.332     8.410 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24/O
+                         net (fo=1, routed)           0.856     9.266    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24_n_0
+    SLICE_X42Y74         LUT6 (Prop_lut6_I4_O)        0.327     9.593 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9/O
+                         net (fo=14, routed)          1.060    10.653    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9_n_0
+    SLICE_X42Y78         LUT5 (Prop_lut5_I1_O)        0.124    10.777 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[28]_i_1/O
+                         net (fo=1, routed)           0.000    10.777    linienmodule_slow_chain_pid_pipelinedpid_int_reg[28]_i_1_n_0
+    SLICE_X42Y78         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[28]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.470    12.479    sys_clk
+    SLICE_X42Y78         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[28]/C
+                         clock pessimism              0.366    12.845    
+                         clock uncertainty           -0.069    12.776    
+    SLICE_X42Y78         FDRE (Setup_fdre_C_D)        0.077    12.853    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[28]
+  -------------------------------------------------------------------
+                         required time                         12.853    
+                         arrival time                         -10.777    
+  -------------------------------------------------------------------
+                         slack                                  2.077    
+
+Slack (MET) :             2.091ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[29]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.779ns  (logic 2.112ns (36.547%)  route 3.667ns (63.453%))
+  Logic Levels:           6  (CARRY4=2 LUT2=1 LUT4=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.479ns = ( 12.479 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[4])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[4]
+                         net (fo=2, routed)           0.913     6.335    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[0]
+    SLICE_X43Y71         LUT2 (Prop_lut2_I0_O)        0.124     6.459 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6/O
+                         net (fo=1, routed)           0.000     6.459    linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_6_n_0
+    SLICE_X43Y71         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     6.991 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     6.991    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]_i_2_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.239     7.230 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/O[2]
+                         net (fo=3, routed)           0.848     8.078    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_5
+    SLICE_X44Y73         LUT4 (Prop_lut4_I1_O)        0.332     8.410 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24/O
+                         net (fo=1, routed)           0.856     9.266    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_24_n_0
+    SLICE_X42Y74         LUT6 (Prop_lut6_I4_O)        0.327     9.593 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9/O
+                         net (fo=14, routed)          1.050    10.643    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_9_n_0
+    SLICE_X42Y78         LUT5 (Prop_lut5_I1_O)        0.124    10.767 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[29]_i_1/O
+                         net (fo=1, routed)           0.000    10.767    linienmodule_slow_chain_pid_pipelinedpid_int_reg[29]_i_1_n_0
+    SLICE_X42Y78         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[29]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.470    12.479    sys_clk
+    SLICE_X42Y78         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[29]/C
+                         clock pessimism              0.366    12.845    
+                         clock uncertainty           -0.069    12.776    
+    SLICE_X42Y78         FDRE (Setup_fdre_C_D)        0.081    12.857    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[29]
+  -------------------------------------------------------------------
+                         required time                         12.857    
+                         arrival time                         -10.767    
+  -------------------------------------------------------------------
+                         slack                                  2.091    
+
+Slack (MET) :             2.095ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.723ns  (logic 2.413ns (42.165%)  route 3.310ns (57.835%))
+  Logic Levels:           10  (CARRY4=6 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.476ns = ( 12.476 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.285 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.285    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_0
+    SLICE_X43Y74         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.399 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2/CO[3]
+                         net (fo=1, routed)           0.009     7.408    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2_n_0
+    SLICE_X43Y75         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.522 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.522    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2_n_0
+    SLICE_X43Y76         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.636 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.636    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2_n_0
+    SLICE_X43Y77         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313     7.949 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2/O[3]
+                         net (fo=3, routed)           0.823     8.772    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2_n_4
+    SLICE_X42Y78         LUT5 (Prop_lut5_I4_O)        0.306     9.078 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17/O
+                         net (fo=1, routed)           0.501     9.580    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17_n_0
+    SLICE_X42Y76         LUT6 (Prop_lut6_I5_O)        0.124     9.704 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5/O
+                         net (fo=19, routed)          0.883    10.587    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5_n_0
+    SLICE_X44Y72         LUT5 (Prop_lut5_I3_O)        0.124    10.711 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[0]_i_1/O
+                         net (fo=1, routed)           0.000    10.711    linienmodule_slow_chain_pid_pipelinedpid_int_reg[0]_i_1_n_0
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.467    12.476    sys_clk
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[0]/C
+                         clock pessimism              0.366    12.842    
+                         clock uncertainty           -0.069    12.773    
+    SLICE_X44Y72         FDRE (Setup_fdre_C_D)        0.032    12.805    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[0]
+  -------------------------------------------------------------------
+                         required time                         12.805    
+                         arrival time                         -10.711    
+  -------------------------------------------------------------------
+                         slack                                  2.095    
+
+Slack (MET) :             2.097ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.719ns  (logic 2.413ns (42.191%)  route 3.306ns (57.809%))
+  Logic Levels:           10  (CARRY4=6 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.476ns = ( 12.476 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.285 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.285    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_0
+    SLICE_X43Y74         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.399 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2/CO[3]
+                         net (fo=1, routed)           0.009     7.408    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2_n_0
+    SLICE_X43Y75         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.522 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.522    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2_n_0
+    SLICE_X43Y76         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.636 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.636    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2_n_0
+    SLICE_X43Y77         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313     7.949 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2/O[3]
+                         net (fo=3, routed)           0.823     8.772    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2_n_4
+    SLICE_X42Y78         LUT5 (Prop_lut5_I4_O)        0.306     9.078 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17/O
+                         net (fo=1, routed)           0.501     9.580    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17_n_0
+    SLICE_X42Y76         LUT6 (Prop_lut6_I5_O)        0.124     9.704 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5/O
+                         net (fo=19, routed)          0.879    10.583    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5_n_0
+    SLICE_X44Y72         LUT5 (Prop_lut5_I3_O)        0.124    10.707 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_1/O
+                         net (fo=1, routed)           0.000    10.707    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_1_n_0
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.467    12.476    sys_clk
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]/C
+                         clock pessimism              0.366    12.842    
+                         clock uncertainty           -0.069    12.773    
+    SLICE_X44Y72         FDRE (Setup_fdre_C_D)        0.031    12.804    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]
+  -------------------------------------------------------------------
+                         required time                         12.804    
+                         arrival time                         -10.707    
+  -------------------------------------------------------------------
+                         slack                                  2.097    
+
+Slack (MET) :             2.138ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[5]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.677ns  (logic 1.975ns (34.789%)  route 3.702ns (65.211%))
+  Logic Levels:           6  (CARRY4=2 LUT2=1 LUT4=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.476ns = ( 12.476 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     7.505 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/O[1]
+                         net (fo=3, routed)           0.722     8.227    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_6
+    SLICE_X41Y73         LUT4 (Prop_lut4_I0_O)        0.303     8.530 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_18/O
+                         net (fo=1, routed)           0.814     9.344    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_18_n_0
+    SLICE_X42Y74         LUT6 (Prop_lut6_I2_O)        0.124     9.468 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_6/O
+                         net (fo=19, routed)          1.073    10.541    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_6_n_0
+    SLICE_X44Y72         LUT5 (Prop_lut5_I2_O)        0.124    10.665 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[5]_i_1/O
+                         net (fo=1, routed)           0.000    10.665    linienmodule_slow_chain_pid_pipelinedpid_int_reg[5]_i_1_n_0
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.467    12.476    sys_clk
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[5]/C
+                         clock pessimism              0.366    12.842    
+                         clock uncertainty           -0.069    12.773    
+    SLICE_X44Y72         FDRE (Setup_fdre_C_D)        0.029    12.802    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[5]
+  -------------------------------------------------------------------
+                         required time                         12.802    
+                         arrival time                         -10.665    
+  -------------------------------------------------------------------
+                         slack                                  2.138    
+
+Slack (MET) :             2.140ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[6]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.676ns  (logic 2.413ns (42.509%)  route 3.263ns (57.491%))
+  Logic Levels:           10  (CARRY4=6 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.146ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.476ns = ( 12.476 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.285 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.285    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_0
+    SLICE_X43Y74         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.399 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2/CO[3]
+                         net (fo=1, routed)           0.009     7.408    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2_n_0
+    SLICE_X43Y75         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.522 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.522    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2_n_0
+    SLICE_X43Y76         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.636 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.636    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2_n_0
+    SLICE_X43Y77         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313     7.949 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2/O[3]
+                         net (fo=3, routed)           0.823     8.772    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2_n_4
+    SLICE_X42Y78         LUT5 (Prop_lut5_I4_O)        0.306     9.078 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17/O
+                         net (fo=1, routed)           0.501     9.580    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17_n_0
+    SLICE_X42Y76         LUT6 (Prop_lut6_I5_O)        0.124     9.704 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5/O
+                         net (fo=19, routed)          0.837    10.540    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5_n_0
+    SLICE_X44Y72         LUT5 (Prop_lut5_I3_O)        0.124    10.664 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[6]_i_1/O
+                         net (fo=1, routed)           0.000    10.664    linienmodule_slow_chain_pid_pipelinedpid_int_reg[6]_i_1_n_0
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[6]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.467    12.476    sys_clk
+    SLICE_X44Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[6]/C
+                         clock pessimism              0.366    12.842    
+                         clock uncertainty           -0.069    12.773    
+    SLICE_X44Y72         FDRE (Setup_fdre_C_D)        0.031    12.804    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[6]
+  -------------------------------------------------------------------
+                         required time                         12.804    
+                         arrival time                         -10.664    
+  -------------------------------------------------------------------
+                         slack                                  2.140    
+
+Slack (MET) :             2.156ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.709ns  (logic 2.649ns (46.399%)  route 3.060ns (53.601%))
+  Logic Levels:           10  (CARRY4=6 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.477ns = ( 12.477 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.285 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.285    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_0
+    SLICE_X43Y74         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.399 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2/CO[3]
+                         net (fo=1, routed)           0.009     7.408    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2_n_0
+    SLICE_X43Y75         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.522 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.522    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2_n_0
+    SLICE_X43Y76         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.636 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.636    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2_n_0
+    SLICE_X43Y77         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313     7.949 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2/O[3]
+                         net (fo=3, routed)           0.823     8.772    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2_n_4
+    SLICE_X42Y78         LUT5 (Prop_lut5_I1_O)        0.335     9.107 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_27/O
+                         net (fo=1, routed)           0.447     9.555    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_27_n_0
+    SLICE_X42Y76         LUT6 (Prop_lut6_I5_O)        0.331     9.886 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_10/O
+                         net (fo=14, routed)          0.688    10.573    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_10_n_0
+    SLICE_X42Y77         LUT5 (Prop_lut5_I2_O)        0.124    10.697 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[27]_i_1/O
+                         net (fo=1, routed)           0.000    10.697    linienmodule_slow_chain_pid_pipelinedpid_int_reg[27]_i_1_n_0
+    SLICE_X42Y77         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.468    12.477    sys_clk
+    SLICE_X42Y77         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]/C
+                         clock pessimism              0.366    12.843    
+                         clock uncertainty           -0.069    12.774    
+    SLICE_X42Y77         FDRE (Setup_fdre_C_D)        0.079    12.853    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]
+  -------------------------------------------------------------------
+                         required time                         12.853    
+                         arrival time                         -10.697    
+  -------------------------------------------------------------------
+                         slack                                  2.156    
+
+Slack (MET) :             2.165ns  (required time - arrival time)
+  Source:                 linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]/D
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Path Group:             clk_2
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (clk_2 rise@8.000ns - clk_2 rise@0.000ns)
+  Data Path Delay:        5.653ns  (logic 2.413ns (42.682%)  route 3.240ns (57.318%))
+  Logic Levels:           10  (CARRY4=6 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.477ns = ( 12.477 - 8.000 ) 
+    Source Clock Delay      (SCD):    4.988ns
+    Clock Pessimism Removal (CPR):    0.366ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      0.000     0.000 r  
+    U18                                               0.000     0.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     0.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     0.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205     3.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102     3.258 r  BUFG/O
+                         net (fo=1, routed)           1.831     5.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     1.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883     3.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101     3.261 r  BUFG_3/O
+                         net (fo=13269, routed)       1.727     4.988    sys_clk
+    DSP48_X2Y29          DSP48E1                                      r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y29          DSP48E1 (Prop_dsp48e1_CLK_P[8])
+                                                      0.434     5.422 r  linienmodule_slow_chain_pid_pipelinedpid_ki_mult1/P[8]
+                         net (fo=2, routed)           1.094     6.515    linienmodule_slow_chain_pid_pipelinedpid_ki_mult[4]
+    SLICE_X43Y72         LUT2 (Prop_lut2_I0_O)        0.124     6.639 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6/O
+                         net (fo=1, routed)           0.000     6.639    linienmodule_slow_chain_pid_pipelinedpid_int_reg[7]_i_6_n_0
+    SLICE_X43Y72         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     7.171 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.171    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[7]_i_2_n_0
+    SLICE_X43Y73         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.285 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.285    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[11]_i_2_n_0
+    SLICE_X43Y74         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.399 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2/CO[3]
+                         net (fo=1, routed)           0.009     7.408    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[15]_i_2_n_0
+    SLICE_X43Y75         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.522 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.522    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[19]_i_2_n_0
+    SLICE_X43Y76         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     7.636 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.636    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[23]_i_2_n_0
+    SLICE_X43Y77         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.313     7.949 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2/O[3]
+                         net (fo=3, routed)           0.823     8.772    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[27]_i_2_n_4
+    SLICE_X42Y78         LUT5 (Prop_lut5_I4_O)        0.306     9.078 f  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17/O
+                         net (fo=1, routed)           0.501     9.580    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_17_n_0
+    SLICE_X42Y76         LUT6 (Prop_lut6_I5_O)        0.124     9.704 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5/O
+                         net (fo=19, routed)          0.814    10.517    linienmodule_slow_chain_pid_pipelinedpid_int_reg[30]_i_5_n_0
+    SLICE_X41Y72         LUT5 (Prop_lut5_I3_O)        0.124    10.641 r  linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_1/O
+                         net (fo=1, routed)           0.000    10.641    linienmodule_slow_chain_pid_pipelinedpid_int_reg[3]_i_1_n_0
+    SLICE_X41Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     8.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    10.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    11.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    12.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442     9.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    10.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    11.010 r  BUFG_3/O
+                         net (fo=13269, routed)       1.468    12.477    sys_clk
+    SLICE_X41Y72         FDRE                                         r  linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]/C
+                         clock pessimism              0.366    12.843    
+                         clock uncertainty           -0.069    12.774    
+    SLICE_X41Y72         FDRE (Setup_fdre_C_D)        0.032    12.806    linienmodule_slow_chain_pid_pipelinedpid_int_reg_reg[3]
+  -------------------------------------------------------------------
+                         required time                         12.806    
+                         arrival time                         -10.641    
+  -------------------------------------------------------------------
+                         slack                                  2.165    
+
+
+
+

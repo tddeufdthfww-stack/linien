@@ -676,3 +676,11 @@ R70脚本原严格文本比较FAIL，因为只忽略LOC/BEL，输出增加3处PH
 
 
 R71-v1配置失败：Vivado2020.1明确-tns_cleanup只能用于SLR crossing的UltraScale/UltraScale+，不适用7020；未产生新route，不能写成硬件STA结果。原始命令/源码/退出3/日志与输入DCP未改SHA在experiments/r71_unsupported_tns_option_20261112。v2已删除该选项，保留-placement_opt -routing_opt -path_groups clk_2，独立新目录重跑；核心算法/寄存器/时钟和全部计时约束不改。
+
+## R71 actual物理候选 / 2026-11-12
+
+输入41c22164c181b256f81833e972784e7ba9c19240。综合REUSED_R69，不是新综合；route COMPLETE，WNS/TNS=-0.343/-5.363ns，24 setup端点，WHS/THS=0.027/0.0ns，WPWS=1.5ns。最终STA FAIL。功能引用同RAW硬件R69b完整有效响应契约PASS（4c4f965），原无ACK数据严格差分FAIL保留。
+
+逻辑比较：Within-trial logical equality PASS; original cross-reopen comparator FAIL on 30 HOLD_DETOUR physical pin annotations. Independent transitive proof PASS; original exit1 retained. v1 unsupported TNS option separately archived.
+
+全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r71_actual_physical_20261112，DCP SHA256=55c46b57ccc79a6662765b7265a33a2ca52f9f2af0abdbfae13f6ddf4b11efc7。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
