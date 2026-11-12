@@ -725,3 +725,9 @@ R71-v2自身before/after逻辑token已严格相同；原脚本退出1是跨check
 ## R73b属性兼容修正 / 2026-11-12
 
 R73输入9fbcc83定向功能PASS，但顶层generate在Migen `_printattr` 的 `attr_translate["DONT_TOUCH"]` KeyError，综合/route NOT RUN。原源码/manifest/完整失败日志保留experiments/r73_original_generation_failure_20261112。独立R73b仅将属性集合改成显式(DONT_TOUCH,true)键值，不改变任何状态、位宽或周期，按实际库源规避属性名转换。重新顶层生成、功能、新综合/route分别验证；未签核。
+
+## R73B fresh完整功能PASS，物理状态独立 / 2026-11-12
+
+输入5543e7477b7073468529d703d9afde7d181418ab，trial 20261112_123314_r73b_explicit_feedback_full：所有既有功能阶段及新增14/25位IIR107706拍、FastChain32000拍PASS，source_changes=[]，采用已明示R69b有效响应契约，旧strict空闲数据FAIL保留。完整命令/fixture/RTL/日志及SHA在experiments/r73b_fresh_full_functional_20261112。
+
+物理状态：COMPLETE BUT STA FAIL WNS -1.257/TNS -869.526ns,2041setup。功能PASS不代表时序/IO/CDC/DRC通过；该候选未采用，正常新增反馈周期0（继承R2b+32ns），无签核bit/bin或板卡操作。独立R74改在原输出边沿捕获最终MAC、重构饱和状态，尚待实际时序；不覆盖本失败候选。
