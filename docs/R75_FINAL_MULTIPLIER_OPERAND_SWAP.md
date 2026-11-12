@@ -69,3 +69,11 @@ DRC告警风险须逐项审查。无签核bitstream，不进行烧录、启动�
 R73最新完整功能PASS和生成失败归档2b0fc162b26fb07829ccc02e2c4c9311a30e700a；R73b完整功能PASS但物理失败归档b3da30114366b1fe608a98d449c08518aafb60d4；R74定向PASS但route -0.827/-635.956ns、1829端点失败归档2a0a04836b8799b0626e4a4599b222b45c272b85，fresh全功能NOT RUN。均保持独立，没有合并进本R75硬件选择。当前较好参考仍R72 -0.343/-4.308ns、17端点，最终STA FAIL。
 
 完整DAC/PCB/物理CDC/DRC及16输入32输出接口约束仍待签核，无可部署bitstream、无烧录/激光/PZT操作。
+
+## R75实际结果：目标CE改善，整机STA仍FAIL / 2026-11-12
+
+输入769a86b0a91b4c8a1dd1a4c73cc4abed98dbd954，source_changes=[]。生成/CSR语义PASS、新综合COMPLETE WNS/TNS=-.786/-80.690ns（301端点）；actual route COMPLETE -0.365/-6.307ns（34端点），WHS/THS+.025/0、WPWS1.500。整体尚未优于R72 -0.343/-4.308、17端点，不合并。最大common_reg→parallel tap y/D，8.047ns（logic3.290/route4.757，5CARRY4+LUT2+LUT4+2LUT5+MUXF7）。目标IIR CE最差+.138ns；仍有a2_reg[24]/C→z_high1_i_2_psdsp_21/D -.003ns。实际目标low/high DSP AREG1/BREG1/PREG0，饱和控制进CEA2，CEB2=1，不能称CEA器件规格本身更快。
+
+14/25 IIR107706拍及FastChain32000拍新定向PASS，fresh全功能NOT RERUN。全套实际新综合/route/输入/DCP/SHA/只读映射和分类见experiments/r75_actual_operand_swap_20261112，DCP SHA=0d568f7c3e1d0476b81dd7a30a3471563898d697cc822ca97032777911820b1f。ADC28条+.429/+3.304及0/-8关系PASS，DNA setup+.285ns，DAC必要预算-.343/+.070ns。52ASYNC/26同SLICE双级，GPIO16对实际setup+7.207/hold+.119ns；接口库存32无输出延迟分16GPIO/8LED/4PWM/2DAC控制/2LOW生成时钟，不混为32个相同同步数据失败。六Scope元数据已按实际src_capture_o同请求cohort分类，正常16ns窗口只是扣除guard前诊断，不是整体物理CDC签核。
+
+后继R76仅在冻结R75 DCP重做核心placement/routing/pin优化，逐token逻辑比较；综合REUSED_R75不冒称新综合。新增正常反馈级0，继承R2b+32ns；完整DAC协议/外部脉宽/PCB、物理CDC/DRC仍待签核。无可部署bit/bin或板卡/激光/PZT操作。
