@@ -19,11 +19,12 @@ from migen import If, Module, Signal
 from misoc.interconnect.csr import AutoCSR, CSRStorage
 
 from .cordic import Cordic
+from .speculative_demod_cordic import SpeculativeDemodCordic
 from .filter import Filter
 
 
 class Demodulate(Module, AutoCSR):
-    def __init__(self, freq_width=32, width=14):
+    def __init__(self, freq_width=32, width=14, speculative_first_rotation=False):
         # input signal
         self.x = Signal((width, True))
 
@@ -35,7 +36,13 @@ class Demodulate(Module, AutoCSR):
         self.multiplier = CSRStorage(4, reset=1)
         self.phase = Signal(width)
 
-        self.submodules.cordic = Cordic(
+        phase_value = Signal((width + 1, True))
+        self.comb += phase_value.eq(
+            ((self.phase * self.multiplier.storage) + self.delay.storage) << 1)
+        cordic_type = SpeculativeDemodCordic if speculative_first_rotation else Cordic
+        extra = dict(source_x=self.x, source_phase=phase_value) if speculative_first_rotation else {}
+        self.submodules.cordic = cordic_type(
+            **extra,
             width=width + 1,
             stages=width + 1,
             guard=2,
@@ -46,9 +53,8 @@ class Demodulate(Module, AutoCSR):
         self.comb += [
             # cordic input
             self.cordic.xi.eq(self.x),
-            self.cordic.zi.eq(
-                ((self.phase * self.multiplier.storage) + self.delay.storage) << 1
-            ),
+            self.cordic.zi.eq(phase_value),
+            self.cordic.yi.eq(0),
             # cordic output
             self.i.eq(self.cordic.xo >> 1),
             self.q.eq(self.cordic.yo >> 1),

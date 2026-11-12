@@ -189,6 +189,10 @@ def main():
                     ROOT, out, 'r75_operand_swap', env, 'R75_OPERAND_SWAP_IIR_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r75_fastchain.py', '--out', out / 'r75_fastchain_checks'],
                     ROOT, out, 'r75_fastchain', env, 'R75_FASTCHAIN_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r77_demod.py', '--out', out / 'r77_demod_checks'],
+                    ROOT, out, 'r77_demod', env, 'R77_DEMOD_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r77_fastchain.py', '--out', out / 'r77_fastchain_checks'],
+                    ROOT, out, 'r77_fastchain', env, 'R77_FASTCHAIN_SUITE_PASS')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'

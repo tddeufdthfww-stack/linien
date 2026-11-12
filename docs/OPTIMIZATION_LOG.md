@@ -716,3 +716,9 @@ R75actual -0.365/-6.307ns、34 setup，hold+.025/0，pulse1.5；原IIR CE已+.13
 导出前后funcsim逻辑网表，除已明确物理注释外逐token严格比对；INIT/实际端口/位宽/DSP参数不忽略。若不一致，保留诊断，不接受等价。
 所有时钟域仍完整报告；core路径定位不等于只签core。新增反馈周期0，继承相对R2b+32ns；实际总ADC-DAC延迟未测。
 actual route/STA/CDC/DRC/IO待独立结果，不能先写PASS。R72基线不覆盖，R73/R74失败不合并。
+
+## R77已执行新定向PASS / 2026-11-12
+
+14位完整Demod93226拍、25位27701拍，均真实独立CSRBank、16/16倍频、delay部分热写/边界/相位绕回/27复位拍/IQ及phase全输出每拍严格PASS；延迟分别原15/26拍不变。第一步独立数学65536组14位与40020组25位边界随机PASS。原R75冻结Demod源作为reference。全FastChain32000拍PASS（31976已知/21317写/24000 CE保持）。所有原件/SHA在experiments/r77_native_equivalence_20261112。新生成/综合/route与fresh全功能待验证，不预报最终收益。
+
+R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.343/-6.077ns、33端点、前后逻辑一致PASS，最终STA仍FAIL。R77不加任何寄存器级，不改变原IIR/limiter状态边界；所有延迟结论仍不等于端到端或闭环带宽实测。完整DAC协议/PCB/CDC/DRC尚未签核。

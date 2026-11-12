@@ -30,7 +30,7 @@ class FastChain(Module, AutoCSR):
     def __init__(
         self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
         iir_mac_impl="native", parallel_output=False, pre_offset_signal=None,
-        iir_swap_final_operands=False
+        iir_swap_final_operands=False, speculative_demod=False
     ):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
@@ -56,7 +56,8 @@ class FastChain(Module, AutoCSR):
 
         ###
 
-        self.submodules.demod = Demodulate(width=width)
+        self.submodules.demod = Demodulate(
+            width=width, speculative_first_rotation=speculative_demod)
 
         ###
 
