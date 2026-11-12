@@ -735,3 +735,11 @@ R74采用docs/R74_IIR_SATURATION_RETIME.md的逐拍状态等价重排，替代�
 ## R74已执行定向功能PASS
 
 14/25位一/二/五阶107706拍严格差分+独立整数模型PASS，b0/bN脉冲延迟分别保持order+1和2*order+1；全FastChain32000拍PASS（31976已知/21317写/24000 CE保持）。clear/hold/复位/饱和/部分CSR写全部逐拍比较，未允许多一拍误差。完整原件/SHA在experiments/r74_native_equivalence_20261112。新生成/综合/route尚待，完整功能暂未重跑，最终STA未签核。
+
+## R74实际：功能定向PASS，布局布线完成但STA失败 / 2026-11-12
+
+输入4947e86547c0068ef3bec3be3a84c70a94f161bc。新生成/CSR语义PASS；综合COMPLETE WNS/TNS=-.773/-648.230ns，1295 setup；actual route COMPLETE -0.827/-635.956ns，1829 setup，WHS/THS+.049/0、WPWS1.500。最差DSP48E1_25/CLK→fast_a_paralleltaplimitcsr0_y_reg[8]/D，8.384ns（logic3.335/route5.049，5CARRY4+2LUT4+3LUT5+MUXF7）。饱和逻辑转移到输出限幅路径，整体劣于R72，REJECTED_NOT_MERGED。
+
+14/25位107706拍和FastChain32000拍定向PASS；fresh全功能NOT RUN，不能将R73b完整PASS冒称R74又运行。原输入/新综合/route/只读审计/DCP和SHA在experiments/r74_rejected_physical_20261112，DCP SHA=a4839a29304f803675feb13bf230ac390d6f0ee9cf9e996444240e752dcbd6d2。ADC28条+.429/+3.304ns及0/-8关系逐条PASS，52FF/26pair结构PASS，但完整物理CDC/IO/DRC仍未签核。原始/R2b/R4a/R16/R60保护验证PASS。
+
+后继R75从R72独立建分支，只交换最终乘法操作数拆分方向，保持原输出饱和与寄存器边界；R73/R74不带入生产选择。所有候选正常反馈新增周期0，继承R2b+32ns，不是总端到端实测；无可部署bitstream、无烧录或激光/PZT操作。
