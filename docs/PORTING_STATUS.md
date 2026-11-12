@@ -1097,3 +1097,15 @@ R83实际原语73474次逐字WRT、37205次ADC、36731对DAC锁存、双通道�
 保留R80 60ba54e9cef8b672eba3988bd436aaac16e7179a为当前最佳候选：内部125MHz WNS+.055/TNS0/0端点，整体仍-.343/-3.974ns、14 DAC端点、hold+.038ns。R83等后继未合并。原用户工程/R2b/R4a/R16/R60/R80逐文件SHA、HEAD、工作树状态再核对全部PASS。全部R83原件、完整功能、合成/route、896行扫描、原始失败与gate/SHA在experiments/r83_full_and_rejected_physical_20261112；DCP SHA256=be4ae22a2dcd3313bcb48118065d06e05486ff1aea6f61c858c2772742f00226。
 
 下一步应先获得AD9767该模式完整数值时序/脉宽与真实PCB预算；以独立最小I/O设计评估共源SERDES并匹配data/clock输出路径，确认实际物理窗口后再接入R80。当前扫描已不支持继续盲调同一驱动/相位参数；不能承诺再跑固定几轮必定签核。没有降低125MHz、牺牲14位精度/双125MS/s或滤波器阶数，没有新增掩盖违例的例外，没有生成发布bit/bin或操作板卡/激光/PZT。
+
+# R84 独立I/O原语表征完成 / 2026-11-12
+
+父版R83 55c5190e保持；R80仍最佳整机候选。本轮只新增独立14位探针/测试/物理脚本，原Root/PS7/CRG/ADC/算法/CSR/接口约束无改。探针SYS直接由125MHz输入驱动，与整机PLL级联不同，不可把绝对结果当作整机签核。
+
+实际UNISIM原语native04 PASS：73663次WRT，A36833/B36830，2357215逐时刻新旧输出比较，两个通道全16384取值，3次复位epoch，73663次CLK检查。SDR2数据半帧预装与独立SYS旧A/新B oracle一致，零新增整拍只在探针成立，整机集成/完整回归NOT RUN。native01因缺secureip库ELAB FAIL，02/03停钟期间仍检查稳定相位/波形导致FAIL，全部保留；04在停钟时撤销稳定相位oracle资格，仍必须在2us内进入DAC复位，参考恢复后显式复位重锁。不是不停钟恢复或板级失锁性能证明。
+
+新综合与实际route两结构均COMPLETE；参考FDRE/ODDR DAC setup最差-.346ns，hold+.072；其最小计数器/选择器还存在内部负setup，不能借此评价R80内部时序。候选SDR2数据+DDR4固定0101时钟，global WNS/TNS=-.311/-3.532ns、14setup，WHS+.072/THS0、0hold，WPWS+2ns（FPGA自身要求，不代表外部DAC脉宽）；no_clock0、内部未约束0、独立异步reset_i无输入预算1、输出未预算4含2 forwarded-clock。候选数据最差来自OSERDESE2/CLK到dac_data[1]，Fast角CQ.204+OBUF1.635+net.001=1.840ns；不得把它与参考Slow角3.726ns简单相减当作全角收益。相同约束下只改善.035ns，仍FAIL，不接整机、不生成bitstream。
+
+两个DCP SHA详见experiments/r84_standalone_serdes_20261112/manifest.json。实际OSERDES转发clock的非单调时序弧须继续核对边沿sense，当前负slack不可改名为PASS；SEL/CLK/WRT低窗、3.3V适用脉宽、PCB/SI、整机CDC/DRC全部仍OPEN。
+
+用户追加授权由工程师自行定义官方未公开PCB/时钟信息的验收口径。将建立明确的设计假设/裕量与证据级别，不伪造PCB实测，不删除负STA。官方板卡页明确LTC2145-14/AD9767；V2r0 RevA只公开开发原理图，不公开完整硬件布线。ADI官方答复确认交织每路125MS/s并澄清tH不等同tH*，但未给替代3.5ns脉宽的数值。来源：https://redpitaya.readthedocs.io/en/latest/developerGuide/hardware/GEN2/125-14_Gen2_Z7020_Pro/top.html 和 https://ez.analog.com/data_converters/high-speed_dacs/f/q-a/164567/ad9763-ad9765-ad9767-interleaved-mode-with-125-msps-update-rate-possible/380408 。后续R85优先独立比较SDR2输出WRT的同类原语映射，保持双125MS/s/14位/同样本/零新增整数反馈级，不放宽时钟和2/-1.5ns预算。
