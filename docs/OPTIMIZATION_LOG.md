@@ -721,3 +721,7 @@ R71-v2自身before/after逻辑token已严格相同；原脚本退出1是跨check
 ## R73已执行定向回归
 
 14/25位一/二/五阶共107706拍，新旧逐拍+独立有限位整数模型PASS（完整CSR/复位/hold/clear/饱和/脉冲延迟）；完整FastChain32000拍PASS，31976已知周期/21317写/24000 CE保持周期。厂商DSP48E1/FDRE原生模型。原件/SHA在experiments/r73_targeted_native_20261112。新完整功能/综合/实际route尚待，不得以此认定时序收敛或上板。
+
+## R73b属性兼容修正 / 2026-11-12
+
+R73输入9fbcc83定向功能PASS，但顶层generate在Migen `_printattr` 的 `attr_translate["DONT_TOUCH"]` KeyError，综合/route NOT RUN。原源码/manifest/完整失败日志保留experiments/r73_original_generation_failure_20261112。独立R73b仅将属性集合改成显式(DONT_TOUCH,true)键值，不改变任何状态、位宽或周期，按实际库源规避属性名转换。重新顶层生成、功能、新综合/route分别验证；未签核。

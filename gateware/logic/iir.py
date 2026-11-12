@@ -109,7 +109,7 @@ class Iir(Filter):
                     "FDRE", name=f"feedback_fabric_{bit}",
                     p_INIT=0, i_C=ClockSignal(), i_CE=1, i_R=ResetSignal(),
                     i_D=y_d[bit], o_Q=y[bit],
-                    attr={"DONT_TOUCH": "TRUE"})
+                    attr={("DONT_TOUCH", "true")})
         else:
             self.sync += If(self.clear, y.eq(0)).Elif(~self.hold, y.eq(y_lim))
 
