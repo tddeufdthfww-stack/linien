@@ -978,3 +978,15 @@ R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.3
 实施前14/10位与25/14位阈值CSA数学各200500例PASS。实际14/25位限幅各36000拍，真实独立CSRBank+signed64 oracle在每个边沿前后核对所有阈值/pre_y/rail/y/error/bound/CSR/common，PASS。两例各10303次CE0写、30909保持拍，反置边界17545/16266拍、相等539/535拍、边界1795/1796例；全FastChain32000拍PASS。没有延迟容忍。原件/SHA在experiments/r78_native_equivalence_20261112。新生成/综合/route和fresh全功能尚待。
 
 R77最新物理失败/相位改善归档99dc108e0ba799bfa4dee40118b8150ba45f5f56；全部102负路径无phase/CORY。R78仅优化限幅控制比较，未更改原IIR/PID/PLL/PS7/ADC/DAC/AXI/CDC和输出接受边沿。新增辅助阈值FF不是新增反馈数据级，累计R2b+32ns非全链路实测。最终DAC/PCB/CDC/DRC签核未完成，不上板。
+
+## R79冻结物理候选输入 / 2026-11-12
+
+R78输入cbdbc736119c699c9022598afa7a6442b9783845 actual DCP SHA256=697b393c087361d7c8356967a2a4fcff35d9243f1a724b3ee79bf03e9b7f6f12。
+R78生成/CSR语义PASS、新综合-.773/-76.419ns、285setup；actual route -.343/-4.097ns，15setup，hold+.038/0，pulse1.5。
+仅剩14DAC必要模型端点及1条autolock prefetch_choice_reg[1]/C→gpio_n_o_reg[7]/D -.122ns，8.022ns（logic2.395/net5.627），10级4CARRY4+2LUT3+3LUT5+LUT6。
+全部负端点无PID/IIR/Demod/limit，当前整体仍FAIL，不能当作可上板。GPIO终点为同步FF/D，不能当作外部异步端口免检。
+本轮仅placement/routing/critical_pin、再route Explore，保持全部时钟域/IO/例外预算；综合明确REUSED_R78。
+不改RTL、不增加寄存器、retime、FF插入、DSP寄存器搬移、复制、rewire或clock_opt。
+前后funcsim导出在保留INIT/所有逻辑参数和实际端口条件下严格比较，仅去已明确物理注释；失败则保留，不认可等价。
+功能引用新R78限幅14/25位72000拍+FastChain32000拍定向PASS；R78同RAW源fresh完整回归正在独立trial运行，尚不称PASS。
+新增正常反馈周期0，继承R2b+32ns，真实总ADC-DAC延迟未测。实际新route/STA/CDC/DRC/IO待结果，无bitstream/板卡操作。
