@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Linien.  If not, see <http://www.gnu.org/licenses/>.
 
-from migen import Constant, If, Signal
+from migen import ClockSignal, Constant, If, Instance, ResetSignal, Signal
 from migen.genlib.misc import timeline
 from misoc.interconnect.csr import CSRConstant, CSRStorage
 
@@ -35,6 +35,7 @@ class Iir(Filter):
         intermediate_width=None,
         config_delay=0,
         mac_impl="native",
+        fabric_feedback=False,
     ):
         Filter.__init__(self, width)
         assert config_delay in (0,1,2)
@@ -96,8 +97,21 @@ class Iir(Filter):
         self.sync += [
             self.error.eq(railed),
             self.y.eq(y_lim),
-            If(self.clear, y.eq(0)).Elif(~self.hold, y.eq(y_lim)),
         ]
+        if fabric_feedback:
+            # The ORIGINAL feedback state edge, explicitly kept outside DSP BREG.
+            # D selects hold/clear; CE is constant. No extra pipeline state.
+            y_d = Signal.like(y)
+            self.comb += [y_d.eq(y),
+                          If(self.clear, y_d.eq(0)).Elif(~self.hold, y_d.eq(y_lim))]
+            for bit in range(len(y)):
+                self.specials += Instance(
+                    "FDRE", name=f"feedback_fabric_{bit}",
+                    p_INIT=0, i_C=ClockSignal(), i_CE=1, i_R=ResetSignal(),
+                    i_D=y_d[bit], o_Q=y[bit],
+                    attr={"DONT_TOUCH": "TRUE"})
+        else:
+            self.sync += If(self.clear, y.eq(0)).Elif(~self.hold, y.eq(y_lim))
 
         if mode == "pipelined":
             r = [(f"b{i}", self.x) for i in reversed(range(order + 1))]

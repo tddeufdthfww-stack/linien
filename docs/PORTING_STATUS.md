@@ -933,3 +933,35 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 全部原始strict失败源/日志、生成文件、新物理DCP/SHA、实际总线值诊断及clock geometry在experiments/r69_strict_failure_and_physical_20261112。DCP SHA256=63e1f2a98a3d335dff9880408e35ac0cbf36573d6859663e6bdb6dbd14c2be40。R66只读FAST合法16电气组合、逐14位224行扫描无同时setup/hold可行解，含整体相移假设也未找到交集，仅诊断未选入源码。
 
 下一R69b仅明确测试契约，硬件源码逐RAW保持本输入：ACK始终严格比较，payload/ERR仅在任一ACK非确知0时四态比较，保留所有数值/状态/内存/CSR/cohort断言和原始strict FAIL。必须独立跑过才能写更新契约PASS，不能将旧FAIL删掉；不预判是否存在有效响应或Scope数值问题。最终未签核、不部署，正常反馈新增级0（继承+32ns相对R2b）。
+
+## R69b后续完整功能结论
+
+4c4f9650d1404126ecd6db448b7cc9c183160f05：明确的有效响应契约fresh完整PASS，32故障测试、9整Scope测试225588 ADC cycles/15404事务/1890已知读取。原strict无ACK周期数据FAIL完整保留。该结论对应R69原硬件，不自动替代R73新硬件功能回归。
+
+## R70 actual物理候选 / 2026-11-12
+
+输入444ea6a9f029093bfdd2c9fc42d1049d9fb56f00。综合REUSED_R69，不是新综合；route COMPLETE，WNS/TNS=-0.343/-5.9ns，70 setup端点，WHS/THS=0.027/0.0ns，WPWS=1.5ns。最终STA FAIL。功能引用同RAW硬件R69b完整有效响应契约PASS（4c4f965），原无ACK数据严格差分FAIL保留。
+
+逻辑比较：Original strict export comparator FAIL: exactly three physical placement annotations. Independent exact logical proof PASS; original exit1 retained.
+
+全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r70_actual_physical_20261112，DCP SHA256=db5c8f6e20818363d39d884136a855d488db484c725c611cd6fb61fce7df8c4b。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
+
+## R71 actual物理候选 / 2026-11-12
+
+输入41c22164c181b256f81833e972784e7ba9c19240。综合REUSED_R69，不是新综合；route COMPLETE，WNS/TNS=-0.343/-5.363ns，24 setup端点，WHS/THS=0.027/0.0ns，WPWS=1.5ns。最终STA FAIL。功能引用同RAW硬件R69b完整有效响应契约PASS（4c4f965），原无ACK数据严格差分FAIL保留。
+
+逻辑比较：Within-trial logical equality PASS; original cross-reopen comparator FAIL on 30 HOLD_DETOUR physical pin annotations. Independent transitive proof PASS; original exit1 retained. v1 unsupported TNS option separately archived.
+
+全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r71_actual_physical_20261112，DCP SHA256=55c46b57ccc79a6662765b7265a33a2ca52f9f2af0abdbfae13f6ddf4b11efc7。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
+
+## R72 actual物理候选 / 2026-11-12
+
+输入662ab1be674f1c638c2e21252e6cad62f203a534。综合REUSED_R69，不是新综合；route COMPLETE，WNS/TNS=-0.343/-4.308ns，17 setup端点，WHS/THS=0.027/0.0ns，WPWS=1.5ns。最终STA FAIL。功能引用同RAW硬件R69b完整有效响应契约PASS（4c4f965），原无ACK数据严格差分FAIL保留。
+
+逻辑比较：Original run exit0 and within-trial / input canonical logical equality PASS.
+
+全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r72_actual_physical_20261112，DCP SHA256=3c8b72a77450f5fbaf21f759982405472637883baa23261b4721ed8f6e4a3696。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
+
+## R73已执行定向回归
+
+14/25位一/二/五阶共107706拍，新旧逐拍+独立有限位整数模型PASS（完整CSR/复位/hold/clear/饱和/脉冲延迟）；完整FastChain32000拍PASS，31976已知周期/21317写/24000 CE保持周期。厂商DSP48E1/FDRE原生模型。原件/SHA在experiments/r73_targeted_native_20261112。新完整功能/综合/实际route尚待，不得以此认定时序收敛或上板。
