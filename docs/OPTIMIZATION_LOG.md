@@ -624,3 +624,13 @@ bus_clk_bridge对本地src_fault_ack读数据强制0；return payload/error寄�
 R68实际route已失败：WNS/TNS=-.829/-16.583ns、45端点，WHS/THS=-.412/-5.257ns、14端点；同pad波形正边沿clock重编码无物理收益，拒绝保留于生产候选。R69在完整物理输入冻结前，将crg.py/analog.py/io_intrinsic_probe.tcl逐RAW字节恢复到R67（即R66 DAC + R67 PS ASR），保留R68分支原失败源和报告。R68脚本和参考文件仅为历史重现，R69回归入口恢复check_r66_analog，保留R67 reset检查并加入R69 fault/wiring检查。不是回退PS reset成果、不是覆盖R68失败现场；只是选取较优组件组合，额外数据级0。
 
 本轮针对性实际native结果：六原故障情景×4异步相位=24例PASS；新增“目标请求已到同步器末级但尚未提交即停钟”和“timeout控制断言100ps后立即恢复目标clock”两例×4相位=8例PASS。同一两个新增fixture在冻结R68均按预期复现超时后旧写replay FAIL；正常下游ERR payload两边PASS。实际RootModule取消连线/四SYS slave/source epoch与AXI自身reset分离检查PASS。全部32候选例、对应旧缺口FAIL、原源码/SHA均在experiments/r69_fault_native_20261112。完整功能和新物理将在冻结输入后另跑，不把这些32例写作完整回归。
+
+## 2026-11-12 R69实际：32故障PASS，严格旧空闲总线差分FAIL，STA FAIL
+
+输入afdfa18334a9cb34ccd6419f8c5e02286e903296；新32故障/取消/重放/非法payload及实际Root连线PASS。完整回归在Scope factor-cache parent phase0的79926ns FAIL：复位0/0、ACK0/0、ERR0/0，旧RDATA0/新RDATA1。保留return payload导致无有效响应周期数据变化，符合新计划的fault隔离，但旧严格“包括无ACK周期数据相等”检查不成立，不能写全功能PASS。后续未执行项NOT RUN。原manifest functional仍初始NOT RUN，其failure和原生日志明确实际FAIL，原件不回写；下一runner需将运行/失败状态准确记录。
+
+新综合COMPLETE：WNS/TNS=-.773/-80.399ns（312端点）；actual route COMPLETE：WNS/TNS=-.411/-30.808ns（242端点），WHS/THS=+.027/0（0端点），WPWS+1.500ns。最差fast_a_zi0__10/C→fast_b_cordic17[16]/D，8.395ns（logic4.140/route4.255，14级9CARRY4+5LUT）；DAC必要预算-.343/+.070，ADC28+.429/+3.304及0/-8ns逐条PASS，DNA+.009/+.216ns。LUT11803/FF13386/DSP94/BRAM35/BUFG6；noClock0/内部未约束0、noInput16/noOutput32。52ASYNC FF/26pair同SLICE一级Q只驱动二级D，CDC总体NOT PROVEN（报告当前451 CDC1，不能拿数量判断已签核）。
+
+全部原始strict失败源/日志、生成文件、新物理DCP/SHA、实际总线值诊断及clock geometry在experiments/r69_strict_failure_and_physical_20261112。DCP SHA256=63e1f2a98a3d335dff9880408e35ac0cbf36573d6859663e6bdb6dbd14c2be40。R66只读FAST合法16电气组合、逐14位224行扫描无同时setup/hold可行解，含整体相移假设也未找到交集，仅诊断未选入源码。
+
+下一R69b仅明确测试契约，硬件源码逐RAW保持本输入：ACK始终严格比较，payload/ERR仅在任一ACK非确知0时四态比较，保留所有数值/状态/内存/CSR/cohort断言和原始strict FAIL。必须独立跑过才能写更新契约PASS，不能将旧FAIL删掉；不预判是否存在有效响应或Scope数值问题。最终未签核、不部署，正常反馈新增级0（继承+32ns相对R2b）。
