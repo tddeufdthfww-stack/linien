@@ -189,6 +189,10 @@ def main():
                     ROOT, out, 'r73_feedback', env, 'R73_FABRIC_FEEDBACK_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r73_fastchain.py', '--out', out / 'r73_fastchain_checks'],
                     ROOT, out, 'r73_fastchain', env, 'R73_FASTCHAIN_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r74_retimed_iir.py', '--out', out / 'r74_retimed_iir_checks'],
+                    ROOT, out, 'r74_retimed_iir', env, 'R74_RETIMED_IIR_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r74_fastchain.py', '--out', out / 'r74_fastchain_checks'],
+                    ROOT, out, 'r74_fastchain', env, 'R74_FASTCHAIN_SUITE_PASS')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'

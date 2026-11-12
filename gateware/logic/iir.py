@@ -36,8 +36,11 @@ class Iir(Filter):
         config_delay=0,
         mac_impl="native",
         fabric_feedback=False,
+        retimed_output=False,
     ):
         Filter.__init__(self, width)
+        assert not (retimed_output and fabric_feedback)
+        assert not retimed_output or mode == "pipelined"
         assert config_delay in (0,1,2)
         assert mode in ("pipelined", "iterative")
         assert mac_impl in ("native","split_c48","registered_c48")
@@ -90,15 +93,26 @@ class Iir(Filter):
         y_pat = Signal.like(y_over, reset=2 ** (intermediate_width - skip) - 1)
         y = Signal.like(self.y)
         railed = Signal()
+        previous_y = Signal.like(self.y) if retimed_output else self.y
         self.comb += [
             railed.eq(~((y_over == y_pat) | (y_over == ~y_pat))),
-            If(railed, y_lim.eq(self.y)).Else(y_lim.eq(y_next[shift:])),
+            If(railed, y_lim.eq(previous_y)).Else(y_lim.eq(y_next[shift:])),
         ]
-        self.sync += [
-            self.error.eq(railed),
-            self.y.eq(y_lim),
-        ]
-        if fabric_feedback:
+        if retimed_output:
+            # Capture the old states/controls on the ORIGINAL output edge.
+            # The raw MAC result is registered on that same edge below.
+            previous_feedback = Signal.like(y)
+            hold_q, clear_q = Signal(), Signal()
+            self.sync += [previous_y.eq(self.y), previous_feedback.eq(y),
+                          hold_q.eq(self.hold), clear_q.eq(self.clear)]
+            self.comb += [self.error.eq(railed), self.y.eq(y_lim),
+                          If(clear_q, y.eq(0)).Elif(hold_q, y.eq(previous_feedback))
+                          .Else(y.eq(y_lim))]
+        else:
+            self.sync += [self.error.eq(railed), self.y.eq(y_lim)]
+        if retimed_output:
+            pass  # Feedback is reconstructed from this edge's registered cohort.
+        elif fabric_feedback:
             # The ORIGINAL feedback state edge, explicitly kept outside DSP BREG.
             # D selects hold/clear; CE is constant. No extra pipeline state.
             y_d = Signal.like(y)
@@ -123,7 +137,10 @@ class Iir(Filter):
                     if i < len(r)-1:
                         zr = registered_c48_mac(self,zr,signal,c[coeff])
                     else:
-                        z = split_c48_mac(self,zr,signal,c[coeff])
+                        # Replace the output state edge with full MAC state,
+                        # not an extra edge after the original output FF.
+                        z = (registered_c48_mac if retimed_output else split_c48_mac)(
+                            self,zr,signal,c[coeff])
             else:
                 for coeff, signal in r:
                     zr = Signal.like(z)
@@ -133,7 +150,12 @@ class Iir(Filter):
                         self.comb += z.eq(split_c48_mac(self,zr,signal,c[coeff]))
                     else:
                         self.comb += z.eq(zr + signal * c[coeff])
-            self.comb += y_next.eq(z)
+            if retimed_output and mac_impl != "registered_c48":
+                raw_q = Signal.like(z)
+                self.sync += raw_q.eq(z)
+                self.comb += y_next.eq(raw_q)
+            else:
+                self.comb += y_next.eq(z)
             self.latency.value = Constant(order + 1)
             self.interval.value = Constant(1)
 

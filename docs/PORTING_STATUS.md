@@ -969,3 +969,13 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 ## R73b属性兼容修正 / 2026-11-12
 
 R73输入9fbcc83定向功能PASS，但顶层generate在Migen `_printattr` 的 `attr_translate["DONT_TOUCH"]` KeyError，综合/route NOT RUN。原源码/manifest/完整失败日志保留experiments/r73_original_generation_failure_20261112。独立R73b仅将属性集合改成显式(DONT_TOUCH,true)键值，不改变任何状态、位宽或周期，按实际库源规避属性名转换。重新顶层生成、功能、新综合/route分别验证；未签核。
+
+## R73b实际物理失败与R74后继
+
+R73b输入5543e747，新生成CSR映射PASS，新综合COMPLETE WNS/TNS=-1.953/-648.235ns；actual route COMPLETE但STA FAIL -1.257/-869.526ns、2041 setup端点，WHS/THS+.014/0、WPWS1.500。最差fabric反馈→两个DSP+三LUT→输出CE，8.993ns（6.259逻辑/2.734布线）。REJECTED_NOT_MERGED。定向功能PASS，fresh完整功能仍在原独立trial运行，未提前写PASS。完整物理/DCP/输入SHA及只读审计在experiments/r73b_rejected_physical_20261112。
+
+R74采用docs/R74_IIR_SATURATION_RETIME.md的逐拍状态等价重排，替代原输出边沿，新增反馈整数周期0；只有fast A/B启用，raw/PS7/引脚/PLL/CSR/现有AXI与CDC修复保持。先14/25位逐拍及整链测试，未取得实际报告前不预判时序。DAC/PCB/CDC/DRC尚未整体签核，无可部署bitstream。
+
+## R74已执行定向功能PASS
+
+14/25位一/二/五阶107706拍严格差分+独立整数模型PASS，b0/bN脉冲延迟分别保持order+1和2*order+1；全FastChain32000拍PASS（31976已知/21317写/24000 CE保持）。clear/hold/复位/饱和/部分CSR写全部逐拍比较，未允许多一拍误差。完整原件/SHA在experiments/r74_native_equivalence_20261112。新生成/综合/route尚待，完整功能暂未重跑，最终STA未签核。

@@ -214,7 +214,7 @@ class LinienModule(Module, AutoCSR):
             offset_signal=self.logic.chain_a_offset_signed,
             pre_offset_signal=self.logic.chain_a_offset.storage,
             iir_mac_impl="registered_c48",parallel_output=True,
-            iir_fabric_feedback=True,
+            iir_retimed_output=True,
         )
         self.submodules.fast_b = FastChain(
             width,
@@ -224,7 +224,7 @@ class LinienModule(Module, AutoCSR):
             offset_signal=self.logic.chain_b_offset_signed,
             pre_offset_signal=self.logic.chain_b_offset.storage,
             iir_mac_impl="registered_c48",parallel_output=True,
-            iir_fabric_feedback=True,
+            iir_retimed_output=True,
         )
 
         max_decimation = 16

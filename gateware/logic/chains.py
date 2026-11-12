@@ -30,7 +30,7 @@ class FastChain(Module, AutoCSR):
     def __init__(
         self, width=14, signal_width=25, coeff_width=18, mod=None, offset_signal=None,
         iir_mac_impl="native", parallel_output=False, pre_offset_signal=None,
-        iir_fabric_feedback=False
+        iir_fabric_feedback=False, iir_retimed_output=False
     ):
         self.adc = Signal((width, True))
         # output of in-phase demodulated signal
@@ -90,6 +90,7 @@ class FastChain(Module, AutoCSR):
                 order=1,
                 mac_impl=iir_mac_impl,
                 fabric_feedback=iir_fabric_feedback,
+                retimed_output=iir_retimed_output,
             )
             setattr(self.submodules, f"iir_c_{sub_channel_idx+1}", iir_c)
             iir_d = Iir(
@@ -99,6 +100,7 @@ class FastChain(Module, AutoCSR):
                 order=2,
                 mac_impl=iir_mac_impl,
                 fabric_feedback=iir_fabric_feedback,
+                retimed_output=iir_retimed_output,
             )
             setattr(self.submodules, f"iir_d_{sub_channel_idx+1}", iir_d)
             y_limit = (ParallelTapLimitCSR if parallel_output else LimitCSR)(width=signal_width, guard=3)
