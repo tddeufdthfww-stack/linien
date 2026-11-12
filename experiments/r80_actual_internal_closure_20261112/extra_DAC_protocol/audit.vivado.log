@@ -1,0 +1,99 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Thu Nov 12 19:10:53 2026
+# Process ID: 14972
+# Current directory: C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_dac_extra_protocol
+# Command line: vivado.exe -mode batch -source C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_dac_extra_protocol\audit.tcl -log C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_dac_extra_protocol\audit.vivado.log -journal C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_dac_extra_protocol\audit.jou
+# Log file: C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_dac_extra_protocol/audit.vivado.log
+# Journal file: C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_dac_extra_protocol\audit.jou
+#-----------------------------------------------------------
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_dac_extra_protocol\audit.tcl}
+# if {[catch {
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_dac_extra_protocol}
+# set_param general.maxThreads 2
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/routed.dcp}
+# 
+# set sel [get_ports dac_sel]
+# if {[llength $sel]!=1 || [llength [get_clocks dac_write]]!=1 || [llength [get_clocks dac_sample]]!=1} {error "Missing exact DAC interface"}
+# # Real condition in Fig64/ADI explanation: SEL changes only while BOTH clocks low.
+# # Setup to next rising edge and hold after preceding falling edge; 0 means the
+# # stated logic-level window condition, NOT an assumed zero board delay budget.
+# set_output_delay -clock [get_clocks dac_write] -max 0.0 $sel
+# set_output_delay -clock [get_clocks dac_write] -clock_fall -min 0.0 $sel
+# set_output_delay -clock [get_clocks dac_sample] -max 0.0 -add_delay $sel
+# set_output_delay -clock [get_clocks dac_sample] -clock_fall -min 0.0 -add_delay $sel
+# report_timing -to $sel -delay_type max -max_paths 30 -nworst 10 -file "$out/sel_before_rises.rpt"
+# report_timing -to $sel -delay_type min -max_paths 30 -nworst 10 -file "$out/sel_after_falls.rpt"
+# set clk_cells {}
+# foreach c [get_cells -hier -filter {REF_NAME == ODDR}] {
+#  set q [get_nets -of_objects [get_pins -of_objects $c -filter {REF_PIN_NAME == Q}]]
+#  if {$q eq "dac_clk_OBUF"} {lappend clk_cells $c}
+# }
+# if {[llength $clk_cells]!=1} {error "Cannot trace DAC CLK ODDR"}
+# set clk_c [get_pins -of_objects $clk_cells -filter {REF_PIN_NAME == C}]
+# # Actual frozen R65 CLK ODDR D1=0,D2=1: only C-fall generates Q-rise.
+# # A clock-as-data path from C-rise to Q-rise is an unreachable primitive
+# # timing arc. Select the actual physical launch edge in diagnostic reports;
+# # no disable_timing/false_path is installed and no DCP is written.
+# # Fig64 nominal CLK leads WRT by 500ps. This necessary edge-order model is
+# # additional to the unchanged data setup/hold model; PCB skew still absent.
+# set_output_delay -clock [get_clocks dac_write] -max 0.5 [get_ports dac_clk]
+# # FAQ: next CLK must not occur within 2ns after the preceding WRT.
+# set_output_delay -clock [get_clocks dac_write] -min -2.0 [get_ports dac_clk]
+# report_timing -fall_from $clk_c -rise_to [get_ports dac_clk] -delay_type max -max_paths 10 -nworst 5 -file "$out/clk_before_wrt.rpt"
+# report_timing -fall_from $clk_c -rise_to [get_ports dac_clk] -delay_type min -max_paths 10 -nworst 5 -file "$out/clk_after_previous_wrt.rpt"
+# report_clocks -file "$out/clocks.rpt"
+# report_exceptions -file "$out/exceptions.rpt"
+# puts DAC_EXTRA_PROTOCOL_DIAGNOSTIC_COMPLETE_NOT_SIGNOFF
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.037 . Memory (MB): peak = 1076.203 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.303 . Memory (MB): peak = 1076.203 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2917 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.949 ; gain = 19.699
+Restored from archive | CPU: 2.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.949 ; gain = 19.699
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 1561.949 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:24 . Memory (MB): peak = 1561.949 ; gain = 485.746
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 30 -nworst 10 -delay_type max -sort_by slack.
+report_timing: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 1625.094 ; gain = 63.145
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -to_pins  -max_paths 30 -nworst 10 -delay_type min -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -to_pins  -max_paths 10 -nworst 5 -delay_type max -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -to_pins  -max_paths 10 -nworst 5 -delay_type min -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+DAC_EXTRA_PROTOCOL_DIAGNOSTIC_COMPLETE_NOT_SIGNOFF
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 19:11:32 2026...

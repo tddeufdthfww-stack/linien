@@ -1,0 +1,588 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Thu Nov 12 18:00:24 2026
+# Process ID: 21984
+# Current directory: D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster
+# Command line: vivado.exe -mode batch -source D:\RP_Dev\linien_trials\20261112-r80-status-cluster\gateware\build\trials\20261112_r80_status_cluster\implementation.tcl -log D:\RP_Dev\linien_trials\20261112-r80-status-cluster\gateware\build\trials\20261112_r80_status_cluster\implementation.vivado.log -journal D:\RP_Dev\linien_trials\20261112-r80-status-cluster\gateware\build\trials\20261112_r80_status_cluster\implementation.jou
+# Log file: D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/implementation.vivado.log
+# Journal file: D:\RP_Dev\linien_trials\20261112-r80-status-cluster\gateware\build\trials\20261112_r80_status_cluster\implementation.jou
+#-----------------------------------------------------------
+source {D:\RP_Dev\linien_trials\20261112-r80-status-cluster\gateware\build\trials\20261112_r80_status_cluster\implementation.tcl}
+# if {[catch {
+# set_param general.maxThreads 2
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r78-early-clamp-thresholds/gateware/build/trials/20261112_172556_r78_early_clamp_implementation/routed.dcp}
+# 
+# write_verilog -force -mode funcsim logical_before.v
+# # Explicit options disable all implicit optimization categories. No retiming,
+# # FF insertion, DSP/BRAM register optimization, duplication, rewire or clock_opt.
+# 
+# # Exact geometry checked on the immutable parent; change placement only.
+# proc exact_cell {name} {
+#  set c [get_cells -hier -quiet -filter "NAME == \"$name\""]
+#  if {[llength $c] != 1} {error "Expected exact cell $name"};return $c
+# }
+# set target_site [get_sites SLICE_X67Y118]
+# if {[llength [get_cells -quiet -of_objects [get_bels -of_objects $target_site]]]} {error "Chosen parent slice is no longer empty"}
+# set assignments [list {linienmodule_gpio_n_o[7]_i_2} SLICE_X67Y118/A6LUT \
+#                       {linienmodule_gpio_n_o[7]_i_1} SLICE_X67Y118/B6LUT \
+#                       {linienmodule_gpio_n_o_reg[7]} SLICE_X67Y118/BFF \
+#                       {linienmodule_gpio_n_o_reg[7]_lopt_replica} SLICE_X67Y118/CFF]
+# set moved {};set f [open manual_locations_before.tsv w];puts $f "cell\tref\tLOC\tBEL"
+# foreach {name bel} $assignments {
+#  set c [exact_cell $name];lappend moved $c
+#  puts $f [join [list $name [get_property REF_NAME $c] [get_property LOC $c] [get_property BEL $c]] "\t"]
+#  set_property IS_LOC_FIXED false $c;set_property IS_BEL_FIXED false $c
+# };close $f
+# set q0 [exact_cell {linienmodule_gpio_n_o_reg[7]}]
+# set q1 [exact_cell {linienmodule_gpio_n_o_reg[7]_lopt_replica}]
+# foreach p {C R CE} {
+#  if {[get_nets -of_objects [get_pins -of_objects $q0 -filter "REF_PIN_NAME == $p"]] ne [get_nets -of_objects [get_pins -of_objects $q1 -filter "REF_PIN_NAME == $p"]]} {error "GPIO copies disagree on $p"}
+# }
+# place_cell $assignments
+# set_property IS_LOC_FIXED true $moved
+# set_property IS_BEL_FIXED true $moved
+# set f [open manual_locations_after.tsv w];puts $f "cell\tref\tLOC\tBEL"
+# foreach {name expected} $assignments {
+#  set c [exact_cell $name];set location [get_property LOC $c];set bel [get_property BEL $c]
+#  if {$location ne "SLICE_X67Y118" || ![string match "*.[lindex [split $expected /] 1]" $bel]} {error "Unexpected moved location for $name"}
+#  puts $f [join [list $name [get_property REF_NAME $c] $location $bel] "\t"]
+# };close $f
+# 
+# route_design -directive Explore
+# report_route_status -file routed_status.rpt
+# report_timing_summary -max_paths 30 -file routed_timing.rpt
+# report_timing -delay_type max -max_paths 100 -file routed_setup.rpt
+# report_timing -delay_type min -max_paths 30 -file routed_hold.rpt
+# report_timing -from [get_clocks clk_2] -to [get_clocks clk_2] -max_paths 50 -file core_sys_setup.rpt
+# check_timing -verbose -file routed_checks.rpt
+# report_cdc -details -file routed_cdc.rpt
+# report_drc -file routed_drc.rpt
+# report_utilization -file routed_utilization.rpt
+# report_clock_interaction -file routed_clocks.rpt
+# write_verilog -force -mode funcsim logical_after.v
+# write_checkpoint -force routed.dcp
+# puts R80_PLACEMENT_ROUTING_ONLY_COMPLETE
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r78-early-clamp-thresholds/gateware/build/trials/20261112_172556_r78_early_clamp_implementation/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.035 . Memory (MB): peak = 1072.594 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.299 . Memory (MB): peak = 1072.594 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2917 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.512 ; gain = 19.379
+Restored from archive | CPU: 2.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.512 ; gain = 19.379
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1561.512 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:17 ; elapsed = 00:00:23 . Memory (MB): peak = 1561.512 ; gain = 488.918
+Command: route_design -directive Explore
+Attempting to get a license for feature 'Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-270] Using Router directive 'Explore'.
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 2 CPUs
+Checksum: PlaceDB: c806f809 ConstDB: 0 ShapeSum: 13bb7811 RouteDB: bd8df867
+
+Phase 1 Build RT Design
+Phase 1 Build RT Design | Checksum: 1789ed0d0
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:39 . Memory (MB): peak = 1800.465 ; gain = 147.152
+Post Restoration Checksum: NetGraph: 835a71fc NumContArr: f9a1ad50 Constraints: 0 Timing: 0
+
+Phase 2 Router Initialization
+
+Phase 2.1 Create Timer
+Phase 2.1 Create Timer | Checksum: 17cfc1f4c
+
+Time (s): cpu = 00:00:24 ; elapsed = 00:00:40 . Memory (MB): peak = 1800.758 ; gain = 147.445
+
+Phase 2.2 Fix Topology Constraints
+Phase 2.2 Fix Topology Constraints | Checksum: 17cfc1f4c
+
+Time (s): cpu = 00:00:24 ; elapsed = 00:00:41 . Memory (MB): peak = 1811.219 ; gain = 157.906
+
+Phase 2.3 Pre Route Cleanup
+Phase 2.3 Pre Route Cleanup | Checksum: 1559e6b71
+
+Time (s): cpu = 00:00:24 ; elapsed = 00:00:41 . Memory (MB): peak = 1811.219 ; gain = 157.906
+ Number of Nodes with overlaps = 0
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 24734d099
+
+Time (s): cpu = 00:00:33 ; elapsed = 00:00:51 . Memory (MB): peak = 1908.137 ; gain = 254.824
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-1.081 | TNS=-9.677 | WHS=-1.187 | THS=-762.837|
+
+Phase 2 Router Initialization | Checksum: 25ca18a7c
+
+Time (s): cpu = 00:00:37 ; elapsed = 00:00:56 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 9.2929 %
+  Global Horizontal Routing Utilization  = 10.4317 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 15
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 8
+  Number of Partially Routed Nets     = 7
+  Number of Node Overlaps             = 0
+
+
+Phase 3 Initial Routing
+Phase 3 Initial Routing | Checksum: 1e7b2ad0d
+
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:57 . Memory (MB): peak = 2001.762 ; gain = 348.449
+INFO: [Route 35-580] Design has 101 pins with tight setup and hold constraints.
+
+The top 5 pins with tight setup and hold constraints:
+
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|       Launch Clock       |      Capture Clock       |                                                 Pin                                                      |
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|                    clk_2 |                  dna_clk |                                                                                             DNA_PORT/READ|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[28]/D|
+|               clk_fpga_0 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[11]/D|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[27]/D|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[25]/D|
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+
+File with complete list of pins: tight_setup_hold_pins.txt
+
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 77
+ Number of Nodes with overlaps = 75
+ Number of Nodes with overlaps = 62
+ Number of Nodes with overlaps = 36
+ Number of Nodes with overlaps = 36
+ Number of Nodes with overlaps = 32
+ Number of Nodes with overlaps = 12
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.536 | TNS=-8.910 | WHS=N/A    | THS=N/A    |
+
+Phase 4.1 Global Iteration 0 | Checksum: cdd93068
+
+Time (s): cpu = 00:00:47 ; elapsed = 00:01:12 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 4.2 Global Iteration 1
+ Number of Nodes with overlaps = 366
+ Number of Nodes with overlaps = 229
+ Number of Nodes with overlaps = 182
+ Number of Nodes with overlaps = 43
+ Number of Nodes with overlaps = 23
+ Number of Nodes with overlaps = 13
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.536 | TNS=-7.787 | WHS=N/A    | THS=N/A    |
+
+Phase 4.2 Global Iteration 1 | Checksum: 228147537
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:01:21 . Memory (MB): peak = 2001.762 ; gain = 348.449
+Phase 4 Rip-up And Reroute | Checksum: 228147537
+
+Time (s): cpu = 00:00:50 ; elapsed = 00:01:21 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: 19d202437
+
+Time (s): cpu = 00:00:51 ; elapsed = 00:01:23 . Memory (MB): peak = 2001.762 ; gain = 348.449
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.522 | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Delay CleanUp | Checksum: 19d202437
+
+Time (s): cpu = 00:00:52 ; elapsed = 00:01:23 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 19d202437
+
+Time (s): cpu = 00:00:52 ; elapsed = 00:01:23 . Memory (MB): peak = 2001.762 ; gain = 348.449
+Phase 5 Delay and Skew Optimization | Checksum: 19d202437
+
+Time (s): cpu = 00:00:52 ; elapsed = 00:01:23 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 20841b261
+
+Time (s): cpu = 00:00:53 ; elapsed = 00:01:25 . Memory (MB): peak = 2001.762 ; gain = 348.449
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.522 | WHS=0.012  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 1d6567a19
+
+Time (s): cpu = 00:00:53 ; elapsed = 00:01:25 . Memory (MB): peak = 2001.762 ; gain = 348.449
+Phase 6 Post Hold Fix | Checksum: 1d6567a19
+
+Time (s): cpu = 00:00:53 ; elapsed = 00:01:25 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 7 Timing Verification
+
+Phase 7.1 Update Timing
+Phase 7.1 Update Timing | Checksum: 2126b67da
+
+Time (s): cpu = 00:00:54 ; elapsed = 00:01:28 . Memory (MB): peak = 2001.762 ; gain = 348.449
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.522 | WHS=N/A    | THS=N/A    |
+
+Phase 7 Timing Verification | Checksum: 2126b67da
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:01:28 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 9.32179 %
+  Global Horizontal Routing Utilization  = 10.4606 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Congestion Report
+North Dir 1x1 Area, Max Cong = 83.7838%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 70.2703%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 76.4706%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 91.1765%, Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+   INT_R_X35Y136 -> INT_R_X35Y136
+   INT_R_X63Y78 -> INT_R_X63Y78
+   INT_R_X65Y77 -> INT_R_X65Y77
+
+------------------------------
+Reporting congestion hotspots
+------------------------------
+Direction: North
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: South
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: East
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: West
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 1
+
+Phase 8 Route finalize | Checksum: 2126b67da
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:01:28 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 2126b67da
+
+Time (s): cpu = 00:00:55 ; elapsed = 00:01:29 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 1ad0786f5
+
+Time (s): cpu = 00:00:56 ; elapsed = 00:01:31 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 11 Incr Placement Change
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 2001.762 ; gain = 0.000
+INFO: [Place 30-746] Post Placement Timing Summary WNS=-0.343. For the most accurate timing information please run report_timing.
+Ending IncrPlace Task | Checksum: f5bd8320
+
+Time (s): cpu = 00:00:23 ; elapsed = 00:00:26 . Memory (MB): peak = 2001.762 ; gain = 0.000
+Phase 11 Incr Placement Change | Checksum: 1ad0786f5
+
+Time (s): cpu = 00:01:20 ; elapsed = 00:01:58 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 12 Build RT Design
+Phase 12 Build RT Design | Checksum: 12d421673
+
+Time (s): cpu = 00:01:26 ; elapsed = 00:02:36 . Memory (MB): peak = 2001.762 ; gain = 348.449
+Post Restoration Checksum: NetGraph: dea81bf3 NumContArr: b7d64847 Constraints: 0 Timing: 0
+
+Phase 13 Router Initialization
+
+Phase 13.1 Create Timer
+Phase 13.1 Create Timer | Checksum: 1967e643a
+
+Time (s): cpu = 00:01:27 ; elapsed = 00:02:37 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 13.2 Fix Topology Constraints
+Phase 13.2 Fix Topology Constraints | Checksum: 1967e643a
+
+Time (s): cpu = 00:01:27 ; elapsed = 00:02:37 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 13.3 Pre Route Cleanup
+Phase 13.3 Pre Route Cleanup | Checksum: 1967e643a
+
+Time (s): cpu = 00:01:27 ; elapsed = 00:02:37 . Memory (MB): peak = 2001.762 ; gain = 348.449
+
+Phase 13.4 Timing Verification
+
+Phase 13.4.1 Update Timing
+Phase 13.4.1 Update Timing | Checksum: 972e39ae
+
+Time (s): cpu = 00:01:36 ; elapsed = 00:02:45 . Memory (MB): peak = 2001.762 ; gain = 348.449
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.343 | TNS=-3.974 | WHS=0.038  | THS=0.000  |
+
+Phase 13.4 Timing Verification | Checksum: 972e39ae
+
+Time (s): cpu = 00:01:36 ; elapsed = 00:02:46 . Memory (MB): peak = 2001.762 ; gain = 348.449
+ Number of Nodes with overlaps = 0
+
+Phase 13.5 Update Timing
+Phase 13.5 Update Timing | Checksum: 14fbf3657
+
+Time (s): cpu = 00:01:45 ; elapsed = 00:02:56 . Memory (MB): peak = 2006.820 ; gain = 353.508
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.536 | TNS=-7.818 | WHS=-1.187 | THS=-762.837|
+
+Phase 13 Router Initialization | Checksum: 104c58569
+
+Time (s): cpu = 00:01:49 ; elapsed = 00:03:01 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 9.32179 %
+  Global Horizontal Routing Utilization  = 10.4606 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+Phase 14 Initial Routing
+Phase 14 Initial Routing | Checksum: e211d9ce
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:03:02 . Memory (MB): peak = 2080.797 ; gain = 427.484
+INFO: [Route 35-580] Design has 101 pins with tight setup and hold constraints.
+
+The top 5 pins with tight setup and hold constraints:
+
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|       Launch Clock       |      Capture Clock       |                                                 Pin                                                      |
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|                    clk_2 |                  dna_clk |                                                                                             DNA_PORT/READ|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[28]/D|
+|               clk_fpga_0 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[11]/D|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[27]/D|
+|                    clk_2 |                    clk_2 |                                                        red_pitaya_scope/i_bridge/dst_rdata_hold_reg[25]/D|
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+
+File with complete list of pins: tight_setup_hold_pins.txt
+
+
+Phase 15 Rip-up And Reroute
+
+Phase 15.1 Global Iteration 0
+ Number of Nodes with overlaps = 150
+ Number of Nodes with overlaps = 124
+ Number of Nodes with overlaps = 71
+ Number of Nodes with overlaps = 49
+ Number of Nodes with overlaps = 26
+ Number of Nodes with overlaps = 15
+ Number of Nodes with overlaps = 11
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.536 | TNS=-8.259 | WHS=N/A    | THS=N/A    |
+
+Phase 15.1 Global Iteration 0 | Checksum: 169c743ce
+
+Time (s): cpu = 00:02:01 ; elapsed = 00:03:20 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 15.2 Global Iteration 1
+ Number of Nodes with overlaps = 304
+ Number of Nodes with overlaps = 133
+ Number of Nodes with overlaps = 40
+ Number of Nodes with overlaps = 17
+ Number of Nodes with overlaps = 9
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.536 | TNS=-8.290 | WHS=N/A    | THS=N/A    |
+
+Phase 15.2 Global Iteration 1 | Checksum: 131aece3b
+
+Time (s): cpu = 00:02:04 ; elapsed = 00:03:28 . Memory (MB): peak = 2080.797 ; gain = 427.484
+Phase 15 Rip-up And Reroute | Checksum: 131aece3b
+
+Time (s): cpu = 00:02:04 ; elapsed = 00:03:28 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 16 Delay and Skew Optimization
+
+Phase 16.1 Delay CleanUp
+
+Phase 16.1.1 Update Timing
+Phase 16.1.1 Update Timing | Checksum: 15f960812
+
+Time (s): cpu = 00:02:05 ; elapsed = 00:03:29 . Memory (MB): peak = 2080.797 ; gain = 427.484
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.690 | WHS=N/A    | THS=N/A    |
+
+ Number of Nodes with overlaps = 0
+Phase 16.1 Delay CleanUp | Checksum: c06abb97
+
+Time (s): cpu = 00:02:06 ; elapsed = 00:03:30 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 16.2 Clock Skew Optimization
+Phase 16.2 Clock Skew Optimization | Checksum: c06abb97
+
+Time (s): cpu = 00:02:06 ; elapsed = 00:03:30 . Memory (MB): peak = 2080.797 ; gain = 427.484
+Phase 16 Delay and Skew Optimization | Checksum: c06abb97
+
+Time (s): cpu = 00:02:06 ; elapsed = 00:03:30 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 17 Post Hold Fix
+
+Phase 17.1 Hold Fix Iter
+
+Phase 17.1.1 Update Timing
+Phase 17.1.1 Update Timing | Checksum: c5d1c886
+
+Time (s): cpu = 00:02:07 ; elapsed = 00:03:32 . Memory (MB): peak = 2080.797 ; gain = 427.484
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.690 | WHS=0.012  | THS=0.000  |
+
+Phase 17.1 Hold Fix Iter | Checksum: 173c4e04e
+
+Time (s): cpu = 00:02:07 ; elapsed = 00:03:32 . Memory (MB): peak = 2080.797 ; gain = 427.484
+Phase 17 Post Hold Fix | Checksum: 173c4e04e
+
+Time (s): cpu = 00:02:07 ; elapsed = 00:03:32 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 18 Timing Verification
+
+Phase 18.1 Update Timing
+Phase 18.1 Update Timing | Checksum: 155e294ac
+
+Time (s): cpu = 00:02:09 ; elapsed = 00:03:35 . Memory (MB): peak = 2080.797 ; gain = 427.484
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.365 | TNS=-4.690 | WHS=N/A    | THS=N/A    |
+
+Phase 18 Timing Verification | Checksum: 155e294ac
+
+Time (s): cpu = 00:02:09 ; elapsed = 00:03:35 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 19 Reset Design
+INFO: [Route 35-307] 26182 nets already restored were skipped.
+Post Restoration Checksum: NetGraph: 5c405bcf NumContArr: ba6bcb26 Constraints: 0 Timing: b42a5048
+Phase 19 Reset Design | Checksum: 1cad6773d
+
+Time (s): cpu = 00:02:13 ; elapsed = 00:03:39 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Phase 20 Post Router Timing
+INFO: [Route 35-20] Post Routing Timing Summary | WNS=-0.343 | TNS=-3.974 | WHS=0.038  | THS=0.000  |
+
+CRITICAL WARNING: [Route 35-39] The design did not meet timing requirements. Please run report_timing_summary for detailed reports.
+Resolution: Verify that the timing was met or had small violations at all previous steps (synthesis, placement, power_opt, and phys_opt). Run report_timing_summary and analyze individual timing paths.
+INFO: [Route 35-253] TNS is the sum of the worst slack violation on every endpoint in the design. Review the paths with the biggest WNS violations in the timing reports and modify your constraints or your design to improve both WNS and TNS.
+Phase 20 Post Router Timing | Checksum: 17c75ba03
+
+Time (s): cpu = 00:02:22 ; elapsed = 00:03:46 . Memory (MB): peak = 2080.797 ; gain = 427.484
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:02:22 ; elapsed = 00:03:46 . Memory (MB): peak = 2080.797 ; gain = 427.484
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+38 Infos, 1 Warnings, 1 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:02:25 ; elapsed = 00:03:48 . Memory (MB): peak = 2080.797 ; gain = 519.117
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+report_timing_summary: Time (s): cpu = 00:00:09 ; elapsed = 00:00:07 . Memory (MB): peak = 2080.797 ; gain = 0.000
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 100 -nworst 1 -delay_type max -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 30 -nworst 1 -delay_type min -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-78] ReportTimingParams: -from_pins  -to_pins  -max_paths 50 -nworst 1 -delay_type max -sort_by slack.
+INFO: [Timing 38-91] UpdateTimingParams: No interconnect No Cell Dly, Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-433] Consider using Xilinx recommended XPM_CDC modules to avoid Critical severities
+INFO: [Timing 38-314] The report_cdc command only analyzes and reports clock domain crossing paths where clocks have been defined on both source and destination sides. Ports with no input delay constraint are skipped. Please run check_timing to verify there are no missing clock definitions in your design, nor any unconstrained input port.
+Command: report_drc -file routed_drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2020.1/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Coretcl 2-168] The results of DRC are in file D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/routed_drc.rpt.
+report_drc completed successfully
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-164] This design has multiple clocks. Inter clock paths are considered valid unless explicitly excluded by timing constraints such as set_clock_groups or set_false_path.
+report_clock_interaction: Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 2080.797 ; gain = 0.000
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:05 ; elapsed = 00:00:03 . Memory (MB): peak = 2080.797 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/routed.dcp' has been generated.
+R80_PLACEMENT_ROUTING_ONLY_COMPLETE
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 18:05:09 2026...
