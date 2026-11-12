@@ -35,8 +35,10 @@ class Iir(Filter):
         intermediate_width=None,
         config_delay=0,
         mac_impl="native",
+        swap_final_operands=False,
     ):
         Filter.__init__(self, width)
+        assert not swap_final_operands or mode == "pipelined"
         assert config_delay in (0,1,2)
         assert mode in ("pipelined", "iterative")
         assert mac_impl in ("native","split_c48","registered_c48")
@@ -109,16 +111,24 @@ class Iir(Filter):
                     if i < len(r)-1:
                         zr = registered_c48_mac(self,zr,signal,c[coeff])
                     else:
-                        z = split_c48_mac(self,zr,signal,c[coeff])
+                        # Commutative full-width product, unchanged state edge.
+                        lhs, rhs = ((c[coeff], signal) if swap_final_operands
+                                    else (signal, c[coeff]))
+                        z = split_c48_mac(self,zr,lhs,rhs)
             else:
                 for coeff, signal in r:
                     zr = Signal.like(z)
                     self.sync += zr.eq(z)
                     z = Signal.like(zr)
                     if mac_impl == "split_c48":
-                        self.comb += z.eq(split_c48_mac(self,zr,signal,c[coeff]))
+                        lhs, rhs = ((c[coeff], signal)
+                                    if swap_final_operands and coeff == "a1"
+                                    else (signal, c[coeff]))
+                        self.comb += z.eq(split_c48_mac(self,zr,lhs,rhs))
                     else:
-                        self.comb += z.eq(zr + signal * c[coeff])
+                        product = (c[coeff] * signal if swap_final_operands and coeff == "a1"
+                                   else signal * c[coeff])
+                        self.comb += z.eq(zr + product)
             self.comb += y_next.eq(z)
             self.latency.value = Constant(order + 1)
             self.interval.value = Constant(1)

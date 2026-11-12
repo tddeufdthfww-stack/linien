@@ -185,6 +185,10 @@ def main():
                     if phase is not None:
                         command += ['--testplusarg', 'PHASE_PS=' + str(phase)]
                     execute(command, sim, out, top + '_simulate_' + str(phase), env, marker)
+            execute([sys.executable, ROOT / 'tools/check_r75_operand_swap.py', '--out', out / 'r75_operand_swap_checks'],
+                    ROOT, out, 'r75_operand_swap', env, 'R75_OPERAND_SWAP_IIR_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r75_fastchain.py', '--out', out / 'r75_fastchain_checks'],
+                    ROOT, out, 'r75_fastchain', env, 'R75_FASTCHAIN_SUITE_PASS')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'

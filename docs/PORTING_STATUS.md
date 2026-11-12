@@ -1,3 +1,5 @@
+> **2026-11-12 R75候选：从R72独立试验最终MAC乘数拆分，定向功能PASS；新综合/route尚待，最终未签核。R73b/R74物理失败均未选入。**
+
 > **R72候选：core关键LUT物理pin交换待实际结果**。R69b fresh完整有效响应回归PASS，原strict idle差分FAIL保留；R71实际-.343/-5.363ns、24端点、core-.234。R72不改源码/周期/约束/反馈级，综合复用R69，功能复用R69b，逻辑和实际STA各自验收。
 
 > **R71候选：内部clk_2 placement/routing TNS cleanup待结果**。R70实际-.343/-5.900ns、core-.205、hold+.027；逻辑仅新增3物理标记的等价已独立证明，原严格比较FAIL保留。R71无源码/反馈级/时钟/约束更改，综合复用R69，仍全局计时签核。
@@ -941,3 +943,11 @@ SAME_EDGE/D1=D2换为250MHz rising FDRE/IOB TRUE；初始值/CE/R及原数据FF/
 逻辑比较：Original run exit0 and within-trial / input canonical logical equality PASS.
 
 全部原始manifest/exit/实际报告/DCP、独立证明、只读审计在experiments/r72_actual_physical_20261112，DCP SHA256=3c8b72a77450f5fbaf21f759982405472637883baa23261b4721ed8f6e4a3696。只忽略物理注释做文本逻辑比较，未移除实际DCP属性，hold始终检查。ADC28端点+.429/+3.304ns、同字0/-8关系；52ASYNC/26同SLICE双级结构不等于整体CDC安全。外部DAC必要setup仍-.343ns，CLK/WRT/SEL/3.5ns外部脉宽/真实PCB及16输入32输出接口约束未签核。正常反馈新增周期0，继承相对R2b+32ns；无签核bitstream或烧录。
+
+## R75候选输入及定向PASS / 2026-11-12
+
+从R72最终5124a1c另建opt/r75-iir-final-operand-swap-20261112，只交换fast A/B最终a1 MAC两个完整乘数的拆分方向，原输出饱和/反馈寄存器/CSR/PLL/ADC/DAC/PS7/AXI/CDC不动，新增反馈周期0。依据docs/R75_FINAL_MULTIPLIER_OPERAND_SWAP.md。14/25位一/二/五阶107706拍对照冻结R72及独立整数模型PASS，FastChain32000拍PASS，31976已知/21317写/24000 CE保持；完整原件和SHA在experiments/r75_native_equivalence_20261112。新生成/新综合/actual route待执行，fresh全功能未重跑，不能预判收益。
+
+R73最新完整功能PASS和生成失败归档2b0fc162b26fb07829ccc02e2c4c9311a30e700a；R73b完整功能PASS但物理失败归档b3da30114366b1fe608a98d449c08518aafb60d4；R74定向PASS但route -0.827/-635.956ns、1829端点失败归档2a0a04836b8799b0626e4a4599b222b45c272b85，fresh全功能NOT RUN。均保持独立，没有合并进本R75硬件选择。当前较好参考仍R72 -0.343/-4.308ns、17端点，最终STA FAIL。
+
+完整DAC/PCB/物理CDC/DRC及16输入32输出接口约束仍待签核，无可部署bitstream、无烧录/激光/PZT操作。
