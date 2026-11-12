@@ -197,10 +197,10 @@ def main():
                     ROOT, out, 'r78_early_limit', env, 'R78_EARLY_LIMIT_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r78_fastchain.py', '--out', out / 'r78_fastchain_checks'],
                     ROOT, out, 'r78_fastchain', env, 'R78_FASTCHAIN_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_r82_regional_dac.py', '--out', out / 'r82_regional_dac_checks'],
-                    ROOT, out, 'r82_regional_dac', env, 'R82_REGIONAL_DAC_SUITE_PASS')
-            execute([sys.executable, ROOT / 'tools/check_r82_bare_latency.py', '--out', out / 'r82_bare_latency_checks'],
-                    ROOT, out, 'r82_bare_latency', env, 'DIGITAL_LATENCY_MEASUREMENT_COMPLETE')
+            execute([sys.executable, ROOT / 'tools/check_r83_regional_dac.py', '--out', out / 'r83_regional_dac_checks'],
+                    ROOT, out, 'r83_regional_dac', env, 'R83_REGIONAL_DAC_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r83_bare_latency.py', '--out', out / 'r83_bare_latency_checks'],
+                    ROOT, out, 'r83_bare_latency', env, 'DIGITAL_LATENCY_MEASUREMENT_COMPLETE')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'

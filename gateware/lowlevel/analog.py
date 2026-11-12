@@ -24,7 +24,7 @@ class PitayaAnalog(Module):
             from .dac_regional_clock import DACRegionalClock
             self.submodules.regional = DACRegionalClock()
         data_domain = "dac_io" if regional_dac else "sys_double"
-        write_domain = "dac_write_io" if regional_dac else "sys_double"
+        write_domain = "dac_io" if regional_dac else "sys_double"
         sample_domain = "dac_sample_io" if regional_dac else "dac_2p"
         select_domain = "dac_select_io" if regional_dac else "sys"
         self.comb += adc.cdcs.eq(1), adc.clk.eq(0b10)
