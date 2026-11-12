@@ -9,3 +9,6 @@ R70脚本原严格文本比较FAIL，因为只忽略LOC/BEL，输出增加3处PH
 本轮输入为R70实际routed DCP db5c8f6e20818363d39d884136a855d488db484c725c611cd6fb61fce7df8c4b，验证追加identity proof对应SHA后，在独立输出目录执行phys_opt_design -placement_opt -routing_opt -tns_cleanup -path_groups clk_2，再实际route Explore。path_groups只限制优化器工作范围，所有时钟和路径仍完整计时、报告，不增加任何时序例外。不开retime/FF插入/复制/寄存器优化/rewire/clock_opt，无新增反馈级；不改Migen/CSR/ADC/DAC/PLL/电气参数/时钟周期。
 
 逻辑before/after完整funcsim严格比较，只忽略注释、LOC/BEL及精确PLACEMENT_OPT物理标签；输入canonical hash还须等于R70独立证明的canonical hash。原DCP前后SHA保持。若发生实际逻辑变化，不接受等价。全局DAC仍-.343ns必要预算，DNA旧+.009ns裕量很小，必须继续核查所有setup/hold/pulse/CDC/I/O/DRC，不能仅拿core过线宣称可上板。
+
+
+R71-v1配置失败：Vivado2020.1明确-tns_cleanup只能用于SLR crossing的UltraScale/UltraScale+，不适用7020；未产生新route，不能写成硬件STA结果。原始命令/源码/退出3/日志与输入DCP未改SHA在experiments/r71_unsupported_tns_option_20261112。v2已删除该选项，保留-placement_opt -routing_opt -path_groups clk_2，独立新目录重跑；核心算法/寄存器/时钟和全部计时约束不改。

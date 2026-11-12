@@ -16,7 +16,7 @@ assert all((ROOT/n).is_file() and hashlib.sha256((ROOT/n).read_bytes()).hexdiges
 head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 status=subprocess.check_output(['git','status','--short'],cwd=ROOT,text=True)
 assert not status,'Commit the reviewable physical-trial recipe before running'
-meta={'head':head,'branch':subprocess.check_output(['git','branch','--show-current'],cwd=ROOT,text=True).strip(),'source_hashes':hardware,'input_dcp':str(dcp),'input_dcp_sha256':digest,'input_source_head':parent['head'],'synthesis':'REUSED_R69_NOT_NEW_SYNTHESIS','route':'RUNNING','functional':'R69B_FRESH_CONTRACT_RUN_PENDING_OR_SEPARATE','new_data_pipeline_stages':0,'timing_signoff':'NOT_EVALUATED','optimizations':['placement_opt','routing_opt','tns_cleanup'],'optimization_path_group':'clk_2 (all clock groups remain timed/reported)','excluded_optimizations':['retime','negative_edge_ff_insertion','register_optimization','cell_replication','rewire','clock_opt'],'clock_or_exception_changes':False}
+meta={'head':head,'branch':subprocess.check_output(['git','branch','--show-current'],cwd=ROOT,text=True).strip(),'source_hashes':hardware,'input_dcp':str(dcp),'input_dcp_sha256':digest,'input_source_head':parent['head'],'synthesis':'REUSED_R69_NOT_NEW_SYNTHESIS','route':'RUNNING','functional':'R69B_FRESH_CONTRACT_RUN_PENDING_OR_SEPARATE','new_data_pipeline_stages':0,'timing_signoff':'NOT_EVALUATED','optimizations':['placement_opt','routing_opt'],'tns_cleanup':'UNSUPPORTED_ON_Z7020_NOT_USED','optimization_path_group':'clk_2 (all clock groups remain timed/reported)','excluded_optimizations':['retime','negative_edge_ff_insertion','register_optimization','cell_replication','rewire','clock_opt'],'clock_or_exception_changes':False}
 for name in ['synth_timing.rpt','synth_utilization.rpt','top.v','top.xdc','top.tcl','csrmap.py']:
  assert (dcp.parent/name).is_file();shutil.copyfile(dcp.parent/name,out/name)
 meta['reused_files_sha256']={n:hashlib.sha256((out/n).read_bytes()).hexdigest() for n in ['synth_timing.rpt','synth_utilization.rpt','top.v','top.xdc','top.tcl','csrmap.py']}
@@ -26,7 +26,7 @@ tcl='set_param general.maxThreads 2\nopen_checkpoint {'+dcp.as_posix()+'}\n'+r''
 write_verilog -force -mode funcsim logical_before.v
 # Explicit options disable all implicit optimization categories. No retiming,
 # FF insertion, DSP/BRAM register optimization, duplication, rewire or clock_opt.
-phys_opt_design -placement_opt -routing_opt -tns_cleanup -path_groups clk_2
+phys_opt_design -placement_opt -routing_opt -path_groups clk_2
 route_design -directive Explore
 report_route_status -file routed_status.rpt
 report_timing_summary -max_paths 30 -file routed_timing.rpt
