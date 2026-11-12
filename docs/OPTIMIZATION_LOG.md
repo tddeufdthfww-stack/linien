@@ -728,3 +728,15 @@ R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.3
 实施前14/10位与25/14位阈值CSA数学各200500例PASS。实际14/25位限幅各36000拍，真实独立CSRBank+signed64 oracle在每个边沿前后核对所有阈值/pre_y/rail/y/error/bound/CSR/common，PASS。两例各10303次CE0写、30909保持拍，反置边界17545/16266拍、相等539/535拍、边界1795/1796例；全FastChain32000拍PASS。没有延迟容忍。原件/SHA在experiments/r78_native_equivalence_20261112。新生成/综合/route和fresh全功能尚待。
 
 R77最新物理失败/相位改善归档99dc108e0ba799bfa4dee40118b8150ba45f5f56；全部102负路径无phase/CORY。R78仅优化限幅控制比较，未更改原IIR/PID/PLL/PS7/ADC/DAC/AXI/CDC和输出接受边沿。新增辅助阈值FF不是新增反馈数据级，累计R2b+32ns非全链路实测。最终DAC/PCB/CDC/DRC签核未完成，不上板。
+
+## R78 实际结论 / 2026-11-12
+
+输入 cbdbc736119c699c9022598afa7a6442b9783845。新综合 -.773/-76.419ns、285 setup端点；实际route COMPLETE：WNS/TNS=-0.343/-4.097ns，15 setup端点，WHS/THS=0.038/0.0ns、0 hold端点，WPWS=1.5ns。最终STA FAIL。
+
+R78 fresh完整功能全部PASS，含pytest/慢CE/快慢PID/Scope/AXI背压/CDC故障与集成，以及R75乘数交换、R77 Demod和R78限幅/FastChain；完整manifest input=cbdbc736119c699c9022598afa7a6442b9783845、source_changes=[]。R79硬件RAW相同，仅引用这次全功能和严格导出逻辑一致PASS，不冒称重新跑过。
+
+R78全部15负端点=14DAC+1GPIO，PID/IIR/phase/新限幅无负端点。唯一内部prefetch_choice[1]/C→gpio_n_o_reg[7]/D=-.122ns，10级，logic2.395/route5.627ns。当前最优候选，但仍不可签发。
+
+ADC全部28条setup+.429/hold+3.304ns、同字0/-8ns关系逐条PASS；52ASYNC/26同SLICE双级结构PASS、GPIO16对级间setup+7.193/hold+.122ns。这些不等于整体CDC/板级IO安全。DAC必要零PCB模型setup-.343/hold+.070ns；完整CLK/WRT/SEL、外部脉宽、真实PCB/SI及接口用途仍待签核，DRC405警告/建议须分类。全部原件见experiments/r78_actual_and_full_reference_20261112，DCP SHA256=697b393c087361d7c8356967a2a4fcff35d9243f1a724b3ee79bf03e9b7f6f12。
+
+本轮新增反馈整数周期0，继承相对R2b+32ns；实际端到端与真实锁频带宽NOT MEASURED。无bitstream发布/烧录/激光/PZT操作。
