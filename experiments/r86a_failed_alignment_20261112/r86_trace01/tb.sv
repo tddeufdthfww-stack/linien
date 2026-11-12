@@ -1,0 +1,61 @@
+`timescale 1ns/1ps
+module tb_r84;
+reg clk125_p=0,clock_run=1;always #4 if(clock_run)clk125_p=~clk125_p;
+wire clk125_n=~clk125_p;reg reset_i=1;
+wire[13:0]old_data,new_data;
+wire old_wrt,new_wrt,old_clk,new_clk,old_sel,new_sel,old_rst,new_rst;
+dac_serdes_probe #(.USE_SERDES(0)) old(.clk125_p(clk125_p),.clk125_n(clk125_n),.reset_i(reset_i),.dac_data(old_data),.dac_wrt(old_wrt),.dac_clk(old_clk),.dac_sel(old_sel),.dac_rst(old_rst));
+dac_common_sdr4_probe #(.USE_SERDES(1)) dut(.clk125_p(clk125_p),.clk125_n(clk125_n),.reset_i(reset_i),.dac_data(new_data),.dac_wrt(new_wrt),.dac_clk(new_clk),.dac_sel(new_sel),.dac_rst(new_rst));
+integer qualified=0,checks=0,pair_checks=0,frames=0,epochs=0,clock_checks=0;
+integer a_checks=0,b_checks=0,all_values=0;
+// A stopped reference has no stable phase oracle until reacquisition.
+// The separately bounded reset assertion remains checked below.
+always@(negedge clock_run)qualified=0;
+reg[13:0]model_count=0,model_a=0,slot_a=0,slot_b=0;
+reg[16383:0]seen_a=0,seen_b=0;real last_sys=-1000,delta;
+always@(posedge old.sys_clk)begin
+ last_sys=$realtime;
+ if(old.sys_rst)begin model_count<=0;model_a<=0;slot_a<=0;slot_b<=0;end
+ else begin slot_a<=model_a;slot_b<=~model_count;model_a<=model_count;model_count<=model_count+1'b1;end
+ if(clock_run && old_rst===0 && new_rst===0)qualified<=qualified+1;else qualified<=0;
+end
+always@(negedge new_rst)begin
+ if(dut.locked!==1 || dut.data_rst!==0 || dut.sample_rst!==0 || dut.sys_rst!==0)$fatal(1,"R86_RELEASE_WITHOUT_STABLE_DOMAINS");
+ epochs=epochs+1;
+end
+always #0.125 if(clock_run && qualified>12 && old_rst===0 && new_rst===0)begin
+ if({old_data,old_wrt,old_clk,old_sel}!={new_data,new_wrt,new_clk,new_sel})
+  $fatal(1,"R86_NATIVE_PAIR_FAIL t=%f data=%h/%h wrt=%b/%b clk=%b/%b sel=%b/%b",$realtime,old_data,new_data,old_wrt,new_wrt,old_clk,new_clk,old_sel,new_sel);
+ if((^{new_data,new_wrt,new_clk,new_sel})===1'bx)$fatal(1,"R86_UNKNOWN_VALID_OUTPUT");
+ pair_checks=pair_checks+1;
+end
+always@(posedge new_wrt)if(clock_run && qualified>12 && new_rst===0 && old_rst===0)begin
+ delta=$realtime-last_sys;
+ if(delta>1.59 && delta<1.61)begin
+  if(new_sel!==0 || new_data!==slot_a)$fatal(1,"R86_A_SAMPLE_FAIL t=%f data=%h expected=%h sel=%b",$realtime,new_data,slot_a,new_sel);
+  a_checks=a_checks+1;seen_a[new_data]=1;
+ end else if(delta>5.59 && delta<5.61)begin
+  if(new_sel!==1 || new_data!==slot_b)$fatal(1,"R86_B_SAMPLE_FAIL t=%f data=%h expected=%h sel=%b",$realtime,new_data,slot_b,new_sel);
+  b_checks=b_checks+1;seen_b[new_data]=1;
+ end else $fatal(1,"R86_WRT_PHASE_FAIL %f",delta);
+ checks=checks+1;
+end
+always@(posedge new_clk)if(clock_run && qualified>12 && new_rst===0 && old_rst===0)begin
+ delta=$realtime-last_sys;
+ if(!((delta>0.59&&delta<0.61)||(delta>4.59&&delta<4.61)))$fatal(1,"R86_SAMPLE_CLOCK_PHASE_FAIL %f",delta);
+ clock_checks=clock_checks+1;
+end
+always@(new_data or new_wrt or new_sel)if($realtime>1680 && $realtime<1780)$display("R86_TRACE t=%f sys=%f div=%b fast=%b new=%h/%b/%b old=%h/%b/%b A=%h B=%h",$realtime,last_sys,dut.io_div,dut.io_clk,new_data,new_wrt,new_sel,old_data,old_wrt,old_sel,dut.a_hold,dut.b_now);
+always@(posedge dut.io_div)if($realtime>1680 && $realtime<1780)$display("R86_DIV t=%f A=%h B=%h",$realtime,dut.a_hold,dut.b_now);
+initial begin
+ #1200;reset_i=0;#280000;reset_i=1;#19;reset_i=0;#7000;
+ @(negedge clk125_p);clock_run=0;#2000;
+ if(new_rst!==1)$fatal(1,"R86_CLOCK_LOSS_NOT_RESET");
+ clock_run=1;#500;reset_i=1;#200;reset_i=0;#9000;
+ for(integer i=0;i<16384;i=i+1)begin if(seen_a[i])all_values=all_values+1;if(seen_b[i])all_values=all_values+1;end
+ if(checks<65000 || a_checks<32000 || b_checks<32000 || pair_checks<1000000 || all_values!=32768 || epochs<3)
+  $fatal(1,"R86_COVERAGE_FAIL total=%d A=%d B=%d pairs=%d values=%d epochs=%d",checks,a_checks,b_checks,pair_checks,all_values,epochs);
+ $display("R86_SERDES_NATIVE_PASS writes=%0d A=%0d B=%0d pairs=%0d values=%0d epochs=%0d clk=%0d",checks,a_checks,b_checks,pair_checks,all_values,epochs,clock_checks);$finish;
+end
+initial begin #310000;$fatal(1,"R86_TIMEOUT");end
+endmodule

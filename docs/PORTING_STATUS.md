@@ -1117,3 +1117,17 @@ R83实际原语73474次逐字WRT、37205次ADC、36731对DAC锁存、双通道�
 新综合COMPLETE、新route COMPLETE；最终STA FAIL，global WNS/TNS=-3.981/-16.872ns，16setup，WHS/THS=-.312/-3.862ns、14hold，WPWS+.333ns。14DAC setup最差-.696（CQ.472+OBUF3.253+net.001=3.726ns，Slow角），hold-.312；WRT和data不同MMCM输出，uncertainty.183含PhaseError.120，CPR.467。最差另外两条为WRTDIV250→SYS复位同步器PRE的recovery，最差-3.981，不能豁免或声称复位安全。输入源码SHA837700a92d19e62e384e9b4d6a200d1d3c7e767e880af1f994faef6edee8d7b8，DCPc6c30591665d88a050cd4b08dd890d3173d8094539b6771abb705773c379e628。
 
 拒绝、不接整机、不生成bitstream。原功能与物理日志均保留。独立probe无PS7所以ZPS7-1预期但未作为板级DRC合格；BUFR/BUFIO混合REQP-1577还须核对实际相位/物理合法性。后续R86试同一500MHz BUFIO、相同SDR4模式数据AABB和WRT0101，同CLKDIV125；数据重复只定义真实有效边沿，先保留默认严格STA，不立即加例外。若分析工具把不可能改变值的重复位边沿当成有效数据变化，必须先证明协议并单独审查正确的路径关系，不得直接放宽周期。
+
+# R86b实际BBAA功能通过，必要物理窗口仍不成立 / 2026-11-12
+
+最初R86a手算SDR4 3CLK延迟漏了CLK/DIV对齐时多1CLK，native FAIL。实际trace证明aligned延迟4CLK=8ns，旧源码/所有日志/两DCP均保留experiments/r86a_failed_alignment_20261112，未放宽断言。
+
+R86b精确修正：DIV改SYS-4.5、串行BBAA，A取原DAC寄存器前的输入，probe为counter，B为~counter。DIV捕获SYS n将写入A/B寄存器的同一帧；D1/D2在n+3.5/5.5输出B_n，D3/D4在n+7.5/9.5输出A_n，因此SYS n-.5仍是前帧旧A、n+3.5是本帧新B。整数反馈新增0；实际整机捕获路径预算与集成尚待，不能从计数器预测替代真实通路证明。WRT同一500MHz BUFIO/SDR4/DIV，常量0101，正沿1.5/5.5；CLK仍250MHz ODDR。启动等16SYS后解除DACreset，去掉异域reset到SYS PRE直接扇入。零数据级，启动时间增加，不声称无缝停钟恢复。
+
+native02 PASS：73573 WRT/A36788/B36785/2354335逐时刻比较/32768通道码值/3epochs/73573 CLK。源SHAa9bb116b7265dbc074646f073512fbf741f44a8db9bb16c4802c9ef6cc7069b7；新综合和route COMPLETE，DCPc3a441afd3bd574d4c973d69a2ef1bd7759a506b1a8eb3366cff53730b2978bc。默认严格STA WNS/TNS=-.306/-3.459ns、14setup，WHS/THS=-1.865/-25.616ns、14hold，WPWS+.333ns。最差setup仍CLK→dac_data[1]，Fast角CQ.204+OBUF1.635+net.001。startup改动使非DAC内部setup/hold无负（须以完整报告为准），但这不是整机R80结果。
+
+默认hold把BBAA同值中间边沿作为潜在值变化。只有BBAA被证明后，诊断数学模型才给raw hold +2ns，代表下一次真实变化；没有应用multicycle或改动任何STA约束。64合法drive/slew共896行，允许逐bit drive/slew并假设固定路径整体移相，所有8种WRT配置的14位公共区间仍空；不移相最好最小必要裕量-.115ns。即使剔除不可能的重复边沿仍无必要窗口，所以不增加hold例外来刷PASS。扫描恢复原电气属性，DCP SHA不变；固定路径假设移相不是实际可实现时钟证明。
+
+本候选不集成、不生成bitstream；完整Linien回归NOT RUN，外部SEL/CLK-WRT/pulse/PCB、整机CDC/DRC未完成。R80仍最佳且尚不正式可烧录。新增docs/ENGINEERING_ACCEPTANCE_20261112.md响应用户授权：官方未知项建立工程假设与限定接口配置，数据手册已知负路径不能用自行验收口径消除。ADC ±.2ns预留；DAC只从真实全角窗口反推可容PCB预算，未证明为正前不批准。
+
+下一独立R87最小探针将比较250MHz区域时钟直接转发WRT，取消WRT输出串行寄存器级、让数据在相反边沿发出。先核对合法路由/有效clock关系及实际输出数据顺序，再判断是否有物理窗口，失败不合并。原Root/PS/ADC/CRG/算法/CSR保持不变。
