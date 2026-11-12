@@ -1,3 +1,5 @@
+> **2026-11-12 R81：实际STA FAIL -0.478/-6.52ns，hold -0.556ns。失败候选保留，不合并；独立R83正在验证。**
+
 > **2026-11-12 R80：内部125MHz时序已闭合+.055ns；整体仍FAIL，14 DAC负端点-.343ns。完整功能引用R78 fresh PASS、逻辑严格一致。不是可烧录正式版本。**
 
 > **2026-11-12 R78候选：同拍预计算限幅阈值，401000例实施前数学、14/25位72000拍限幅oracle与32000拍整FastChain PASS。新综合/route待结果；最终未签核。**
@@ -1037,3 +1039,15 @@ native06 PASS，实际原CRG PLL+新增MMCM+4BUFIO+FDRE/ODDR及双级复位模�
 参考丢失后原CRG PLLE2不保证无复位自行恢复；测试确认保持IQRESET，再施加PS reset恢复。没有宣称自动无缝恢复，不改原CRG。所有新MMCM波形仅锁定/复位释放后合格，停钟/抖动的真实电气特性仍需物理与板测。
 
 只读R80器件数据库确认X1Y2四个BUFIO和MMCME2_ADV_X1Y2均空闲；无占用、无修改原DCP。新实现使用R80精确SHA82adfcf0...作为incremental reference，尽量保留已闭合内部布局/路由；新综合及所有真实路径仍完整分析。不是复用旧综合，也不豁免新MMCM传输时序。综合/route尚待，fresh整套回归尚待。正常反馈新增数据级0，累计R2b+32ns非端到端实测。
+
+## R81 实际失败与独立后继 / 2026-11-12
+
+输入4e86132d0d1c200dbbebc24bc578ba04dfb26639，新生成CSR语义PASS、新综合COMPLETE（WNS/TNS=-0.773/-79.039ns）；actual route COMPLETE，WNS/TNS=-0.478/-6.52ns、21 setup端点，WHS/THS=-0.556/-7.281ns、14 hold端点，WPWS=0.833ns。source_changes=[]。最终STA FAIL，REJECTED_NOT_MERGED，不能作为可上板正式版。
+
+实际原CRG原语定向PASS，但补充Bare通路模型FAIL：参考+123出现，候选未出现，IO边沿采样的selectB始终1。原始RTL/TB/日志/SHA与波形诊断完整保留，不能把该模型FAIL说成已验证板级故障，也不能用原语某一启动相位PASS覆盖。fresh整套功能NOT RUN。
+
+ADC全部28条setup+.429/hold+3.304ns、同字0/-8逐条PASS。54ASYNC/27同SLICE配对、一级Q仅到二级D；GPIO16级间setup7.193/hold.122ns。旧只读审计因无负载FF/Q的get_property空集合失败，原FAIL保留；v2单独记录无连接Q并完整报告全部时序，未改DCP/约束。
+
+当前不同MMCM输出驱动数据与WRT。.177ns clock uncertainty中包含.120ns跨MMCM输出PhaseError；实际min最差在Slow角，不能只用Fast角典型值或调小uncertainty“修复”。后继R83在独立分支把WRT真正接到DATA同一CLKOUT0/BUFIO，由工具重新计算共享路径与相位误差，保持data提前.5ns防止同边沿采样歧义。不改变原CRG/PLL/SYS/ADC/PS/算法/CSR、时钟周期、IO2/-1.5预算或时序例外。
+
+原件见experiments/r81_rejected_physical_20261112；DCP SHA256=ab74f022bfe44585d2eb51079a24a8c82542f1f158b064467050197c9dc0b132。保留R80最佳内部已闭合候选60ba54e9；新增反馈整数级0。R82相位提前.5ns不是少8ns，端到端硬件/ADC转换/DAC模拟建立/激光环路未测。DAC外部3.5ns脉宽、CLK/WRT/SEL完整协议、真实PCB/SI、物理CDC/DRC仍未签核，不生成bit/bin、不刷写、不驱动激光/PZT。
