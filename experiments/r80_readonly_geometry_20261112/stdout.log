@@ -1,0 +1,90 @@
+
+****** Vivado v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source {C:\Users\admin\Documents\Codex\2026-11-05\ba\work\r61_signoff\r80_status_geometry\query.tcl}
+# if {[catch {
+# set_param general.maxThreads 2
+# open_checkpoint {D:/RP_Dev/linien_trials/20261112-r78-early-clamp-thresholds/gateware/build/trials/20261112_172556_r78_early_clamp_implementation/routed.dcp}
+# set out {C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r80_status_geometry}
+# 
+# help place_cell
+# help unplace_cell
+# proc exact_cell {name} {
+#  set result [get_cells -hier -quiet -filter "NAME == \"$name\""]
+#  if {[llength $result] != 1} {error "Expected exact cell $name"}
+#  return $result
+# }
+# set cells [list {linienmodule_gpio_n_o[7]_i_6} {linienmodule_gpio_n_o[7]_i_2} {linienmodule_gpio_n_o[7]_i_1} {linienmodule_gpio_n_o_reg[7]}]
+# set f [open "$out/cells.tsv" w];puts $f "cell\tref\tLOC\tBEL\tC_net\tR_net\tCE_net"
+# foreach name $cells {
+#  set c [exact_cell $name];set row [list $name [get_property REF_NAME $c] [get_property LOC $c] [get_property BEL $c]]
+#  foreach p {C R CE} {lappend row [get_nets -quiet -of_objects [get_pins -quiet -of_objects $c -filter "REF_PIN_NAME == $p"]]}
+#  puts $f [join $row "\t"]
+# };close $f
+# set f [open "$out/last_lut_loads.tsv" w];puts $f "pin\tcell\tref\tLOC\tBEL\tclock\treset\tCE"
+# set c [exact_cell {linienmodule_gpio_n_o[7]_i_1}]
+# set nets [get_nets -of_objects [get_pins -of_objects $c -filter {REF_PIN_NAME == O}]]
+# foreach pin [get_pins -leaf -of_objects $nets -filter {DIRECTION == IN}] {
+#  set cc [get_cells -of_objects $pin];set row [list $pin $cc [get_property REF_NAME $cc] [get_property LOC $cc] [get_property BEL $cc]]
+#  foreach pp {C R CE} {lappend row [get_nets -quiet -of_objects [get_pins -quiet -of_objects $cc -filter "REF_PIN_NAME == $pp"]]}
+#  puts $f [join $row "\t"]
+# };close $f
+# set f [open "$out/last_lut_fanin.tsv" w];puts $f "target\tpin\tnet\tdriver\tLOC\tBEL"
+# foreach name [list {linienmodule_gpio_n_o[7]_i_2} {linienmodule_gpio_n_o[7]_i_1}] {
+#  set c [exact_cell $name]
+#  foreach p [get_pins -of_objects $c -filter {DIRECTION == IN}] {
+#   set net [get_nets -of_objects $p];set dp [get_pins -leaf -of_objects $net -filter {DIRECTION == OUT}];set dc [get_cells -of_objects $dp]
+#   puts $f [join [list $name $p $net $dp [get_property LOC $dc] [get_property BEL $dc]] "\t"]
+#  }
+# };close $f
+# set f [open "$out/sites.tsv" w];puts $f "site\ttype\tcells\tfree_bels"
+# for {set x 64} {$x <= 74} {incr x} {
+#  for {set y 116} {$y <= 124} {incr y} {
+#   set s [get_sites -quiet SLICE_X${x}Y${y}];if {![llength $s]} {continue}
+#   set all [lsort -unique [get_cells -quiet -of_objects [get_bels -of_objects $s]]]
+#   set free {}
+#   foreach b {A6LUT A5LUT B6LUT B5LUT C6LUT C5LUT D6LUT D5LUT AFF A5FF BFF B5FF CFF C5FF DFF D5FF} {
+#    set bel [get_bels -quiet ${s}/${b}]
+#    if {[llength $bel] && ![llength [get_cells -quiet -of_objects $bel]]} {lappend free $b}
+#   }
+#   puts $f [join [list $s [get_property SITE_TYPE $s] $all $free] "\t"]
+#  }
+# };close $f
+# puts STATUS_GEOMETRY_READONLY_COMPLETE
+# 
+# } msg opts]} {puts stderr "ERROR: $msg";puts stderr [dict get $opts -errorinfo];exit 3}
+Command: open_checkpoint D:/RP_Dev/linien_trials/20261112-r78-early-clamp-thresholds/gateware/build/trials/20261112_172556_r78_early_clamp_implementation/routed.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.036 . Memory (MB): peak = 1075.152 ; gain = 0.000
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.318 . Memory (MB): peak = 1075.152 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 2917 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'top' is not ideal for floorplanning, since the cellview 'top' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2020.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF File: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.516 ; gain = 15.316
+Restored from archive | CPU: 2.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1561.516 ; gain = 15.316
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 1561.516 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 16 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2020.1 (64-bit) build 2902540
+open_checkpoint: Time (s): cpu = 00:00:16 ; elapsed = 00:00:25 . Memory (MB): peak = 1561.516 ; gain = 486.363
+STATUS_GEOMETRY_READONLY_COMPLETE
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 12 17:53:48 2026...

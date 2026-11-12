@@ -978,3 +978,16 @@ R76最新物理归档提交7d62979be0644264b8ba75595d9595b68dfe784a：route -0.3
 实施前14/10位与25/14位阈值CSA数学各200500例PASS。实际14/25位限幅各36000拍，真实独立CSRBank+signed64 oracle在每个边沿前后核对所有阈值/pre_y/rail/y/error/bound/CSR/common，PASS。两例各10303次CE0写、30909保持拍，反置边界17545/16266拍、相等539/535拍、边界1795/1796例；全FastChain32000拍PASS。没有延迟容忍。原件/SHA在experiments/r78_native_equivalence_20261112。新生成/综合/route和fresh全功能尚待。
 
 R77最新物理失败/相位改善归档99dc108e0ba799bfa4dee40118b8150ba45f5f56；全部102负路径无phase/CORY。R78仅优化限幅控制比较，未更改原IIR/PID/PLL/PS7/ADC/DAC/AXI/CDC和输出接受边沿。新增辅助阈值FF不是新增反馈数据级，累计R2b+32ns非全链路实测。最终DAC/PCB/CDC/DRC签核未完成，不上板。
+
+## R80四单元定向物理候选 / 2026-11-12
+
+从较好R78原DCP697b393c...开始，不采用R79 -.343/-4.453ns、23端点的整体恶化结果。
+R78只剩14DAC及1条status -.122ns。实际链末级_i2 LUT6在X81Y112、_i1 LUT5在X84Y112，
+两个同数据FDRE原均X85Y112，C=sys_clk/R=dac_rst_OBUF/CE1；关键状态计算在X53-58Y121-130。
+只读查询确认SLICE_X67Y118完全空闲，所有BEL空；实际place_cell 2020帮助明确平铺cell/site配对。
+本轮仅移动4个既有单元：_i2到A6LUT、_i1到B6LUT、原FF到BFF、同数据副本到CFF，固定LOC/BEL后route Explore。
+不增删/复制/retime寄存器，不改逻辑、采样周期、RESET、CSR、时钟、IO预算或例外。
+输入SHA必须精确匹配，目标slice非空则报错。保存前后LOC/BEL，完整funcsim严格逻辑比较并保留所有INIT/DSP/实际端口。
+如出现不同逻辑、全局STA/hold恶化或其它新违例，保留结果不采用；不以局部改善冒称最终签核。
+源hardware RAW同R78；综合REUSED_R78，R78fresh全功能仍运行待结果。新增正常反馈周期0，继承R2b+32ns。
+全部原只读几何/命令帮助在experiments/r80_readonly_geometry_20261112；无bitstream/板卡/激光/PZT操作。
