@@ -19,7 +19,14 @@ from migen import Cat, ClockSignal, Instance, Module, Mux, ResetSignal, Signal
 
 
 class PitayaAnalog(Module):
-    def __init__(self, adc, dac):
+    def __init__(self, adc, dac, regional_dac=False):
+        if regional_dac:
+            from .dac_regional_clock import DACRegionalClock
+            self.submodules.regional = DACRegionalClock()
+        data_domain = "dac_io" if regional_dac else "sys_double"
+        write_domain = "dac_write_io" if regional_dac else "sys_double"
+        sample_domain = "dac_sample_io" if regional_dac else "dac_2p"
+        select_domain = "dac_select_io" if regional_dac else "sys"
         self.comb += adc.cdcs.eq(1), adc.clk.eq(0b10)
 
         # sign = 1<<(len(dac.data) - 1)
@@ -92,14 +99,14 @@ class PitayaAnalog(Module):
         dac_word = Signal.like(dac.data)
         self.comb += dac_word.eq(Mux(select_b, dacb, daca))
 
-        self.comb += dac.rst.eq(ResetSignal("sys"))
+        self.comb += dac.rst.eq(ResetSignal("dac_ready") if regional_dac else ResetSignal("sys"))
         self.specials += [
             Instance(
                 "ODDR",
                 i_D1=0,
                 i_D2=1,
                 #i_C=ClockSignal("sys_double"),
-                i_C=ClockSignal("dac_2p"),#add
+                i_C=ClockSignal(sample_domain),
                 o_Q=dac.clk,
                 i_CE=1,
                 i_R=0,
@@ -109,7 +116,7 @@ class PitayaAnalog(Module):
                 "ODDR",
                 i_D1=0,
                 i_D2=1,
-                i_C=ClockSignal("sys_double"),
+                i_C=ClockSignal(write_domain),
                 o_Q=dac.wrt,
                 i_CE=1,
                 i_R=0,
@@ -119,7 +126,7 @@ class PitayaAnalog(Module):
                 "ODDR",
                 i_D1=0,
                 i_D2=1,
-                i_C=ClockSignal("sys"),
+                i_C=ClockSignal(select_domain),
                 o_Q=dac.sel,
                 i_CE=1,
                 i_R=0,
@@ -131,7 +138,7 @@ class PitayaAnalog(Module):
                     p_INIT=0,
                     p_IS_C_INVERTED=0,
                     i_D=value,
-                    i_C=ClockSignal("sys_double"),
+                    i_C=ClockSignal(data_domain),
                     o_Q=pad,
                     i_CE=1,
                     i_R=0,

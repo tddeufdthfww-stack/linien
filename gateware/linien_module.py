@@ -187,7 +187,7 @@ class LinienModule(Module, AutoCSR):
             raw_iir_config_delay=2, raw_iir_mac_impl="registered_c48"
         )
         self.submodules.analog = PitayaAnalog(
-            platform.request("adc"), platform.request("dac")
+            platform.request("adc"), platform.request("dac"), regional_dac=True
         )
         self.submodules.xadc = XADC(platform.request("xadc"))
 

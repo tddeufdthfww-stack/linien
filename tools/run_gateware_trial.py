@@ -197,6 +197,8 @@ def main():
                     ROOT, out, 'r78_early_limit', env, 'R78_EARLY_LIMIT_SUITE_PASS')
             execute([sys.executable, ROOT / 'tools/check_r78_fastchain.py', '--out', out / 'r78_fastchain_checks'],
                     ROOT, out, 'r78_fastchain', env, 'R78_FASTCHAIN_SUITE_PASS')
+            execute([sys.executable, ROOT / 'tools/check_r81_regional_dac.py', '--out', out / 'r81_regional_dac_checks'],
+                    ROOT, out, 'r81_regional_dac', env, 'R81_REGIONAL_DAC_SUITE_PASS')
             manifest['functional'] = 'PASS'; save()
         if 'generate' in stages:
             ps = out / 'ps/linien_ps_only'
@@ -231,7 +233,13 @@ def main():
             tcl_run(script, out, 'synthesis', env, 'SYNTHESIS_COMPLETE', args.vivado)
             manifest['synthesis'] = 'COMPLETE'; save()
         if 'route' in stages:
-            script = 'set_param general.maxThreads 2\nopen_checkpoint synth.dcp\nopt_design\nplace_design\nphys_opt_design\nroute_design\n'
+            reference = Path('D:/RP_Dev/linien_trials/20261112-r80-status-cluster/gateware/build/trials/20261112_r80_status_cluster/routed.dcp')
+            reference_sha = hashlib.sha256(reference.read_bytes()).hexdigest()
+            assert reference_sha == '82adfcf0187ddf27c15c5cc54f8cfcbf9a9279faa3fe3443886e752b65f13273'
+            manifest['incremental_reference'] = {'path':str(reference),'sha256':reference_sha,'source':'R80 frozen routed, STA FAIL DAC14; reuse physical core only, no waiver'}; save()
+            script = 'set_param general.maxThreads 2\nopen_checkpoint synth.dcp\nopt_design\n'
+            script += 'read_checkpoint -incremental {' + reference.as_posix() + '}\nplace_design\nphys_opt_design\nroute_design\n'
+            script += 'report_incremental_reuse -file incremental_reuse.rpt\n'
             script += 'report_route_status -file routed_status.rpt\n'
             script += 'report_timing_summary -max_paths 30 -file routed_timing.rpt\n'
             script += 'report_timing -delay_type max -max_paths 100 -file routed_setup.rpt\n'
