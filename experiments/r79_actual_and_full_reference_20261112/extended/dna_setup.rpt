@@ -1,0 +1,146 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Thu Nov 12 17:48:43 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -to [get_pins {DNA_PORT/DIN DNA_PORT/READ}] -max_paths 8 -file C:/Users/admin/Documents/Codex/2026-11-05/ba/work/r61_signoff/r79_extended/dna_setup.rpt
+| Design       : top
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             0.830ns  (required time - arrival time)
+  Source:                 r61_dna_read_reg/C
+                            (rising edge-triggered cell FDSE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            DNA_PORT/READ
+                            (rising edge-triggered cell DNA_PORT clocked by dna_clk  {rise@0.000ns fall@8.000ns period=16.000ns})
+  Path Group:             dna_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (dna_clk rise@16.000ns - clk_2 rise@8.000ns)
+  Data Path Delay:        3.826ns  (logic 0.456ns (11.919%)  route 3.370ns (88.081%))
+  Logic Levels:           0  
+  Clock Path Skew:        2.080ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    6.815ns = ( 22.815 - 16.000 ) 
+    Source Clock Delay      (SCD):    4.986ns = ( 12.986 - 8.000 ) 
+    Clock Pessimism Removal (CPR):    0.252ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     8.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205    11.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102    11.258 r  BUFG/O
+                         net (fo=1, routed)           1.831    13.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     9.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883    11.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101    11.261 r  BUFG_3/O
+                         net (fo=13409, routed)       1.725    12.986    sys_clk
+    SLICE_X80Y97         FDSE                                         r  r61_dna_read_reg/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X80Y97         FDSE (Prop_fdse_C_Q)         0.456    13.442 r  r61_dna_read_reg/Q
+                         net (fo=2, routed)           3.370    16.812    r61_dna_read
+    DNA_PORT_X0Y0        DNA_PORT                                     r  DNA_PORT/READ
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dna_clk rise edge)   16.000    16.000 r  
+    U18                                               0.000    16.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000    16.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909    16.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    18.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    19.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    20.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442    17.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    18.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    19.010 r  BUFG_3/O
+                         net (fo=13409, routed)       1.709    20.719    sys_clk
+    SLICE_X61Y117        FDRE (Prop_fdre_C_Q)         0.367    21.086 r  linienmodule_dna_cnt_reg[0]/Q
+                         net (fo=10, routed)          1.729    22.815    linienmodule_dna_cnt_reg[0]
+    DNA_PORT_X0Y0        DNA_PORT                                     r  DNA_PORT/CLK
+                         clock pessimism              0.252    23.067    
+                         clock uncertainty           -0.069    22.998    
+    DNA_PORT_X0Y0        DNA_PORT (Setup_dna_port_CLK_READ)
+                                                     -5.356    17.642    DNA_PORT
+  -------------------------------------------------------------------
+                         required time                         17.642    
+                         arrival time                         -16.812    
+  -------------------------------------------------------------------
+                         slack                                  0.830    
+
+Slack (MET) :             2.813ns  (required time - arrival time)
+  Source:                 linienmodule_dna_status_reg[63]/C
+                            (rising edge-triggered cell FDRE clocked by clk_2  {rise@0.000ns fall@4.000ns period=8.000ns})
+  Destination:            DNA_PORT/DIN
+                            (rising edge-triggered cell DNA_PORT clocked by dna_clk  {rise@0.000ns fall@8.000ns period=16.000ns})
+  Path Group:             dna_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            8.000ns  (dna_clk rise@16.000ns - clk_2 rise@8.000ns)
+  Data Path Delay:        3.629ns  (logic 0.419ns (11.546%)  route 3.210ns (88.454%))
+  Logic Levels:           0  
+  Clock Path Skew:        1.900ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    6.815ns = ( 22.815 - 16.000 ) 
+    Source Clock Delay      (SCD):    5.166ns = ( 13.166 - 8.000 ) 
+    Clock Pessimism Removal (CPR):    0.252ns
+  Clock Uncertainty:      0.069ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.118ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_2 rise edge)      8.000     8.000 r  
+    U18                                               0.000     8.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000     8.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     8.951 r  IBUFGDS/O
+                         net (fo=1, routed)           2.205    11.156    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.102    11.258 r  BUFG/O
+                         net (fo=1, routed)           1.831    13.089    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.812     9.277 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.883    11.160    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.101    11.261 r  BUFG_3/O
+                         net (fo=13409, routed)       1.905    13.166    sys_clk
+    SLICE_X67Y114        FDRE                                         r  linienmodule_dna_status_reg[63]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X67Y114        FDRE (Prop_fdre_C_Q)         0.419    13.585 r  linienmodule_dna_status_reg[63]/Q
+                         net (fo=2, routed)           3.210    16.795    linienmodule_csrbank0_dna7_w[7]
+    DNA_PORT_X0Y0        DNA_PORT                                     r  DNA_PORT/DIN
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dna_clk rise edge)   16.000    16.000 r  
+    U18                                               0.000    16.000 r  clk125_p (IN)
+                         net (fo=0)                   0.000    16.000    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909    16.909 r  IBUFGDS/O
+                         net (fo=1, routed)           2.006    18.915    clk_adci
+    BUFGCTRL_X0Y17       BUFG (Prop_bufg_I_O)         0.092    19.007 r  BUFG/O
+                         net (fo=1, routed)           1.634    20.641    clk_adcb
+    PLLE2_ADV_X1Y0       PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT2)
+                                                     -3.442    17.199 r  PLLE2_BASE/CLKOUT2
+                         net (fo=1, routed)           1.720    18.919    clk_2
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    19.010 r  BUFG_3/O
+                         net (fo=13409, routed)       1.709    20.719    sys_clk
+    SLICE_X61Y117        FDRE (Prop_fdre_C_Q)         0.367    21.086 r  linienmodule_dna_cnt_reg[0]/Q
+                         net (fo=10, routed)          1.729    22.815    linienmodule_dna_cnt_reg[0]
+    DNA_PORT_X0Y0        DNA_PORT                                     r  DNA_PORT/CLK
+                         clock pessimism              0.252    23.067    
+                         clock uncertainty           -0.069    22.998    
+    DNA_PORT_X0Y0        DNA_PORT (Setup_dna_port_CLK_DIN)
+                                                     -3.389    19.609    DNA_PORT
+  -------------------------------------------------------------------
+                         required time                         19.609    
+                         arrival time                         -16.795    
+  -------------------------------------------------------------------
+                         slack                                  2.813    
+
+
+
+
