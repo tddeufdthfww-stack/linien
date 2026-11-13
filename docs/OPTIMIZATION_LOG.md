@@ -909,3 +909,15 @@ R80额外LVTTL100配置/1400bit记录全部完成，无固定相位可行及无�
 工程验收决定：官方未知PCB/时钟资料不再作为必须询问用户的条件；按已写明的参考板/内部125MHz/独立异步GPIO配置继续评审。已知DAC负时序与控制协议未闭合仍FAIL，不批准正式烧录，不生成bit/bin、不操作板卡或激光。可批准的是已有功能回归、R80内部125MHz静态时序、DNA以及有边界的ADC/正常CDC/非致命DRC结构审查；不能把这些局部批准等同全FPGA签核。
 
 后续有效方向：需要具备合法可校准相对延迟的新IO架构或带实测依据的板级接口时序模型，先证明实际数据眼，再整合R80和完整新回归/实现。继续增加PID/IIR反馈流水线不会扩大4ns DAC串行UI；在当前setup2+hold1.5固定要求下，额外8/16ns整帧延迟不能直接解决pad窗口，故未盲加延迟。板测/校准目前NOT RUN，无法承诺固定几轮即可正式签核。
+
+# R90 ODDR SAME_EDGE探针：功能PASS，物理FAIL / 2026-11-13
+
+独立父R89 e7c11e43，R80不变。新增14数据ODDR SAME_EDGE，D1=D2同字正沿采样、负沿重复，不改输出旧A/新B、14bit/双125MS/s；正常反馈新增0整拍。DAC启动用既有16SYS guard。14个特定ODDR DONT_TOUCH防止折回FDRE；综合确认14个SAME_EDGE且每个D1/D2同一net。
+
+native01实际原语PASS：73573writes、A36788/B36785、2354335逐时刻比较、32768通道码值、3epochs，停钟2us内reset及显式恢复PASS。RTL SHA=b7391519ae80e2b6d5085876c2f2c8b798bf3d547257fe529d48762810997298。
+
+新综合COMPLETE、新place/route COMPLETE，DCP SHA=2069b6da10f71c2d9bb2414f3a67998345cdf4459bb7544c07b0dcd51b21e4a2。global WNS/TNS=-1.090/-30.540ns、43setup，rawWHS/THS=-1.899/-26.084ns、14hold，WPWS+1.500ns。只读按源clock正/负沿分开查询、无例外：真实上升沿DACsetup-.346/hold+.038；下降沿重复值的rawhold不能直接视为新的有效数据变化，但真实上升沿setup也未通过，故不添加例外签核。
+
+实际最差报告中data ODDR C-Q=.472ns、WRT ODDR C-Q=.411ns。SAME_EDGE与OPPOSITE_EDGE虽然同名原语，时序模式不同并未获得匹配CQ；不可只凭“都用ODDR”宣称改善。数据路径3.726ns=logic3.725+net.001，与FDRE参考几乎一致。最小探针counter/mux另有内部负路径，不能把该global WNS当作R80内部结果。完整Linien集成/回归NOT RUN；正式基线未改，拒绝此候选，不生成bitstream。
+
+下一独立R91评估半拍预装：在每个IO负沿把下一字寄存在fabric FF，ODDR OPPOSITE_EDGE的D1/D2同接该history。正沿读取上个负沿值、负沿D2读取history更新前值，保持每4ns一字；A在SYS前2.5ns预装、B在SYS后1.5ns预装，目标输出仍SYS前.5/后3.5。预装时钟使用同MMCM输出经BUFR250，不让BUFIO非法驱动fabric；必须新验证history→D2同边沿hold及SYS→history较早捕获setup，不用名义相位掩盖BUFIO/BUFR实际偏斜。只在实际序列及物理路径成立时才认为零新增反馈延迟。
