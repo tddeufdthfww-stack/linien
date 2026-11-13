@@ -1,3 +1,5 @@
+> **2026-11-13 R93：时钟配置有边界筛查与两份新probe综合已完成；共同输入native PASS，但无时序窗口改善，新route NOT RUN。R92实际route仍FAIL。保留R80，正式烧录不放行。**
+
 > **2026-11-13 R92：校准WRT探针功能PASS、实际route完成但STA FAIL（setup全局-1.702ns、DAC hold-3.832ns）；32tap/448行无窗口。保留R80，不放行烧录。R90/R91同样失败。**
 
 > **2026-11-13 R89：361种合法3.3V电气模式/5054条位级必要窗口均失败；保留R80，正式烧录不放行。已自行制定参考板验收口径，未知PCB不作为询问阻塞，已知负STA不能批准。新增可重复SHA/覆盖审计工具。**
@@ -1208,3 +1210,25 @@ native01实际原语PASS：73573writes、A36788/B36785、2354335逐时刻比较�
 RTL SHA256 beffcbcedf17dcc776ec2c367ae37bc67d8677aeb5c51746fce4fe0c80a3ea54；routed DCP 971380270884de6adb20c0e9b6589e959a0c415ae9602c1d0581851115fa632d。原版/R2b/R4a/R80/R89/R90/R91均不回写。延迟链失败源码、工具、完整报告、波形TB、DCP与哈希归档 experiments/r92_rejected_calibrated_20261113。
 
 下一步R93先对冻结DCP做合法PLL/MMCM BANDWIDTH配置诊断：保持频率/相位/约束/整数反馈级不变，让Vivado重新计算jitter/phase error，而非手动缩减uncertainty。只有有必要窗口才投新综合/route；此诊断不是新的物理实现。普通增加PID流水线不能改善固定4ns DAC外部数据眼。
+
+
+# R93 时钟配置筛查结束 / 2026-11-13
+
+NOT RELEASED。生产Root/PS/ADC/DAC/CSR/PID/IIR源码不改；所有新硬件仅为独立probe。14个历史checkout的67247项已跟踪文件哈希/HEAD/status检查全部PASS，当前对父R92的51份生产gateware逐RAW完全相同。完整Linien新回归NOT RUN，无新整机时序数值，不生成.bit/.bin。
+
+R80 PLL和R84 MMCM各OPTIMIZED/HIGH/LOW内存诊断完成（合计84行），R84额外update_timing -full重算42行。实际频率与波形逐项不变，输入DCP哈希不变；工具窗口分别始终-.273/-.274ns，无配置改善。仅为固定网表模型结果，不能声称三种硬件配置已新route或穷尽一切架构。
+
+750MHz VCO/HIGH新probe的native01严格旧测试FAIL：两个MMCM锁定时间不同，自生成counter在不同SYS时刻起跑，1652.125ns为000d/0013。完整失败TB/日志保留，不抹除。native02仅在测试台将双方输入counter/a_hold/b_hold钳零至双方各自复位释放，再同时喂同一SYS序列；未force时钟、复位、输出寄存器、SEL、serializer、锁定或被测反馈状态。复位释放合法性及停钟2usreset/显式恢复仍检查。共同输入有效态波形与oracle PASS：73645writes、A36824/B36821、2356639比较点、32768码值、3epochs。1000MHz/LOW同条件独立native也PASS，数量相同。故只能报告共同输入下的功能PASS，不能宣称两种PLL锁定时间完全等价，或原native01从FAIL改为PASS。
+
+新综合均COMPLETE，但没有新增route：750/HIGH综合global WNS/TNS=-.337/-4.137ns、16setup，WHS/THS=-1.218/-16.672ns、16hold；必要DAC setup/hold=-.337/+.066ns，DJ=.112ns、uncertainty=.066ns。1000/LOW综合global=-.334/-4.416ns、16setup，WHS/THS=-1.382/-19.294ns、16hold；DAC=-.334/+.069ns，DJ=.104ns、uncertainty=.063ns。作为对照，旧R84综合global=-.334/-4.050ns、16setup，WHS/THS=-1.199/-16.370ns。新750配置jitter反而增大，LOW没带来新数据眼收益。因此不投入盲目新route，更不能将综合结果当作布局布线结果。presynthesis hold包含未实现内部路由，不用它冒充routed结论。
+
+硬件SHA：750/HIGH b792adf5b4c6f6456afbe08d6bc3e84c25c84a9f4de66498a062af3703cc184c；1000/LOW fe6b5c00a55615b8cd13b2611b092519ea205c855e4d0efded1a040d00c8c953。完整命令、synth DCP、波形TB、输入SHA和PASS/FAIL/NOT RUN索引见experiments/r93_clock_configuration_20261113。
+
+当前推荐基线仍为R80 60ba54e9，不是本分支继承的失败R83生产输入；R80内部+.055ns，整体-.343/-3.974ns、14DAC负setup、整体hold+.038ns，最终STA失败。R90/R91/R92不合并；R93不集成。新增正常反馈级0（未采用任何新硬件），现有R80相对R2b累计4 SYS级=32ns不是端到端数字总延迟。新综合本身不能缩减这一残余风险。
+
+下一阶段必须针对DAC4ns实际引脚数据眼与CLK/WRT/SEL联合窗口提出新的可证实现，而不是继续给PID加流水线。最低预算2ns setup+1.5ns hold已经占3.5ns。共同延后WRT的数学必要条件是max(-setup_i)<=min(hold_i)；当前R80需要delta>=.343ns却又delta<=.070ns，窗口空集。此公式仅固定网表必要筛查，不替代实际换相后route；R89较广电气扫描亦已保留。继续仅调同一拓扑相位/驱动/tap没有已验证的收敛方案。不得保证还需固定几轮，也不得把未知PCB工程假设或官方125MSPS能力说明当成已知负STA的豁免。若新架构无法给出正窗口，应明确报告现有严格条件下未完成，不能生成或宣称正式可烧录镜像。
+
+官方复核：AD9767 RevG Table3/Fig64仍为2ns setup、1.5ns hold及SEL在两个clock均低时切换。ADI 125MSPS问答并未给本工程PVT/PCB负裕量豁免。Epson SG3225VAN 125MHz资料的0.34ps是2.5V条件下12kHz–20MHz的典型phase jitter，不是本板峰峰周期jitter保证，未据此降低当前0.071ns TSJ或抹去负裕量。
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD9763_9765_9767.pdf
+https://ez.analog.com/data_converters/high-speed_dacs/f/q-a/164567/ad9763-ad9765-ad9767-interleaved-mode-with-125-msps-update-rate-possible/380408
+https://download.epsondevice.com/td/pdf/td_spxo_spso_mhz/SG3225VAN_X1G0042410020_en.pdf

@@ -1,0 +1,996 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Fri Nov 13 11:54:13 2026
+| Host         : DESKTOP-UPVE1P4 running 64-bit major release  (build 9200)
+| Command      : report_timing -to [get_ports {dac_data[*]}] -delay_type max -path_type full_clock_expanded -max_paths 14 -file D:/RP_Dev/linien_trials/20261113-r93-clock-bandwidth/gateware/build/r93_mmcm01/HIGH_setup.rpt
+| Design       : dac_serdes_probe
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.346ns  (required time - arrival time)
+  Source:                 reference.bits[1].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[1]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.726ns  (logic 3.725ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.443ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.233ns = ( 11.733 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.336    11.733    io_clk
+    OLOGIC_X1Y135        FDRE                                         r  reference.bits[1].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y135        FDRE (Prop_fdre_C_Q)         0.472    12.205 r  reference.bits[1].output_data/Q
+                         net (fo=1, routed)           0.001    12.206    dac_data_OBUF[1]
+    M20                  OBUF (Prop_obuf_I_O)         3.253    15.459 r  dac_data_OBUF[1]_inst/O
+                         net (fo=0)                   0.000    15.459    dac_data[1]
+    M20                                                               r  dac_data[1] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.459    
+  -------------------------------------------------------------------
+                         slack                                 -0.346    
+
+Slack (VIOLATED) :        -0.336ns  (required time - arrival time)
+  Source:                 reference.bits[0].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[0]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.716ns  (logic 3.715ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.443ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.233ns = ( 11.733 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.336    11.733    io_clk
+    OLOGIC_X1Y136        FDRE                                         r  reference.bits[0].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y136        FDRE (Prop_fdre_C_Q)         0.472    12.205 r  reference.bits[0].output_data/Q
+                         net (fo=1, routed)           0.001    12.206    dac_data_OBUF[0]
+    M19                  OBUF (Prop_obuf_I_O)         3.243    15.449 r  dac_data_OBUF[0]_inst/O
+                         net (fo=0)                   0.000    15.449    dac_data[0]
+    M19                                                               r  dac_data[0] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.449    
+  -------------------------------------------------------------------
+                         slack                                 -0.336    
+
+Slack (VIOLATED) :        -0.312ns  (required time - arrival time)
+  Source:                 reference.bits[3].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[3]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.697ns  (logic 3.696ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.448ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.228ns = ( 11.728 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.331    11.728    io_clk
+    OLOGIC_X1Y131        FDRE                                         r  reference.bits[3].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y131        FDRE (Prop_fdre_C_Q)         0.472    12.200 r  reference.bits[3].output_data/Q
+                         net (fo=1, routed)           0.001    12.201    dac_data_OBUF[3]
+    L20                  OBUF (Prop_obuf_I_O)         3.224    15.425 r  dac_data_OBUF[3]_inst/O
+                         net (fo=0)                   0.000    15.425    dac_data[3]
+    L20                                                               r  dac_data[3] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.425    
+  -------------------------------------------------------------------
+                         slack                                 -0.312    
+
+Slack (VIOLATED) :        -0.306ns  (required time - arrival time)
+  Source:                 reference.bits[2].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[2]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.691ns  (logic 3.690ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.448ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.228ns = ( 11.728 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.331    11.728    io_clk
+    OLOGIC_X1Y132        FDRE                                         r  reference.bits[2].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y132        FDRE (Prop_fdre_C_Q)         0.472    12.200 r  reference.bits[2].output_data/Q
+                         net (fo=1, routed)           0.001    12.201    dac_data_OBUF[2]
+    L19                  OBUF (Prop_obuf_I_O)         3.218    15.419 r  dac_data_OBUF[2]_inst/O
+                         net (fo=0)                   0.000    15.419    dac_data[2]
+    L19                                                               r  dac_data[2] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.419    
+  -------------------------------------------------------------------
+                         slack                                 -0.306    
+
+Slack (VIOLATED) :        -0.306ns  (required time - arrival time)
+  Source:                 reference.bits[4].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[4]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.694ns  (logic 3.693ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.451ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.225ns = ( 11.725 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.328    11.725    io_clk
+    OLOGIC_X1Y130        FDRE                                         r  reference.bits[4].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y130        FDRE (Prop_fdre_C_Q)         0.472    12.197 r  reference.bits[4].output_data/Q
+                         net (fo=1, routed)           0.001    12.198    dac_data_OBUF[4]
+    K19                  OBUF (Prop_obuf_I_O)         3.221    15.419 r  dac_data_OBUF[4]_inst/O
+                         net (fo=0)                   0.000    15.419    dac_data[4]
+    K19                                                               r  dac_data[4] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.419    
+  -------------------------------------------------------------------
+                         slack                                 -0.306    
+
+Slack (VIOLATED) :        -0.305ns  (required time - arrival time)
+  Source:                 reference.bits[5].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[5]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.693ns  (logic 3.692ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.451ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.225ns = ( 11.725 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.328    11.725    io_clk
+    OLOGIC_X1Y129        FDRE                                         r  reference.bits[5].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y129        FDRE (Prop_fdre_C_Q)         0.472    12.197 r  reference.bits[5].output_data/Q
+                         net (fo=1, routed)           0.001    12.198    dac_data_OBUF[5]
+    J19                  OBUF (Prop_obuf_I_O)         3.220    15.418 r  dac_data_OBUF[5]_inst/O
+                         net (fo=0)                   0.000    15.418    dac_data[5]
+    J19                                                               r  dac_data[5] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.418    
+  -------------------------------------------------------------------
+                         slack                                 -0.305    
+
+Slack (VIOLATED) :        -0.273ns  (required time - arrival time)
+  Source:                 reference.bits[12].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[12]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.648ns  (logic 3.647ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.438ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.238ns = ( 11.738 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.341    11.738    io_clk
+    OLOGIC_X1Y141        FDRE                                         r  reference.bits[12].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y141        FDRE (Prop_fdre_C_Q)         0.472    12.210 r  reference.bits[12].output_data/Q
+                         net (fo=1, routed)           0.001    12.211    dac_data_OBUF[12]
+    D20                  OBUF (Prop_obuf_I_O)         3.175    15.385 r  dac_data_OBUF[12]_inst/O
+                         net (fo=0)                   0.000    15.385    dac_data[12]
+    D20                                                               r  dac_data[12] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.385    
+  -------------------------------------------------------------------
+                         slack                                 -0.273    
+
+Slack (VIOLATED) :        -0.272ns  (required time - arrival time)
+  Source:                 reference.bits[13].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[13]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.647ns  (logic 3.646ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.438ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.238ns = ( 11.738 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.341    11.738    io_clk
+    OLOGIC_X1Y142        FDRE                                         r  reference.bits[13].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y142        FDRE (Prop_fdre_C_Q)         0.472    12.210 r  reference.bits[13].output_data/Q
+                         net (fo=1, routed)           0.001    12.211    dac_data_OBUF[13]
+    D19                  OBUF (Prop_obuf_I_O)         3.174    15.385 r  dac_data_OBUF[13]_inst/O
+                         net (fo=0)                   0.000    15.385    dac_data[13]
+    D19                                                               r  dac_data[13] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.385    
+  -------------------------------------------------------------------
+                         slack                                 -0.272    
+
+Slack (VIOLATED) :        -0.272ns  (required time - arrival time)
+  Source:                 reference.bits[6].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[6]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.656ns  (logic 3.655ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.447ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.229ns = ( 11.729 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.332    11.729    io_clk
+    OLOGIC_X1Y116        FDRE                                         r  reference.bits[6].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y116        FDRE (Prop_fdre_C_Q)         0.472    12.201 r  reference.bits[6].output_data/Q
+                         net (fo=1, routed)           0.001    12.202    dac_data_OBUF[6]
+    J20                  OBUF (Prop_obuf_I_O)         3.183    15.384 r  dac_data_OBUF[6]_inst/O
+                         net (fo=0)                   0.000    15.384    dac_data[6]
+    J20                                                               r  dac_data[6] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.384    
+  -------------------------------------------------------------------
+                         slack                                 -0.272    
+
+Slack (VIOLATED) :        -0.269ns  (required time - arrival time)
+  Source:                 reference.bits[7].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[7]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.653ns  (logic 3.652ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.447ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.229ns = ( 11.729 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.332    11.729    io_clk
+    OLOGIC_X1Y115        FDRE                                         r  reference.bits[7].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y115        FDRE (Prop_fdre_C_Q)         0.472    12.201 r  reference.bits[7].output_data/Q
+                         net (fo=1, routed)           0.001    12.202    dac_data_OBUF[7]
+    H20                  OBUF (Prop_obuf_I_O)         3.180    15.382 r  dac_data_OBUF[7]_inst/O
+                         net (fo=0)                   0.000    15.382    dac_data[7]
+    H20                                                               r  dac_data[7] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.382    
+  -------------------------------------------------------------------
+                         slack                                 -0.269    
+
+Slack (VIOLATED) :        -0.256ns  (required time - arrival time)
+  Source:                 reference.bits[9].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[9]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.443ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.233ns = ( 11.733 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.336    11.733    io_clk
+    OLOGIC_X1Y113        FDRE                                         r  reference.bits[9].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y113        FDRE (Prop_fdre_C_Q)         0.472    12.205 r  reference.bits[9].output_data/Q
+                         net (fo=1, routed)           0.001    12.206    dac_data_OBUF[9]
+    G20                  OBUF (Prop_obuf_I_O)         3.163    15.369 r  dac_data_OBUF[9]_inst/O
+                         net (fo=0)                   0.000    15.369    dac_data[9]
+    G20                                                               r  dac_data[9] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.369    
+  -------------------------------------------------------------------
+                         slack                                 -0.256    
+
+Slack (VIOLATED) :        -0.256ns  (required time - arrival time)
+  Source:                 reference.bits[8].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[8]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.636ns  (logic 3.635ns (99.972%)  route 0.001ns (0.028%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.443ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.233ns = ( 11.733 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.336    11.733    io_clk
+    OLOGIC_X1Y114        FDRE                                         r  reference.bits[8].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y114        FDRE (Prop_fdre_C_Q)         0.472    12.205 r  reference.bits[8].output_data/Q
+                         net (fo=1, routed)           0.001    12.206    dac_data_OBUF[8]
+    G19                  OBUF (Prop_obuf_I_O)         3.163    15.368 r  dac_data_OBUF[8]_inst/O
+                         net (fo=0)                   0.000    15.368    dac_data[8]
+    G19                                                               r  dac_data[8] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.368    
+  -------------------------------------------------------------------
+                         slack                                 -0.256    
+
+Slack (VIOLATED) :        -0.254ns  (required time - arrival time)
+  Source:                 reference.bits[11].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[11]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.642ns  (logic 3.641ns (99.973%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.451ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.225ns = ( 11.725 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.328    11.725    io_clk
+    OLOGIC_X1Y119        FDRE                                         r  reference.bits[11].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y119        FDRE (Prop_fdre_C_Q)         0.472    12.197 r  reference.bits[11].output_data/Q
+                         net (fo=1, routed)           0.001    12.198    dac_data_OBUF[11]
+    F20                  OBUF (Prop_obuf_I_O)         3.169    15.367 r  dac_data_OBUF[11]_inst/O
+                         net (fo=0)                   0.000    15.367    dac_data[11]
+    F20                                                               r  dac_data[11] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.367    
+  -------------------------------------------------------------------
+                         slack                                 -0.254    
+
+Slack (VIOLATED) :        -0.249ns  (required time - arrival time)
+  Source:                 reference.bits[10].output_data/C
+                            (rising edge-triggered cell FDRE clocked by c0  {rise@-0.500ns fall@1.500ns period=4.000ns})
+  Destination:            dac_data[10]
+                            (output port clocked by dac_wrt_forward  {rise@1.500ns fall@3.500ns period=4.000ns})
+  Path Group:             dac_wrt_forward
+  Path Type:              Max at Slow Process Corner
+  Requirement:            2.000ns  (dac_wrt_forward rise@5.500ns - c0 rise@3.500ns)
+  Data Path Delay:        3.637ns  (logic 3.636ns (99.972%)  route 0.001ns (0.027%))
+  Logic Levels:           1  (OBUF=1)
+  Output Delay:           2.000ns
+  Clock Path Skew:        3.451ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    10.941ns = ( 16.441 - 5.500 ) 
+    Source Clock Delay      (SCD):    8.225ns = ( 11.725 - 3.500 ) 
+    Clock Pessimism Removal (CPR):    0.735ns
+  Clock Uncertainty:      0.063ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.104ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock c0 rise edge)         3.500     3.500 r  
+    U18                                               0.000     3.500 r  clk125_p (IN)
+                         net (fo=0)                   0.000     3.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.951     4.451 r  input_clock/O
+                         net (fo=1, routed)           2.205     6.656    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.102     6.758 r  system_clock/O
+                         net (fo=48, routed)          1.980     8.738    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.088     8.826 r  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.961     9.787    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.609    11.396 r  data_clock/O
+                         net (fo=16, routed)          0.328    11.725    io_clk
+    OLOGIC_X1Y120        FDRE                                         r  reference.bits[10].output_data/C
+  -------------------------------------------------------------------    -------------------
+    OLOGIC_X1Y120        FDRE (Prop_fdre_C_Q)         0.472    12.197 r  reference.bits[10].output_data/Q
+                         net (fo=1, routed)           0.001    12.198    dac_data_OBUF[10]
+    F19                  OBUF (Prop_obuf_I_O)         3.164    15.362 r  dac_data_OBUF[10]_inst/O
+                         net (fo=0)                   0.000    15.362    dac_data[10]
+    F19                                                               r  dac_data[10] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock dac_wrt_forward rise edge)
+                                                      5.500     5.500 f  
+    U18                                               0.000     5.500 f  clk125_p (IN)
+                         net (fo=0)                   0.000     5.500    clk125_p
+    U18                  IBUFDS (Prop_ibufds_I_O)     0.909     6.409 f  input_clock/O
+                         net (fo=1, routed)           2.006     8.415    clk_in
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.092     8.507 f  system_clock/O
+                         net (fo=48, routed)          1.770    10.277    sys_clk
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                      0.083    10.360 f  clock_manager/CLKOUT0
+                         net (fo=1, routed)           0.871    11.231    c0
+    BUFIO_X1Y8           BUFIO (Prop_bufio_I_O)       1.431    12.662 f  data_clock/O
+                         net (fo=16, routed)          0.284    12.946    io_clk
+    OLOGIC_X1Y134        ODDR (Prop_oddr_C_Q)         0.411    13.357 r  reference.output_write/Q
+                         net (fo=1, routed)           0.001    13.358    dac_wrt_OBUF
+    M17                  OBUF (Prop_obuf_I_O)         3.083    16.441 r  dac_wrt_OBUF_inst/O
+                         net (fo=0)                   0.000    16.441    dac_wrt
+    M17                                                               r  dac_wrt (OUT)
+                         clock pessimism              0.735    17.176    
+                         clock uncertainty           -0.063    17.113    
+                         output delay                -2.000    15.113    
+  -------------------------------------------------------------------
+                         required time                         15.113    
+                         arrival time                         -15.362    
+  -------------------------------------------------------------------
+                         slack                                 -0.249    
+
+
+
+
