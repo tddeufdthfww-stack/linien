@@ -931,3 +931,20 @@ native01实际原语PASS：73573writes、A36788/B36785、2354335逐时刻比较�
 更正R90的根因解释：先前把data CQ.472与WRT CQ.411的差归于SAME_EDGE/OPPOSITE_EDGE模式，依据不足。这两个数分别是setup最晚数据和最早捕获时钟；R90 hold报告中data CQ=.411、WRT=.472，早晚条件交换，R91改成OPPOSITE_EDGE后data max CQ仍=.472。不能把跨早晚条件的数值差直接归为模式开销。原报告与实验结果不改写；R90功能PASS/物理FAIL结论仍成立。后续必须同工艺角、同早晚及同转换条件比较。
 
 下一R92仅独立最小试验：IDELAYE2 DATAIN→DATAOUT回到fabric，经特定保留LUT后才驱动OBUF，不直接IDELAY→IOB；先由Vivado判定合法路由。源为同一250MHz BUFG时钟，data仍正沿采样，WRT为该同一事件经校准延迟后的波形，不依赖另一周期VCO边沿；固定tap、IDELAYCTRL200MHz参考与RDY启动guard。实际拓扑成立后输出setup必须收紧为同事件0周期、hold核对下一字，不通过放宽4ns周期或删除路径制造PASS。0周期检查是更严格的事件建模，需原语波形/实际报告证明。正常反馈整数级不变，启动等待可能增加，先不改生产Root/PS/ADC/原PLL/CSR。
+
+
+# R92 实际失败与有边界诊断 / 2026-11-13
+
+状态 REJECTED；功能探针 PASS，新综合/布局布线 COMPLETE，最终 STA FAIL，整机集成/整机新回归/bitstream/上板均 NOT RUN。R80 最佳整机保留，不能正式烧录。
+
+实际 UNISIM：73509 writes、A36756/B36753、2352287 比较点、32768 码值、3 epochs PASS。此 oracle 证明字序/复位/启动，不覆盖硅上延迟或 SEL 低电平窗口。新物理 global WNS/TNS=-1.702/-18.314ns、15 setup；WHS/THS=-3.832/-53.150ns、14 hold；WPWS=+.264ns。DAC data setup +.466ns、hold -3.832ns；正确0周期 setup / -4ns 下一字 hold关系已保留。最差内部 frame_copy_replica_2/C→output_data/D 为 -1.702ns，数据2.156ns=逻辑.580+route1.576，时钟偏斜-2.030ns。输出setup单独改善并不代表可用。
+
+实际123可路由net全部route、0routing error；DRC 4 Warning（3混合clockbuffer、1独立probe无PS7），0Error/Critical，并非整机DRC通过。report_cdc显示All paths Safely Timed仅限同源参考探针，不能当作完整物理CDC/失锁RDY协议证明。no_clock=0、内部未约束=0；reset input未预算、2控制输出未预算，不能最终签核。
+
+只读磁盘DCP内存诊断：32合法tap×14位=448行，0可行行；最好单bit setup+hold之和仍-3.005ns。tap0整体setup/hold=-1.149/-1.952ns；tap22为+.466/-3.832ns。仅证明当前固定物理拓扑不能靠tap或共同相移关闭，并非证明所有其他架构不可行。输入DCP哈希始终不变。
+
+必要零PCB SEL低电平窗口最差hold -4.259ns；CLK领先WRT检查+4.597ns但下一CLK避让前WRT2ns检查-7.328ns。额外协议诊断保留完整时钟路径，未保存修改约束的DCP，未豁免违例；delay长于一个UI，不能凭功能模型相位断言硅上同字锁存。未计PCB差分走线、DAC引脚负载及外部pulse最终预算，不夸大PASS。
+
+RTL SHA256 beffcbcedf17dcc776ec2c367ae37bc67d8677aeb5c51746fce4fe0c80a3ea54；routed DCP 971380270884de6adb20c0e9b6589e959a0c415ae9602c1d0581851115fa632d。原版/R2b/R4a/R80/R89/R90/R91均不回写。延迟链失败源码、工具、完整报告、波形TB、DCP与哈希归档 experiments/r92_rejected_calibrated_20261113。
+
+下一步R93先对冻结DCP做合法PLL/MMCM BANDWIDTH配置诊断：保持频率/相位/约束/整数反馈级不变，让Vivado重新计算jitter/phase error，而非手动缩减uncertainty。只有有必要窗口才投新综合/route；此诊断不是新的物理实现。普通增加PID流水线不能改善固定4ns DAC外部数据眼。
